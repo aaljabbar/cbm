@@ -11,40 +11,42 @@ $prv = getPrivilege($menu_id); ?>
         <div class="col-xs-12">
             <!-- PAGE CONTENT BEGINS -->
             <div class="row">
-    		    <div class="col-xs-12">
-    		        <div class="tabbable">
-    		            <ul class="nav nav-tabs padding-18 tab-size-bigger tab-color-blue">
-    					    <li class="active">
-    					    	<a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
-    					    		<i class="blue bigger-120"></i>
-    					    		<strong>Pekerjaan Workflow</strong>
-    					    	</a>
-    					    </li>
-    					    <li class="">
-    					    	<a href="#" data-toggle="tab" aria-expanded="true" id="tab-2">
-    					    		<i class="blue bigger-120"></i>
-    					    		<strong>Role Prosedur</strong>
-    					    	</a>
-    					    </li>
-    		            </ul>
-    		            <input type="hidden" id="tab_procedure_id" value="">
-    		            <input type="hidden" id="tab_procedure_code" value="">
-    		        </div>
-    		        
-    		        <div class="tab-content no-border">
-    		            <div class="row">
+                <div class="col-xs-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs padding-18 tab-size-bigger tab-color-blue">
+                            <li class="active">
+                                <a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
+                                    <i class="blue bigger-120"></i>
+                                    <strong>Pekerjaan Workflow</strong>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#" data-toggle="tab" aria-expanded="true" id="tab-2">
+                                    <i class="blue bigger-120"></i>
+                                    <strong>Role Prosedur</strong>
+                                </a>
+                            </li>
+                        </ul>
+                        <input type="hidden" id="tab_procedure_id" value="">
+                        <input type="hidden" id="tab_procedure_code" value="">
+                    </div>
+                    
+                    <div class="tab-content no-border">
+                        <div class="row">
                             <div class="col-xs-12">       
                                <table id="grid-table"></table>
                                <div id="grid-pager"></div>    
                             </div>
                         </div>    
-    		        </div>
-    		    </div>    
-    	    </div>
-    	    <!-- PAGE CONTENT ENDS -->
+                    </div>
+                </div>    
+            </div>
+            <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
     </div><!-- /.row -->
 </div><!-- /.page-content -->
+
+<?php $this->load->view('parameter/lov_p_procedure.php'); ?>
 
 <script>
     
@@ -115,6 +117,46 @@ $prv = getPrivilege($menu_id); ?>
                         maxlength:128
                     },
                     editrules: {required:true}
+                },
+                {label: 'Induk Pekerjaan',name: 'PROC_NAME_PARENT', width: 200, sortable: true, editable: false},
+                {label: 'Induk Pekerjaan',name: 'PARENT_ID', width: 100, sortable: true,  hidden:true, editable: true,
+                    editrules: {edithidden: true, number:true, required:false},
+                    edittype: 'custom',
+                    editoptions: {
+                        "custom_element":function( value  , options) {                            
+                            var elm = $('<span></span>');
+                            
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_parent_id" type="text"  style="display:none;">'+
+                                        '<input id="form_parent_name" type="text" disabled class="col-xs-5 jqgrid-required" placeholder="Pilih Induk Pekerjaan">'+
+                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovPekerjaan(\'form_parent_id\',\'form_parent_name\')">'+
+                                        '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_parent_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+                            
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            
+                            if(oper === 'get') {
+                                return $("#form_parent_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_parent_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PROC_NAME_PARENT');
+                                        $("#form_parent_name").val( code_display );
+                                    }
+                                },100);
+                            }
+                        }
+                    }
                 },
                 {label: 'Aktif ?',name: 'IS_ACTIVE', width: 100, sortable: true, editable: true,
                     align: 'center',
@@ -210,14 +252,11 @@ $prv = getPrivilege($menu_id); ?>
                 setTimeout(function () {
                     updatePagerIcons(table);
                 }, 0);
-
             },
-
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo site_url('workflow_parameter/crud_procedure');?>',
             caption: "Daftar Pekerjaan Workflow"
         });
-
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options
                 edit: <?php
@@ -225,7 +264,6 @@ $prv = getPrivilege($menu_id); ?>
                     echo 'true';
                 } else {
                     echo 'false';
-
                 }
                 ?>,
                 editicon: 'ace-icon fa fa-pencil blue',
@@ -234,7 +272,6 @@ $prv = getPrivilege($menu_id); ?>
                     echo 'true';
                 } else {
                     echo 'false';
-
                 }
                 ?>,
                 addicon: 'ace-icon fa fa-plus-circle purple',
@@ -243,7 +280,6 @@ $prv = getPrivilege($menu_id); ?>
                     echo 'true';
                 } else {
                     echo 'false';
-
                 }
                 ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
@@ -254,12 +290,10 @@ $prv = getPrivilege($menu_id); ?>
                     // some code here
                     
                 },
-
                 refreshicon: 'ace-icon fa fa-refresh green',
                 view: false,
                 viewicon: 'ace-icon fa fa-search-plus grey'
             },
-
             {
                 // options for the Edit Dialog
                 closeAfterEdit: true,
@@ -332,10 +366,8 @@ $prv = getPrivilege($menu_id); ?>
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     if (form.data('styled')) return false;
-
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_delete_form(form);
-
                     form.data('styled', true);
                 },
                 afterShowForm: function(form) {
@@ -381,39 +413,31 @@ $prv = getPrivilege($menu_id); ?>
     
     
     function clearSelection() {
-
         return null;
     }
-
     function style_edit_form(form) {
         //enable datepicker on "sdate" field and switches for "stock" field
         form.find('input[name=sdate]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
-
         form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
         form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
         //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
         //.addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
-
-
         //update buttons classes
         var buttons = form.next().find('.EditButton .fm-button');
         buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();//ui-icon, s-icon
         buttons.eq(0).addClass('btn-primary').prepend('<i class="ace-icon fa fa-check"></i>');
         buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>')
-
         buttons = form.next().find('.navButton a');
         buttons.find('.ui-icon').hide();
         buttons.eq(0).append('<i class="ace-icon fa fa-chevron-left"></i>');
         buttons.eq(1).append('<i class="ace-icon fa fa-chevron-right"></i>');
     }
-
     function style_delete_form(form) {
         var buttons = form.next().find('.EditButton .fm-button');
         buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
         buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
         buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
     }
-
     function style_search_filters(form) {
         form.find('.delete-rule').val('X');
         form.find('.add-rule').addClass('btn btn-xs btn-primary');
@@ -427,23 +451,18 @@ $prv = getPrivilege($menu_id); ?>
         buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'ace-icon fa fa-comment-o');
         buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'ace-icon fa fa-search');
     }
-
     function beforeDeleteCallback(e) {
         var form = $(e[0]);
         if (form.data('styled')) return false;
-
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_delete_form(form);
-
         form.data('styled', true);
     }
-
     function beforeEditCallback(e) {
         var form = $(e[0]);
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_edit_form(form);
     }
-
     function updatePagerIcons(table) {
         var replacement =
         {
@@ -455,15 +474,16 @@ $prv = getPrivilege($menu_id); ?>
         $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
             var icon = $(this);
             var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
-
             if ($class in replacement) icon.attr('class', 'ui-icon ' + replacement[$class]);
         })
     }
-
     function responsive_jqgrid(grid_selector, pager_selector) {
         var parent_column = $(grid_selector).closest('[class*="col-"]');
         $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
+    }
+    function showLovPekerjaan(id, code) {
+        modal_lov_p_procedure_show(id,code);
     }
     
 </script>
