@@ -990,7 +990,7 @@ class Workflow_parameter extends CI_Controller
         );
 
         // Filter Table *
-        $req_param['where'] = array('P_ORDER_STATUS_ID = 1');
+        $req_param['where'] = array();
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
         // print_r($row);exit;
@@ -1230,7 +1230,8 @@ class Workflow_parameter extends CI_Controller
         );
 
         // Filter Table *
-        $req_param['where'] = array('P_ORDER_STATUS_ID = 1');
+        $req_param['where'] = array();
+        // $req_param['where'] = array('P_ORDER_STATUS_ID = 1');
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
         // print_r($row);exit;

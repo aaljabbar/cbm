@@ -154,7 +154,15 @@ $prv = getPrivilege($menu_id); ?>
                     editable: false,
                     formatter: function(cellvalue, options, rowObject) {
                         var order = String(rowObject.ORDER_NO);
-                        return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+cellvalue+',\''+order+'\');">Submit</button>';
+                        var status = String(rowObject.P_ORDER_STATUS_ID);
+
+                        if (status == 1){
+                            return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+cellvalue+',\''+order+'\');">Submit</button>';
+                        }else if(status == 2){
+                            return '<label style="color:green; font-size: 11px;">IN-PROCESS</label>';
+                        }else{
+                            return '<label style="color:red; font-size: 11px;">FINISH</label>';
+                        }
                     }
                 },
                 {
@@ -191,20 +199,14 @@ $prv = getPrivilege($menu_id); ?>
                     sortable: true, 
                     editable: false
                 },
-                // {   
-                //     label: 'Status Permohonan',
-                //     name: 'P_ORDER_STATUS_ID', 
-                //     width: 200, 
-                //     sortable: true, 
-                //     editable: true,
-                //     hidden:true,
-                //     editrules: {edithidden: true, required: true},
-                //     edittype: 'select',
-                //     editoptions: {
-                //         style: "width: 200px", 
-                //         dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_order_status"); ?>'
-                //     }
-                // },
+                {   
+                    label: 'Status Order',
+                    name: 'P_ORDER_STATUS_ID', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden:true,
+                },
                 {   
                     label: 'Jenis Permohonan',
                     name: 'ORDER_STATUS_CODE', 
