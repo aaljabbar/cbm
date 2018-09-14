@@ -92,8 +92,57 @@ $prv = getPrivilege($menu_id); ?>
         modal_lov_cust_pgl_show(PGL_ID, PGL_NAME, PGL_ADDR);
     }
 
-    function submitWF(){
-       alert('test');
+    function submitWF(custId, map_pks_id){
+        if (custId == null) {
+            custId = 0;
+        };
+        var doc_type = 2; //WF PEMBUATAN KONTRAK
+        var req_type = 2; //WF PEMBUATAN KONTRAK
+        //var user_name = rowObject['T_CUSTOMER_ORDER_ID'];
+        swal({
+            title: "",
+            text: "Apakah Anda yakin melakukan submit untuk pekerjaan ini ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, Submit!',
+            cancelButtonText: "Tidak, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+         },
+         function(isConfirm){
+            if (isConfirm){
+                /*$.ajax({
+                    type: 'POST',
+                    datatype: "json",
+                    url: '<?php echo site_url('tracking_progress/grid_progress_pks');?>'
+                    data: { params : submitter_params , interactive_message : messages},
+                    timeout: 10000,
+                    success: function(data) {
+                        var response = JSON.parse(data);
+                        if(response.success) {
+
+                            $('#form_submitter_success_message').val( response.return_message );
+                            $('#form_submitter_error_message').val( response.error_message );
+                            $('#form_submitter_warning_message').val( response.warning );
+
+                            if( response.return_message.trim() == 'BERHASIL') {
+                                modal_lov_submitter_back_summary();
+                            }
+
+                        }else {
+                            swal("", data.message, "warning");
+                        }
+                    }
+                });*/
+                swal("Submitted!", "Data berhasil disubmit !", "success");
+
+            } else {
+                swal("Cancelled", "Data tidak jadi disubmit :)", "error");
+            }
+         });
+        //alert(map_pks_id);
+
     }
     // function submitWF(T_CUSTOMER_ORDER_ID, ORDER_NO) {        
     //     result = confirm('Submit No. Order : ' + ORDER_NO);
@@ -150,9 +199,11 @@ $prv = getPrivilege($menu_id); ?>
                     formatter: function(cellvalue, options, rowObject) {
                         var order = String(rowObject.ORDER_NO);
                         var status = String(rowObject.P_ORDER_STATUS_ID);
+                        var custId = rowObject['T_CUSTOMER_ORDER_ID'];
+                        var map_pks_id = rowObject['P_MAP_PKS_ID'];
 
                         if(!cellvalue){
-                            return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF();">Submit</button>';
+                            return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
                         }else{
                             if(status == 2){
                                 return '<label style="color:green; font-size: 11px;">IN-PROCESS</label>';
