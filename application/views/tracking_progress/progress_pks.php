@@ -96,8 +96,8 @@ $prv = getPrivilege($menu_id); ?>
         if (custId == null) {
             custId = 0;
         };
-        var doc_type = 2; //WF PEMBUATAN KONTRAK
-        var req_type = 2; //WF PEMBUATAN KONTRAK
+        var idoc_type = 2; //WF PEMBUATAN KONTRAK
+        var ireq_type = 2; //WF PEMBUATAN KONTRAK
         //var user_name = rowObject['T_CUSTOMER_ORDER_ID'];
         swal({
             title: "",
@@ -112,30 +112,28 @@ $prv = getPrivilege($menu_id); ?>
          },
          function(isConfirm){
             if (isConfirm){
-                /*$.ajax({
+                $.ajax({
                     type: 'POST',
                     datatype: "json",
-                    url: '<?php echo site_url('tracking_progress/grid_progress_pks');?>'
-                    data: { params : submitter_params , interactive_message : messages},
+                    url: '<?php echo site_url('tracking_progress/submitWF');?>',
+                    data: { 
+                            DOC_TYPE : idoc_type,
+                            REQ_TYPE : ireq_type,
+                            T_CUSTOMER_ORDER_ID :custId,
+                            P_MAP_PKS_ID :map_pks_id
+                    },
                     timeout: 10000,
                     success: function(data) {
                         var response = JSON.parse(data);
                         if(response.success) {
-
-                            $('#form_submitter_success_message').val( response.return_message );
-                            $('#form_submitter_error_message').val( response.error_message );
-                            $('#form_submitter_warning_message').val( response.warning );
-
-                            if( response.return_message.trim() == 'BERHASIL') {
-                                modal_lov_submitter_back_summary();
-                            }
-
+                            jQuery('#grid-table').trigger("reloadGrid");
+                            swal("Submitted!", "Data berhasil disubmit !", "success");
                         }else {
                             swal("", data.message, "warning");
                         }
                     }
-                });*/
-                swal("Submitted!", "Data berhasil disubmit !", "success");
+                });
+                // swal("Submitted!", "Data berhasil disubmit !", "success");
 
             } else {
                 swal("Cancelled", "Data tidak jadi disubmit :)", "error");
@@ -144,29 +142,7 @@ $prv = getPrivilege($menu_id); ?>
         //alert(map_pks_id);
 
     }
-    // function submitWF(T_CUSTOMER_ORDER_ID, ORDER_NO) {        
-    //     result = confirm('Submit No. Order : ' + ORDER_NO);
-    //     if (result) { 
 
-    //         $.ajax({
-    //             type: 'POST',
-    //             datatype: "json",
-    //             url: '<?php echo site_url('workflow_parameter/submitWF');?>',
-    //             data: { T_CUSTOMER_ORDER_ID : T_CUSTOMER_ORDER_ID, DOC_TYPE_ID : 1 },
-    //             timeout: 10000,
-    //             success: function(data) {
-    //                 var response = JSON.parse(data);
-    //                 if(response.success) {
-    //                     jQuery('#grid-table').trigger("reloadGrid");
-    //                     swal("", "Submit Berhasil", "success");          
-    //                 }else {
-    //                     swal("", data.message, "warning");
-    //                 }
-    //             }
-    //         });
-    //     }
-    //     return false;
-    // }
 
     jQuery(function($) {
         
@@ -191,7 +167,7 @@ $prv = getPrivilege($menu_id); ?>
             colModel: [
                 {label: 'ID', name: 'P_MAP_PKS_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
                 {
-                    label: 'Submit',
+                    label: '<center>Submit</center>',
                     name: 'T_CUSTOMER_ORDER_ID',
                     width: 70, 
                     align: "center",
@@ -201,6 +177,7 @@ $prv = getPrivilege($menu_id); ?>
                         var status = String(rowObject.P_ORDER_STATUS_ID);
                         var custId = rowObject['T_CUSTOMER_ORDER_ID'];
                         var map_pks_id = rowObject['P_MAP_PKS_ID'];
+                        // alert(status);
 
                         if(!cellvalue){
                             return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
@@ -220,6 +197,14 @@ $prv = getPrivilege($menu_id); ?>
                     width: 200, 
                     sortable: true, 
                     editable: false
+                },
+                {   
+                    label: 'Status Order',
+                    name: 'P_ORDER_STATUS_ID', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: true
                 },
                 {   
                     label: 'Status Order',

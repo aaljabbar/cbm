@@ -95,20 +95,24 @@ class Tracking_progress extends CI_Controller
     }
 
     public function submitWF() {
-        $doc_type_id = $this->input->post('DOC_TYPE_ID');
+        $doc_type_id = $this->input->post('DOC_TYPE'); // kontrak
         $t_customer_order_id = $this->input->post('T_CUSTOMER_ORDER_ID');
+        $p_req_type_id = $this->input->post('REQ_TYPE'); //kontrak
+        $p_map_pks_id = $this->input->post('P_MAP_PKS_ID');
         $username = $this->session->userdata('d_user_name');
 
         try {
 
             $sql = "  BEGIN ".
-                            "  p_first_submit_engine(:i_doc_type_id, :i_cust_req_id, :i_username, :o_result_code, :o_result_msg ); END;";
+                            "  p_first_submit_engine(:i_doc_type_id, :i_cust_req_id, :i_req_type_id, :i_map_pks_id, :i_username, :o_result_code, :o_result_msg ); END;";
 
-            $stmt = oci_parse($this->workflow->db->conn_id, $sql);
+            $stmt = oci_parse($this->tp->db->conn_id, $sql);
 
             //  Bind the input parameter
             oci_bind_by_name($stmt, ':i_doc_type_id', $doc_type_id);
             oci_bind_by_name($stmt, ':i_cust_req_id', $t_customer_order_id);
+            oci_bind_by_name($stmt, ':i_req_type_id', $p_req_type_id);
+            oci_bind_by_name($stmt, ':i_map_pks_id', $p_map_pks_id);
             oci_bind_by_name($stmt, ':i_username', $username);
 
             // Bind the output parameter
