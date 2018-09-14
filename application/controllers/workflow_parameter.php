@@ -403,9 +403,9 @@ class Workflow_parameter extends CI_Controller
                         a.UPDATED_BY,
                         a.CREATED_BY,
                         a.CREATION_DATE,
-                        b.PROF_NAME
+                        b.ROLE_NAME
                     FROM P_PROCEDURE_ROLE a
-                    LEFT JOIN APP_PROFILE b ON a.P_APP_ROLE_ID = b.PROF_ID";
+                    LEFT JOIN APP_ROLE b ON a.P_APP_ROLE_ID = b.ROLE_ID";
 
         $req_param = array(
             "table" => $table,

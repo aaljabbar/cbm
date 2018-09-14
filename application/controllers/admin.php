@@ -29,6 +29,188 @@ class Admin extends CI_Controller
     {
         $this->load->view('dashboard/dashboard');
     }*/
+    public function user_role_wf()
+    {
+        //BreadCrumb
+        $title = $_POST['title'];
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $data['menu_id'] = $this->uri->segment(3);
+
+        $this->load->view('admin/list_user_role_wf', $data);
+    }
+
+    public function gridUserRoleWf()
+    {
+        $user_id = $this->input->post('user_id');
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "V_APP_USER_ROLE"; // *
+
+        //JqGrid Parameters
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array('USER_ID' => $user_id);
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
+    public function listRole()
+    {
+        $result = $this->M_admin->getListRole();
+        echo "<select>";
+        foreach ($result as $value) {
+            echo "<option value=" . $value['ROLE_ID'] . ">" . $value['ROLE_NAME'] . "</option>";
+        }
+        echo "</select>";
+        //   $str = implode(" ", $result);
+        //echo(implode(",",$profile));
+    }
+
+    public function crud_user_role(){
+        $userid = $this->input->post('USER_ID');
+        $roleid = $this->input->post('ROLE_ID');
+        $table = "APP_USER_ROLE";
+
+        $oper=$this->input->post('oper');
+        $id_=$this->input->post('id');
+    
+        switch ($oper) {
+            case 'add':
+                $this->db->set('USER_ID',$userid);
+                $this->db->set('ROLE_ID',$roleid);
+                $this->db->insert($table);
+                break;
+            case 'edit':
+                $this->db->set('ROLE_ID',$roleid);
+                $this->db->where('USER_ID',$userid);
+                $this->db->update($table);
+                break;
+            case 'del':
+                $this->db->where('USER_ID',$userid);
+                $this->db->where('ROLE_ID',$roleid);
+                $this->db->delete($table);
+                break;
+        }
+    }
+
+    public function role()
+    {
+        //BreadCrumb
+        $title = $_POST['title'];
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $data['menu_id'] = $this->uri->segment(3);
+
+        $this->load->view('admin/list_role', $data);
+    }
+
+    public function gridRole()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = $_REQUEST['rows']; // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "APP_ROLE"; // *
+
+        //JqGrid Parameters
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function crud_role()
+    {
+        $table = "APP_ROLE";
+        $this->jqGrid->crud($table, 'ROLE_ID', array('ROLE_NAME', 'ROLE_DESC'));
+    }
+
     public function menu()
     {
         //BreadCrumb

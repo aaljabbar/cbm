@@ -1,65 +1,166 @@
-<?php $prv = getPrivilege( $this->input->post('menu_id') ); ?>
+<?php 
+$menu_id = !isset($menu_id) ? $this->input->post('menu_id') : $menu_id ;
+$prv = getPrivilege($menu_id); ?>
+<script type="text/css">
+    .ui-jqgrid .ui-jqgrid-btable
+    {
+        table-layout:auto;
+    }
+</script>
 <div class="breadcrumbs" id="breadcrumbs">
-    <?php echo getBreadcrumb(array('Workflow Parameter','Role Pekerjaan')); ?>
+    <?php echo getBreadcrumb(array('Tracking Progress','Progress PKS')); ?>
 </div>
 
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
     <div class="row">
         <div class="col-xs-12">
-            <!-- PAGE CONTENT BEGINS -->
-            <div class="row">
-    		    <div class="col-xs-12">
-    		        <div class="tabbable">
-    		            <ul class="nav nav-tabs padding-18 tab-size-bigger tab-color-blue">
-    					    <li class="">
-    					    	<a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
-    					    		<i class="blue bigger-120"></i>
-    					    		<strong>Pekerjaan Workflow</strong>
-    					    	</a>
-    					    </li>
-    					    <li class="active">
-    					    	<a href="#" data-toggle="tab" aria-expanded="true" id="tab-2">
-    					    		<i class="blue bigger-120"></i>
-    					    		<strong>Role Prosedur</strong>
-    					    	</a>
-    					    </li>
-    		            </ul>
-    		            <input type="hidden" id="tab_procedure_id" value="<?php echo $this->input->post('procedure_id');?>">
-    		            <input type="hidden" id="tab_procedure_code" value="<?php echo $this->input->post('procedure_code');?>">
-    		        </div>
-    		        
-    		        <div class="tab-content no-border">
-    		            <div class="row">
-                            <div class="col-xs-12">       
-                               <table id="grid-table"></table>
-                               <div id="grid-pager"></div>    
-                            </div>
-                        </div>    
-    		        </div>
-    		    </div>    
-    	    </div>
-    	    <!-- PAGE CONTENT ENDS -->
+            <div class="tabbable">
+                <ul class="nav nav-tabs padding-18 tab-size-bigger tab-color-blue">
+                    <li class="active">
+                        <a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
+                            <i class="blue bigger-120"></i>
+                            <strong>Entry Progress PKS</strong>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#" data-toggle="tab" aria-expanded="true" id="tab-2">
+                            <i class="blue bigger-120"></i>
+                            <strong>Dokumen Pendukung</strong>
+                        </a>
+                    </li>
+                    <input type="hidden" id="tab_customer_order_id" value="">
+                    <input type="hidden" id="tab_order_no" value="">
+                </ul>
+            </div>
+
+            <div class="tab-content no-border">
+
+                <div class="row">
+                    <div class="col-xs-12">       
+                       <table id="grid-table"></table>
+                       <div id="grid-pager"></div>
+
+                       <script type="text/javascript">
+                            var $path_base = "..";//in Ace demo this will be used for editurl parameter
+                        </script>    
+                    </div>
+                </div>
+
+            <br>
+
+                <!-- PAGE CONTENT BEGINS -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+                </div>
+                <!-- PAGE CONTENT ENDS -->
+            </div>
         </div><!-- /.col -->
     </div><!-- /.row -->
 </div><!-- /.page-content -->
 
-<?php $this->load->view('parameter/lov_app_role.php'); ?>
+<?php $this->load->view('tracking_progress/lov_cust_pgl.php'); ?>
 
 <script>
-    
+  
     jQuery(function($) {
-        $( "#tab-1" ).on( "click", function() {
-            loadContentWithParams("workflow_parameter-procedure.php", {
-                menu_id : '<?php echo $this->input->post('menu_id'); ?>'
+        $( "#tab-2" ).on( "click", function(event) {
+            event.stopPropagation();
+            var grid = $('#grid-table');
+            var rowid = grid.jqGrid ('getGridParam', 'selrow');
+            var p_map_pks_id = grid.jqGrid ('getCell', rowid, 'P_MAP_PKS_ID');
+            var pgl_name = grid.jqGrid ('getCell', rowid, 'PGL_NAME');
+
+
+            if(p_map_pks_id == "" || p_map_pks_id == null) {
+                swal("Informasi", "Silahkan Pilih Salah Satu Baris Data", "info");
+                return false;
+            }
+            
+            loadContentWithParams("tracking_progress-pks_doc.php", {
+                p_map_pks_id: p_map_pks_id,
+                pgl_name: pgl_name,
+                menu_id : <?php echo $menu_id; ?>
             });
         });
     });
-    
-    function showLovRole(id, code) {
-        modal_lov_app_role_show(id,code);
+
+    function showLovPGL(PGL_ID, PGL_NAME, PGL_ADDR) {        
+        modal_lov_cust_pgl_show(PGL_ID, PGL_NAME, PGL_ADDR);
     }
-    
+
+    function submitWF(){
+        var ajaxOptions = {
+            url: '<?php echo WS_JQGRID."transaksi.tblt_ccadepreadjust_controller/do_process"; ?>',
+            type: "POST",
+            dataType: "json",
+            data: { periodid_fk:periodid_fk },
+            success: function (data) {
+                if(data.success == true) {
+                    swal('Success',data.message,'success');
+                    loadForm(i_search, periodid_fk, status, data.records);
+                }else {
+                    swal('Attention',data.message,'warning');
+                }
+            },
+            error: function (xhr, status, error) {
+                swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
+            }
+        };
+
+        $.ajax({
+            beforeSend: function( xhr ) {
+                swal({
+                    title: "Konfirmasi",
+                    text: 'Apakah anda yakin ingin melakukan submit?',
+                    type: "info",
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true,
+                    confirmButtonText: "Ya, Yakin",
+                    confirmButtonColor: "#e80c1c",
+                    cancelButtonText: "Tidak",
+                    closeOnConfirm: false,
+                    closeOnCancel: true,
+                    html: true
+                },
+                function(isConfirm){
+                    if(isConfirm) {
+                        $.ajax(ajaxOptions);
+                        return true;
+                    }else {
+                        return false;
+                    }
+                });
+            }
+        });
+    }
+    // function submitWF(T_CUSTOMER_ORDER_ID, ORDER_NO) {        
+    //     result = confirm('Submit No. Order : ' + ORDER_NO);
+    //     if (result) { 
+
+    //         $.ajax({
+    //             type: 'POST',
+    //             datatype: "json",
+    //             url: '<?php echo site_url('workflow_parameter/submitWF');?>',
+    //             data: { T_CUSTOMER_ORDER_ID : T_CUSTOMER_ORDER_ID, DOC_TYPE_ID : 1 },
+    //             timeout: 10000,
+    //             success: function(data) {
+    //                 var response = JSON.parse(data);
+    //                 if(response.success) {
+    //                     jQuery('#grid-table').trigger("reloadGrid");
+    //                     swal("", "Submit Berhasil", "success");          
+    //                 }else {
+    //                     swal("", data.message, "warning");
+    //                 }
+    //             }
+    //         });
+    //     }
+    //     return false;
+    // }
+
     jQuery(function($) {
         
         var grid_selector = "#grid-table";
@@ -73,18 +174,72 @@
             if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
                responsive_jqgrid(grid_selector, pager_selector);
             }
-        });
+        });       
+        
         
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo site_url('workflow_parameter/grid_procedure_role');?>',
-            postData : {procedure_id : $("#tab_procedure_id").val()},
+            url: '<?php echo site_url('tracking_progress/grid_progress_pks');?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID',name: 'P_PROCEDURE_ROLE_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
-                {label: 'ID PROCEDURE',name: 'P_PROCEDURE_ID', width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
-                {label: 'Role Aplikasi', name: 'ROLE_NAME', width: 120, align: "left",  editable: false},
-                {label: 'Role Aplikasi',name: 'P_APP_ROLE_ID', width: 100, sortable: true,  hidden:true, editable: true,
+                {label: 'ID', name: 'P_MAP_PKS_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
+                {
+                    label: 'Submit',
+                    name: 'T_CUSTOMER_ORDER_ID',
+                    width: 70, 
+                    align: "center",
+                    editable: false,
+                    formatter: function(cellvalue, options, rowObject) {
+                        var order = String(rowObject.ORDER_NO);
+                        var status = String(rowObject.P_ORDER_STATUS_ID);
+
+                        if(!cellvalue){
+                            return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF();">Submit</button>';
+                        }else{
+                            if(status == 2){
+                                return '<label style="color:green; font-size: 11px;">IN-PROCESS</label>';
+                            }else{
+                                return '<label style="color:red; font-size: 11px;">FINISH</label>';
+                            }
+                        }
+                        
+                    }
+                },
+                {
+                    label: 'No. Order',
+                    name: 'ORDER_NO', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                },
+                {   
+                    label: 'Status Order',
+                    name: 'ORDER_STATUS_CODE', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: true
+                },
+                {
+                    label: 'No. PKS',
+                    name: 'NO_PKS', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                },
+                {
+                    label: 'Nama Mitra',
+                    name: 'PGL_NAME', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                },
+                {   label: 'Nama Mitra',
+                    name: 'PGL_ID', 
+                    width: 100, 
+                    sortable: true,  
+                    hidden:true, 
+                    editable: true,
                     editrules: {edithidden: true, number:true, required:true},
                     edittype: 'custom',
                     editoptions: {
@@ -93,12 +248,12 @@
                             
                             // give the editor time to initialize
                             setTimeout( function() {
-                                elm.append('<input id="form_p_app_role_id" type="text"  style="display:none;">'+
-                                        '<input id="form_p_app_role_name" type="text" disabled class="col-xs-5 jqgrid-required" placeholder="Pilih Role">'+
-                    					'<button class="btn btn-warning btn-sm" type="button" onclick="showLovRole(\'form_p_app_role_id\',\'form_p_app_role_name\')">'+
-                    					'	<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
-                    					'</button>');
-                                $("#form_p_app_role_id").val(value);
+                                elm.append('<input id="form_pgl_id" type="text"  style="display:none;">'+
+                                        '<input id="form_pgl_name" type="text" disabled class="col-xs-5 jqgrid-required" style="background-color:#FBEC88 !important; margin-left: 3px;" placeholder="Pilih Mitra">'+
+                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovPGL(\'form_pgl_id\',\'form_pgl_name\',\'PGL_ADDR\')">'+
+                                        '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_pgl_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
                             
@@ -107,63 +262,55 @@
                         "custom_value":function( element, oper, gridval) {
                             
                             if(oper === 'get') {
-                                return $("#form_p_app_role_id").val();
+                                return $("#form_pgl_id").val();
                             } else if( oper === 'set') {
-                                $("#form_p_app_role_id").val(gridval);
+                                $("#form_pgl_id").val(gridval);
                                 var gridId = this.id;
                                 // give the editor time to set display
                                 setTimeout(function(){
                                     var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
                                     if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PROF_NAME');
-                                        $("#form_p_app_role_name").val( code_display );
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PGL_NAME');
+                                        $("#form_pgl_name").val( code_display );
                                     }
                                 },100);
                             }
                         }
                     }
                 },
-                {label: 'Fungsi Role Flow',name: 'F_ROLE', width: 150, sortable: true, editable: true,
+                {
+                    label: 'Alamat Mitra',
+                    name: 'PGL_ADDR', 
+                    edittype: 'textarea',
+                    width: 200, 
+                    sortable: true, 
+                    hidden:true, 
+                    editable: true,
                     editoptions: {
-                        size: 50,
-                        maxlength:64
-                    }
+                                    style : 'width:400px;background-color: #f5f5f5;',
+                                    rows : 2,
+                                    readonly: "readonly"
+                    },
+                    editrules: {edithidden: true, required:false}
                 },
-                {label: 'Berlaku Dari', name: 'VALID_FROM', width: 120, editable: true,
-                    edittype:"text",
-                    editrules: {required: true},
+                {
+                    label: 'Keterangan',
+                    name: 'DESCRIPTION', 
+                    edittype: 'textarea',
+                    width: 200, 
+                    sortable: true, 
+                    hidden:true, 
+                    editable: true,
                     editoptions: {
-                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-                        // use it to place a third party control to customize the toolbar
-                        dataInit: function (element) {
-                           $(element).datepicker({
-    			    			autoclose: true,
-    			    			format: 'yyyy-mm-dd',
-    			    			orientation : 'top',
-    			    			todayHighlight : true
-                            });
-                        }
-                    }
-                },
-                {label: 'Berlaku Sampai', name: 'VALID_TO', width: 120, editable: true,
-                    edittype:"text",
-                    editoptions: {
-                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-                        // use it to place a third party control to customize the toolbar
-                        dataInit: function (element) {
-                           $(element).datepicker({
-    			    			autoclose: true,
-    			    			format: 'yyyy-mm-dd',
-    			    			orientation : 'top',
-    			    			todayHighlight : true
-                            });
-                        }
-                    }
-                },
-                {label: 'Tgl Pembuatan', name: 'CREATION_DATE', width: 120, align: "left", editable: false},
-                {label: 'Dibuat Oleh', name: 'CREATED_BY', width: 120, align: "left", editable: false},
-                {label: 'Tgl Update', name: 'UPDATED_DATE', width: 120, align: "left", editable: false},
-                {label: 'Diupdate Oleh', name: 'UPDATED_BY', width: 120, align: "left", editable: false}
+                                    style : 'width:400px',
+                                    rows : 3
+                    },
+                    editrules: {edithidden: true, required:false}
+                },                
+                {label: 'Tgl Pembuatan', name: 'CREATION_DATE', width: 120, align: "left", hidden:true, editable: false},
+                {label: 'Dibuat Oleh', name: 'CREATED_BY', width: 120, align: "left", hidden:true, editable: false},
+                {label: 'Tgl Update', name: 'UPDATED_DATE', width: 120, align: "left", hidden:true, editable: false},
+                {label: 'Diupdate Oleh', name: 'UPDATED_BY', width: 120, align: "left", hidden:true, editable: false}
             ],
             height: '100%',
             autowidth: true,
@@ -176,6 +323,11 @@
             shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
+                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
+         
+                $('#tab_customer_order_id').val(celValue);
+                $('#tab_order_no').val(celCode);
                 
             },
             onSortCol: clearSelection,
@@ -195,8 +347,8 @@
             },
 
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo site_url('workflow_parameter/crud_procedure_role');?>',
-            caption: "Daftar Role Pekerjaan Workflow :: " + $("#tab_procedure_code").val()
+            editurl: '<?php echo site_url('tracking_progress/crud_progress_pks');?>',
+            caption: "Invoice"
         });
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
@@ -243,7 +395,6 @@
 
             {
                 // options for the Edit Dialog
-                viewPagerButtons: true,
                 closeAfterEdit: true,
                 closeOnEscape:true,
                 recreateForm: true,
@@ -255,11 +406,13 @@
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    
-                    /*$("#USER_NAME").prop("readonly", true);*/
+                    form.css({"height": 0.30*screen.height+"px"});
+                    form.css({"width": 0.50*screen.width+"px"});
+                                      
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
+                    $(".mce-widget").hide();
                 },
                 afterSubmit:function(response,postdata) {
                     var response = jQuery.parseJSON(response.responseText);
@@ -271,11 +424,6 @@
             },
             {
                 //new record form
-                editData: {
-                    P_PROCEDURE_ID: function() {
-                        return $("#tab_procedure_id").val();
-                    }
-                },
                 closeAfterAdd: false,
                 clearAfterAdd : true,
                 closeOnEscape:true,
@@ -284,18 +432,25 @@
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
                 },
+                viewPagerButtons: false,
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
+                    form.css({"height": 0.30*screen.height+"px"});
+                    form.css({"width": 0.50*screen.width+"px"});
+
+                    setTimeout( function() {    
+                        $('#form_pgl_id').val('');
+                        $('#form_pgl_name').val('');
+                    }, 100);
                     
-                    setTimeout( function() {
-                        $("#form_p_app_role_name").val("");
-                    },100); 
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
+                    $(".mce-widget").hide();
+
                 },
                 afterSubmit:function(response,postdata) {
                     var response = jQuery.parseJSON(response.responseText);
@@ -306,10 +461,9 @@
                     $(".topinfo").html('<div class="ui-state-success">' + response.message + '</div>'); 
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
-                    
-                    $("#form_p_app_role_id").val("");
-                    $("#form_p_app_role_name").val("");
-                    
+                    $('#form_pgl_id').val('');
+                    $('#form_pgl_name').val('');
+
                     return [true,"",response.responseText];
                 }
             },
@@ -365,8 +519,7 @@
         );
         
     }); /* end jquery onload */
-    
-    
+
     function clearSelection() {
 
         return null;

@@ -23,8 +23,10 @@ class Data_saprfc extends CI_Controller
         $l["ASHOST"] = '10.6.1.134';
         $l["SYSNR"] = '00';
         $l["CLIENT"] = '100';
-        $l["USER"] = '641459';
-        $l["PASSWD"] = 'Telkom2018';
+        $l["USER"] = 'USR_ARIESA';
+        // $l["USER"] = '641459';
+        $l["PASSWD"] = 'telkom#123';
+        // $l["PASSWD"] = 'Telkom2018';
         $l["MSHOST"] = null;
         $l["R3NAME"] = null;
         $l["GROUP"] = null;

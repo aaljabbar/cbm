@@ -324,4 +324,11 @@ class M_admin extends CI_Model
         return $q->result_array();
     }
 
+    public function getListRole()
+    {
+        $this->db->order_by("ROLE_NAME", "ASC");
+        $q = $this->db->get('APP_ROLE');
+        return $q->result_array();
+    }
+
 }
