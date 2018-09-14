@@ -31,6 +31,7 @@ $prv = getPrivilege($menu_id); ?>
                     </li>
                     <input type="hidden" id="tab_customer_order_id" value="">
                     <input type="hidden" id="tab_order_no" value="">
+                    <input type="hidden" id="tab_status" value="">
                 </ul>
             </div>
 
@@ -73,6 +74,7 @@ $prv = getPrivilege($menu_id); ?>
             var rowid = grid.jqGrid ('getGridParam', 'selrow');
             var p_map_pks_id = grid.jqGrid ('getCell', rowid, 'P_MAP_PKS_ID');
             var pgl_name = grid.jqGrid ('getCell', rowid, 'PGL_NAME');
+            var status = grid.jqGrid ('getCell', rowid, 'P_ORDER_STATUS_ID');
 
 
             if(p_map_pks_id == "" || p_map_pks_id == null) {
@@ -83,6 +85,7 @@ $prv = getPrivilege($menu_id); ?>
             loadContentWithParams("tracking_progress-pks_doc.php", {
                 p_map_pks_id: p_map_pks_id,
                 pgl_name: pgl_name,
+                status: status,
                 menu_id : <?php echo $menu_id; ?>
             });
         });
@@ -321,9 +324,19 @@ $prv = getPrivilege($menu_id); ?>
             onSelectRow: function (rowid) {
                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
                 var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
+                var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
+
+                if(!celValue){
+                    $('#edit_grid-table').show();
+                    $('#del_grid-table').show();
+                }else{
+                    $('#edit_grid-table').hide();
+                    $('#del_grid-table').hide();
+                }
          
                 $('#tab_customer_order_id').val(celValue);
                 $('#tab_order_no').val(celCode);
+                $('#tab_status').val(status);
                 
             },
             onSortCol: clearSelection,
@@ -344,7 +357,7 @@ $prv = getPrivilege($menu_id); ?>
 
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo site_url('tracking_progress/crud_progress_pks');?>',
-            caption: "Invoice"
+            caption: "Progress PKS"
         });
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',

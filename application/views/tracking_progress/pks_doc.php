@@ -27,6 +27,7 @@
     		            </ul>
                         <input type="hidden" id="p_map_pks_id" value="<?php echo $this->input->post('p_map_pks_id');?>">
     		            <input type="hidden" id="pgl_name" value="<?php echo $this->input->post('pgl_name');?>">
+                        <input type="hidden" id="status" value="<?php echo $this->input->post('status');?>">
     		        </div>
     		        
     		        <div class="tab-content no-border">
@@ -127,6 +128,16 @@
             },
             loadComplete: function () {
                 var table = this;
+                var status = $("#status").val();
+
+                if (status != 1) {
+                    $('#process_btn').hide();
+                    $('#del_grid-table').hide();
+                }else{
+                    $('#process_btn').show();
+                    $('#del_grid-table').show();
+                };
+                //$('#del_grid-table').hide();
                 setTimeout(function () {
                     updatePagerIcons(table);
                 }, 0);
