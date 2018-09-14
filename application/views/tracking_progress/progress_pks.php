@@ -182,7 +182,9 @@ $prv = getPrivilege($menu_id); ?>
                         if(!cellvalue){
                             return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
                         }else{
-                            if(status == 2){
+                            if(status == 1){
+                                return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
+                            }else if(status == 2){
                                 return '<label style="color:green; font-size: 11px;">IN-PROCESS</label>';
                             }else{
                                 return '<label style="color:red; font-size: 11px;">FINISH</label>';
