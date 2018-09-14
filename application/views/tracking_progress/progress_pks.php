@@ -93,49 +93,7 @@ $prv = getPrivilege($menu_id); ?>
     }
 
     function submitWF(){
-        var ajaxOptions = {
-            url: '<?php echo WS_JQGRID."transaksi.tblt_ccadepreadjust_controller/do_process"; ?>',
-            type: "POST",
-            dataType: "json",
-            data: { periodid_fk:periodid_fk },
-            success: function (data) {
-                if(data.success == true) {
-                    swal('Success',data.message,'success');
-                    loadForm(i_search, periodid_fk, status, data.records);
-                }else {
-                    swal('Attention',data.message,'warning');
-                }
-            },
-            error: function (xhr, status, error) {
-                swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
-            }
-        };
-
-        $.ajax({
-            beforeSend: function( xhr ) {
-                swal({
-                    title: "Konfirmasi",
-                    text: 'Apakah anda yakin ingin melakukan submit?',
-                    type: "info",
-                    showCancelButton: true,
-                    showLoaderOnConfirm: true,
-                    confirmButtonText: "Ya, Yakin",
-                    confirmButtonColor: "#e80c1c",
-                    cancelButtonText: "Tidak",
-                    closeOnConfirm: false,
-                    closeOnCancel: true,
-                    html: true
-                },
-                function(isConfirm){
-                    if(isConfirm) {
-                        $.ajax(ajaxOptions);
-                        return true;
-                    }else {
-                        return false;
-                    }
-                });
-            }
-        });
+       alert('test');
     }
     // function submitWF(T_CUSTOMER_ORDER_ID, ORDER_NO) {        
     //     result = confirm('Submit No. Order : ' + ORDER_NO);
