@@ -120,31 +120,9 @@ $prv = getPrivilege($menu_id); ?>
          function(isConfirm){
             if (isConfirm){
 
-                cekDetail(map_pks_id);
+                cekDetail(map_pks_id,custId, idoc_type, ireq_type);
                 // return false;
-                $.ajax({
-                    type: 'POST',
-                    datatype: "json",
-                    url: '<?php echo site_url('tracking_progress/submitWF');?>',
-                    data: { 
-                            DOC_TYPE : idoc_type,
-                            REQ_TYPE : ireq_type,
-                            T_CUSTOMER_ORDER_ID :custId,
-                            P_MAP_PKS_ID :map_pks_id
-                    },
-                    timeout: 10000,
-                    success: function(data) {
-                        var response = JSON.parse(data);
-                        if(response.success) {
-                            jQuery('#grid-table').trigger("reloadGrid");
-                            $('#edit_grid-table').show();
-                            $('#del_grid-table').show();
-                            swal("Submitted!", "Data berhasil disubmit !", "success");
-                        }else {
-                            swal("", data.message, "warning");
-                        }
-                    }
-                });
+                
                 // swal("Submitted!", "Data berhasil disubmit !", "success");
 
             } else {
@@ -636,7 +614,7 @@ $prv = getPrivilege($menu_id); ?>
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
     }
 
-    function cekDetail(p_map_pks_id){
+    function cekDetail(p_map_pks_id,custId, idoc_type, ireq_type){
         $.ajax({
             type: 'POST',
             dataType: "json",
@@ -647,7 +625,31 @@ $prv = getPrivilege($menu_id); ?>
             success: function(data) {
                 if (!data.success) {
                     swal("Informasi",data.message,"info");
-                    return false;
+                   // return false;
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        datatype: "json",
+                        url: '<?php echo site_url('tracking_progress/submitWF');?>',
+                        data: { 
+                                DOC_TYPE : idoc_type,
+                                REQ_TYPE : ireq_type,
+                                T_CUSTOMER_ORDER_ID :custId,
+                                P_MAP_PKS_ID :p_map_pks_id
+                        },
+                        timeout: 10000,
+                        success: function(data) {
+                            var response = JSON.parse(data);
+                            if(response.success) {
+                                jQuery('#grid-table').trigger("reloadGrid");
+                                $('#edit_grid-table').show();
+                                $('#del_grid-table').show();
+                                swal("Submitted!", "Data berhasil disubmit !", "success");
+                            }else {
+                                swal("", data.message, "warning");
+                            }
+                        }
+                    });
                 };
             }
         });
