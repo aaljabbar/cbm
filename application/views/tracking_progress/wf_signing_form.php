@@ -154,10 +154,18 @@
                                 <table id="grid-log" class="table table-striped table-bordered table-hover">
                                     <thead>
                                       <tr>
-                                            <th data-column-id="T_CUSTOMER_ORDER_ID" data-visible="false">ID</th>
-                                            <th data-column-id="LOG_DATE" data-width="100" data-header-align="center" data-align="center">Tanggal</th>
-                                            <th data-column-id="LOG_HOUR" data-width="100" data-header-align="center" data-align="center">Jam</th>
-                                            <th data-column-id="ACTIVITY">Aktifitas</th>                                            
+                                            <th data-column-id="SIGNING_STEP_ID" data-visible="false">SIGNING STEP ID</th>
+                                            <!--<th data-column-id="REF_LIST_ID" data-visible="false">ID</th>
+                                            <th data-column-id="SIGN_DOC_TYPE" data-visible="false">ID</th>
+                                            <th data-column-id="EXTERNAL_ID" data-visible="false">ID</th>
+                                            <th data-column-id="P_REFERENCE_TYPE_ID" data-visible="false">ID</th>
+                                            <th data-column-id="P_REFERENCE_LIST_ID" data-visible="false">ID</th>
+                                            <th data-column-id="DOC_TYPE_ID" data-visible="false">ID</th>-->
+                                            <th data-column-id="START_DATE" data-width="100" data-header-align="center" data-align="center">Start Date</th>
+                                            <th data-column-id="FINISH_DATE" data-width="100" data-header-align="center" data-align="center">Finish Date</th>
+                                            <th data-column-id="DUE_DATE_NUM" data-width="100" data-header-align="center" data-align="center">Due Date</th>
+                                            <th data-column-id="STATUS">Aktifitas</th>              
+                                            <th data-column-id="REFERENCE_NAME">Aktifitas</th>                                   
                                       </tr>
                                     </thead>
                                 </table>
@@ -292,6 +300,24 @@
                 
             }
         });
+
+                /*$("#grid-log").bootgrid({
+                    ajax: true,
+                    post: function ()
+                    {
+                        return {
+                            "p_map_pks_id": $("#p_map_pks_id").val
+                        };
+                    },
+                    url: "<?php echo site_url('tracking_progress/getSigningPKS');?>",
+                    navigation:0,
+                    formatters: {
+                        "action": function(column, row)
+                        {
+                        }
+
+                    }
+                });*/
 
         /*menyimpan data customer order */
         $("#btn-approval").on('click', (function (e) {

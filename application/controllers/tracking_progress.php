@@ -431,4 +431,34 @@ class Tracking_progress extends CI_Controller
         exit;
     }
 
+    public function getSigningPKS(){
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $result = array();
+        $sql = $this->db->query("SELECT *
+                                  FROM VW_PKS_SIGNING_STEP                
+                                 WHERE SIGN_DOC_TYPE = 1 AND EXTERNAL_ID = ".$this->input->post('p_map_pks_id')." ");
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        
+
+        if ($page == 0) {
+            $hasil['current'] = 1;
+        } else {
+            $hasil['current'] = $page;
+        }
+
+        $hasil['total'] = count($result);
+        $hasil['rowCount'] = $limit;
+        $hasil['success'] = true;
+        $hasil['message'] = 'Berhasil';
+        $hasil['rows'] = $result;
+
+        echo(json_encode($hasil));
+        exit;
+    }
+
 }
