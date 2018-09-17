@@ -414,17 +414,17 @@ class Tracking_progress extends CI_Controller
 
             if($qs->num_rows() > 0){
                 $data['success'] = true;
-                $data['msg'] = 'Data detail ditemukan';
+                $data['message'] = 'Data detail ditemukan';
             }else{
                 $data['success'] = false;
-            $data['msg'] = 'Data detail tidak ditemukan';
+            $data['message'] = 'Data detail tidak ditemukan';
             }
 
             
 
         }else{
             $data['success'] = false;
-            $data['msg'] = 'Data detail untuk p_map_pks_id tidak ditemukan';
+            $data['message'] = 'Data detail untuk p_map_pks_id tidak ditemukan';
         }
 
         echo json_encode($data);

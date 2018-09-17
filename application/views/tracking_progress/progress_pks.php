@@ -119,6 +119,8 @@ $prv = getPrivilege($menu_id); ?>
          },
          function(isConfirm){
             if (isConfirm){
+                cekDetail(map_pks_id);
+                return false;
                 $.ajax({
                     type: 'POST',
                     datatype: "json",
@@ -631,6 +633,23 @@ $prv = getPrivilege($menu_id); ?>
         var parent_column = $(grid_selector).closest('[class*="col-"]');
         $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
+    }
+
+    function cekDetail(p_map_pks_id){
+        $.ajax({
+            type: 'POST',
+            datatype: "json",
+            url: '<?php echo site_url('tracking_progress/cekDetailPKS');?>',
+            data: { p_map_pks_id : p_map_pks_id
+            },
+            timeout: 10000,
+            success: function(data) {
+                //console.log(data.message);
+                if (!data.success) {
+                    swal("Informasi","Dokumen Pendukung tidak ditemukan","info");
+                };
+            }
+        });
     }
     
 </script>
