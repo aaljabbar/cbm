@@ -107,8 +107,8 @@ $prv = getPrivilege($menu_id); ?>
         var ireq_type = 2; //WF PEMBUATAN KONTRAK
         //var user_name = rowObject['T_CUSTOMER_ORDER_ID'];
         swal({
-            title: "",
-            text: "Apakah Anda yakin melakukan submit untuk pekerjaan ini ?",
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin akan melakukan submit?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -119,8 +119,9 @@ $prv = getPrivilege($menu_id); ?>
          },
          function(isConfirm){
             if (isConfirm){
+
                 cekDetail(map_pks_id);
-                return false;
+                // return false;
                 $.ajax({
                     type: 'POST',
                     datatype: "json",
@@ -638,15 +639,15 @@ $prv = getPrivilege($menu_id); ?>
     function cekDetail(p_map_pks_id){
         $.ajax({
             type: 'POST',
-            datatype: "json",
+            dataType: "json",
             url: '<?php echo site_url('tracking_progress/cekDetailPKS');?>',
             data: { p_map_pks_id : p_map_pks_id
             },
             timeout: 10000,
             success: function(data) {
-                //console.log(data.message);
                 if (!data.success) {
-                    swal("Informasi","Dokumen Pendukung tidak ditemukan","info");
+                    swal("Informasi",data.message,"info");
+                    return false;
                 };
             }
         });
