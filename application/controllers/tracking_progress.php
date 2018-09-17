@@ -461,4 +461,35 @@ class Tracking_progress extends CI_Controller
         exit;
     }
 
+    public function cekStatus(){
+        $p_map_pks_id = $this->input->post('p_map_pks_id', 0);
+
+        if($p_map_pks_id > 0){
+            $sql = "SELECT COUNT (*)
+                      FROM SIGNING_STEP
+                     WHERE SIGN_DOC_TYPE = 1 
+                     AND EXTERNAL_ID = ".$p_map_pks_id."
+                     AND STATUS <> 'WAIT' OR STATUS <> 'OPEN'";
+
+            $qs = $this->jqGrid->db->query($sql);
+
+            if($qs->num_rows() == 0){
+                $data['success'] = true;
+                $data['message'] = '';
+            }else{
+                $data['success'] = false;
+                $data['message'] = 'Tidak bisa submit ! Status belum Finish !';
+            }
+
+            
+
+        }else{
+            $data['success'] = false;
+            $data['message'] = 'Tidak bisa submit ! p_map_pks_id tidak ditemukan';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
 }

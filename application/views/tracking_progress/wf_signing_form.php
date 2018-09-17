@@ -248,11 +248,17 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+            cekStatus($('#p_map_pks_id').val(), params_submit, params_back_summary);
+
+            /*if(cekStatus($('#p_map_pks_id').val())){
+                if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
                 modal_lov_submitter_show(params_submit, params_back_summary); 
-            } else {
-                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
-            }
+                } else {
+                    loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
+                }
+            }*/
+
+            
         });  
 
         /*ketika link 'workflow summary' diklik, maka kembali ke summary */
@@ -304,6 +310,30 @@
                 loadgrid(items.P_MAP_PKS_ID);
             }
         });
+
+        function cekStatus(p_map_pks_id, params_submit, params_back_summary){
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                url: '<?php echo site_url('tracking_progress/cekStatus');?>',
+                data: { p_map_pks_id : p_map_pks_id
+                },
+                timeout: 10000,
+                success: function(data) {
+                    if (!data.success) {
+                        swal("Informasi",data.message,"info");
+                        //return data.success;
+                    }else{
+                        if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+                            modal_lov_submitter_show(params_submit, params_back_summary); 
+                        } else {
+                            loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
+                        }
+                    };
+                    // return data.success;
+                }
+            });
+        }
 
         function loadgrid(p_map_pks_id){
             $("#grid-signing").bootgrid({
