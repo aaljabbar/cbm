@@ -145,27 +145,23 @@
                             </div>
 
                             <div class="step-pane" data-step="2">
-                                <div style="padding-bottom: 10px">
-                                    <a id="add_log" class="btn btn-white btn-sm btn-round">
+                                <div class="col-sm-12">
+                                    <center><h3>Table Status Signing</h3></center>
+                                    <!-- <a id="add_log" class="btn btn-white btn-sm btn-round">
                                         <i class="ace-icon fa fa-plus green"></i>
                                         Add
-                                    </a>
+                                    </a> -->
                                 </div>
-                                <table id="grid-log" class="table table-striped table-bordered table-hover">
+                                <table id="grid-signing" class="table table-striped table-bordered table-hover">
                                     <thead>
                                       <tr>
-                                            <th data-column-id="SIGNING_STEP_ID" data-visible="false">SIGNING STEP ID</th>
-                                            <!--<th data-column-id="REF_LIST_ID" data-visible="false">ID</th>
-                                            <th data-column-id="SIGN_DOC_TYPE" data-visible="false">ID</th>
-                                            <th data-column-id="EXTERNAL_ID" data-visible="false">ID</th>
-                                            <th data-column-id="P_REFERENCE_TYPE_ID" data-visible="false">ID</th>
-                                            <th data-column-id="P_REFERENCE_LIST_ID" data-visible="false">ID</th>
-                                            <th data-column-id="DOC_TYPE_ID" data-visible="false">ID</th>-->
+                                            <th data-column-id="SIGNING_STEP_ID" data-visible="false">ID</th>
+                                            <th data-column-id="REFERENCE_NAME">Signing Step</th> 
                                             <th data-column-id="START_DATE" data-width="100" data-header-align="center" data-align="center">Start Date</th>
                                             <th data-column-id="FINISH_DATE" data-width="100" data-header-align="center" data-align="center">Finish Date</th>
                                             <th data-column-id="DUE_DATE_NUM" data-width="100" data-header-align="center" data-align="center">Due Date</th>
-                                            <th data-column-id="STATUS">Aktifitas</th>              
-                                            <th data-column-id="REFERENCE_NAME">Aktifitas</th>                                   
+                                            <th data-column-id="STATUS" data-width="100" data-header-align="center" >Status</th>              
+                                                                              
                                       </tr>
                                     </thead>
                                 </table>
@@ -298,26 +294,23 @@
                 $("#approval_telkom").val( items.VER_DATE_TLK );
                 $("#approval_mitra").val( items.VER_DATE_MITRA );
                 
+                loadgrid(items.P_MAP_PKS_ID);
             }
         });
 
-                /*$("#grid-log").bootgrid({
-                    ajax: true,
-                    post: function ()
-                    {
-                        return {
-                            "p_map_pks_id": $("#p_map_pks_id").val
-                        };
-                    },
-                    url: "<?php echo site_url('tracking_progress/getSigningPKS');?>",
-                    navigation:0,
-                    formatters: {
-                        "action": function(column, row)
-                        {
-                        }
-
-                    }
-                });*/
+        function loadgrid(p_map_pks_id){
+            $("#grid-signing").bootgrid({
+                ajax: true,
+                post: function ()
+                {
+                    return {
+                        "p_map_pks_id": p_map_pks_id
+                    };
+                },
+                url: "<?php echo site_url('tracking_progress/getSigningPKS');?>",
+                navigation:0
+            });
+        }
 
         /*menyimpan data customer order */
         $("#btn-approval").on('click', (function (e) {
