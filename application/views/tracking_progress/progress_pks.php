@@ -130,6 +130,8 @@ $prv = getPrivilege($menu_id); ?>
                         var response = JSON.parse(data);
                         if(response.success) {
                             jQuery('#grid-table').trigger("reloadGrid");
+                            $('#edit_grid-table').show();
+                            $('#del_grid-table').show();
                             swal("Submitted!", "Data berhasil disubmit !", "success");
                         }else {
                             swal("", data.message, "warning");
@@ -186,7 +188,7 @@ $prv = getPrivilege($menu_id); ?>
                             return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
                         }else{
                             if(status == 1){
-                                return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
+                                return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>>';
                             }else if(status == 2){
                                 return '<label style="color:green; font-size: 11px;">IN-PROCESS</label>';
                             }else{
@@ -325,13 +327,24 @@ $prv = getPrivilege($menu_id); ?>
                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
                 var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
                 var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
+                //var custId = $('#cust_id');
 
+                      //alert(custId);
+                if(status == ""){
+                    status = 1;
+                }
                 if(!celValue){
                     $('#edit_grid-table').show();
                     $('#del_grid-table').show();
                 }else{
-                    $('#edit_grid-table').hide();
-                    $('#del_grid-table').hide();
+                    if (status == 1){
+                        $('#edit_grid-table').show();
+                        $('#del_grid-table').show();
+                    }else{
+                        $('#edit_grid-table').hide();
+                        $('#del_grid-table').hide();
+                    }
+                    
                 }
          
                 $('#tab_customer_order_id').val(celValue);
