@@ -410,13 +410,21 @@ class Tracking_progress extends CI_Controller
             $sql = "SELECT * FROM pks_doc
                     WHERE P_MAP_PKS_ID = ".$p_map_pks_id;
 
-            $this->jqGrid->db->query($sql);
+            $qs = $this->jqGrid->db->query($sql);
 
-            $data['success'] = true;
-            $data['msg'] = 'Data detail ditemukan';
+            if($qs->num_rows() > 0){
+                $data['success'] = true;
+                $data['msg'] = 'Data detail ditemukan';
+            }else{
+                $data['success'] = false;
+            $data['msg'] = 'Data detail tidak ditemukan';
+            }
+
+            
+
         }else{
             $data['success'] = false;
-            $data['msg'] = 'Data detail tidak ditemukan';
+            $data['msg'] = 'Data detail untuk p_map_pks_id tidak ditemukan';
         }
 
         echo json_encode($data);
