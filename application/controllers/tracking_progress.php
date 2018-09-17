@@ -54,7 +54,7 @@ class Tracking_progress extends CI_Controller
 
         // Filter Table *
         $req_param['where'] = array();
-        
+
         if($t_customer_order_id != 0){
             // Filter Table *
              $req_param['where'] = array('t_customer_order_id = '.$t_customer_order_id);
@@ -397,6 +397,26 @@ class Tracking_progress extends CI_Controller
         }else{
             $data['success'] = true;
             $data['msg'] = 'Data gagal diverifikasi';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function cekDetailPKS(){
+        $p_map_pks_id = $this->input->post('p_map_pks_id', 0);
+
+        if($p_map_pks_id > 0){
+            $sql = "SELECT * FROM pks_doc
+                    WHERE P_MAP_PKS_ID = ".$p_map_pks_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Data detail ditemukan';
+        }else{
+            $data['success'] = false;
+            $data['msg'] = 'Data detail tidak ditemukan';
         }
 
         echo json_encode($data);
