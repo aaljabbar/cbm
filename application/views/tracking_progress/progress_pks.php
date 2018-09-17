@@ -76,6 +76,10 @@ $prv = getPrivilege($menu_id); ?>
             var pgl_name = grid.jqGrid ('getCell', rowid, 'PGL_NAME');
             var status = grid.jqGrid ('getCell', rowid, 'P_ORDER_STATUS_ID');
 
+            if (status == "") {
+                status = 1;
+            };
+
 
             if(p_map_pks_id == "" || p_map_pks_id == null) {
                 swal("Informasi", "Silahkan Pilih Salah Satu Baris Data", "info");
@@ -346,6 +350,7 @@ $prv = getPrivilege($menu_id); ?>
                     }
                     
                 }
+                //alert(status);
          
                 $('#tab_customer_order_id').val(celValue);
                 $('#tab_order_no').val(celCode);

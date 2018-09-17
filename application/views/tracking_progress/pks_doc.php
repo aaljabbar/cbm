@@ -130,12 +130,12 @@
                 var table = this;
                 var status = $("#status").val();
 
-                if (status != 1) {
-                    $('#process_btn').hide();
-                    $('#del_grid-table').hide();
-                }else{
-                    $('#process_btn').show();
+                if (status == 1){
+                    $('#edit_grid-table').show();
                     $('#del_grid-table').show();
+                }else{
+                    $('#edit_grid-table').hide();
+                    $('#del_grid-table').hide();
                 };
                 //$('#del_grid-table').hide();
                 setTimeout(function () {
