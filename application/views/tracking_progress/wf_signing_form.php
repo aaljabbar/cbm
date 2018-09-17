@@ -156,11 +156,18 @@
                                     <thead>
                                       <tr>
                                             <th data-column-id="SIGNING_STEP_ID" data-visible="false">ID</th>
+                                            <th data-column-id="REF_LIST_ID" data-visible="false">ID</th>
+                                            <th data-column-id="SIGN_DOC_TYPE" data-visible="false">ID</th>
+                                            <th data-column-id="EXTERNAL_ID" data-visible="false">ID</th>
+                                            <th data-column-id="P_REFERENCE_TYPE_ID" data-visible="false">ID</th>
+                                            <th data-column-id="P_REFERENCE_LIST_ID" data-visible="false">ID</th>
+                                            <th data-column-id="DOC_TYPE_ID" data-visible="false">ID</th>
                                             <th data-column-id="REFERENCE_NAME">Signing Step</th> 
                                             <th data-column-id="START_DATE" data-width="100" data-header-align="center" data-align="center">Start Date</th>
                                             <th data-column-id="FINISH_DATE" data-width="100" data-header-align="center" data-align="center">Finish Date</th>
                                             <th data-column-id="DUE_DATE_NUM" data-width="100" data-header-align="center" data-align="center">Due Date</th>
-                                            <th data-column-id="STATUS" data-width="100" data-header-align="center" >Status</th>              
+                                            <th data-column-id="STATUS" data-width="100" data-header-align="center" >Status</th>  
+                                            <th data-column-id="action" data-formatter="action" data-width="100" data-header-align="center" data-align="center">#</th>               
                                                                               
                                       </tr>
                                     </thead>
@@ -308,7 +315,15 @@
                     };
                 },
                 url: "<?php echo site_url('tracking_progress/getSigningPKS');?>",
-                navigation:0
+                navigation:0,
+                formatters: {
+                    "action": function(column, row)
+                    {
+                        var SIGNING_STEP_ID = row.SIGNING_STEP_ID;
+                        return '<button type="button" class="btn btn-xs btn-primary" onclick="update('+SIGNING_STEP_ID+')"> Update </button>';
+                    }
+
+                }
             });
         }
 
