@@ -33,6 +33,8 @@ class Tracking_progress extends CI_Controller
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
 
+        $t_customer_order_id = $this->input->post('t_customer_order_id', 0);
+        // echo($t_customer_order_id);
         $table = "SELECT * FROM V_MAP_PKS";
 
         $req_param = array(
@@ -52,6 +54,13 @@ class Tracking_progress extends CI_Controller
 
         // Filter Table *
         $req_param['where'] = array();
+        
+        if($t_customer_order_id != 0){
+            // Filter Table *
+             $req_param['where'] = array('t_customer_order_id = '.$t_customer_order_id);
+        }
+
+        // $req_param['where'] = array();
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
         // print_r($row);exit;
@@ -290,5 +299,108 @@ class Tracking_progress extends CI_Controller
 
     }
 
+    public function getDetailPKS(){
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $result = array();
+        $sql = $this->db->query("SELECT * FROM v_pks_doc WHERE T_CUSTOMER_ORDER_ID = ".$this->input->post('t_customer_order_id')." ");
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        
+
+        if ($page == 0) {
+            $hasil['current'] = 1;
+        } else {
+            $hasil['current'] = $page;
+        }
+
+        $hasil['total'] = count($result);
+        $hasil['rowCount'] = $limit;
+        $hasil['success'] = true;
+        $hasil['message'] = 'Berhasil';
+        $hasil['rows'] = $result;
+
+        echo(json_encode($hasil));
+        exit;
+    }
+
+    function download()
+    {
+        $path = $this->input->get('location',''); //getVarClean('location', 'str', '');
+        
+        $name = $this->input->get('file_name',''); //getVarClean('file_name', 'str', '');
+
+      // make sure it's a file before doing anything!
+        if(is_file($path))
+        {
+        // required for IE
+            if(ini_get('zlib.output_compression')) { ini_set('zlib.output_compression', 'Off'); }
+
+            // get the file mime type using the file extension
+            $ci = & get_instance();
+            $ci->load->helper('file');
+
+            $mime = get_mime_by_extension($path);
+
+            // Build the headers to push out the file properly.
+            header('Pragma: public');     // required
+            header('Expires: 0');         // no cache
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Last-Modified: '.gmdate ('D, d M Y H:i:s', filemtime ($path)).' GMT');
+            header('Cache-Control: private',false);
+            header('Content-Type: '.$mime);  // Add the mime type from Code igniter.
+            header('Content-Disposition: attachment; filename="'.basename($name).'"');  // Add the file name
+            header('Content-Transfer-Encoding: binary');
+            header('Content-Length: '.filesize($path)); // provide file size
+            header('Connection: close');
+            readfile($path); // push it out
+            exit();
+        }   
+    }
+
+    public function update_ver_telkom() {
+        $p_map_pks_id = $this->input->post('p_map_pks_id', 0);
+
+        if($p_map_pks_id > 0){
+            $sql = "UPDATE p_map_pks SET
+                    VER_DATE_TLK = sysdate
+                    WHERE P_MAP_PKS_ID = ".$p_map_pks_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Data berhasil diverifikasi';
+        }else{
+            $data['success'] = true;
+            $data['msg'] = 'Data gagal diverifikasi';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function update_ver_mitra() {
+        $p_map_pks_id = $this->input->post('p_map_pks_id', 0);
+
+        if($p_map_pks_id > 0){
+            $sql = "UPDATE p_map_pks SET
+                    VER_DATE_MITRA = sysdate
+                    WHERE P_MAP_PKS_ID = ".$p_map_pks_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Data berhasil diverifikasi';
+        }else{
+            $data['success'] = true;
+            $data['msg'] = 'Data gagal diverifikasi';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
 
 }
