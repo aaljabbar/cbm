@@ -166,7 +166,7 @@
                                             <th data-column-id="START_DATE" data-width="150" data-header-align="center" data-align="center">Start Date</th>
                                             <th data-column-id="FINISH_DATE" data-width="150" data-header-align="center" data-align="center">Finish Date</th>
                                             <th data-column-id="DUE_DATE_NUM" data-width="100" data-header-align="center" data-align="center">Due Date</th>
-                                            <th data-column-id="STATUS" data-width="100" data-header-align="center" >Status</th>  
+                                            <th data-column-id="STATUS" data-width="100" data-header-align="center" data-align="center">Status</th>  
                                             <th data-column-id="action" data-formatter="action" data-width="160" data-header-align="center" data-align="center">Action</th>               
                                                                               
                                       </tr>

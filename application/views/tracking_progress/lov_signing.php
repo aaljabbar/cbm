@@ -48,7 +48,18 @@
                                 </div>
                                 <div class="col-xs-9">
                                     <!-- #section:custom/file-input -->
-                                    <input type="text" id="START_DATE" name="START_DATE" class="required" />
+                                    <input type="text" id="START_DATE" name="START_DATE" style="background-color: #FBEC88;" />
+                                </div>
+                            </div>
+
+                            &nbsp;
+                            <div class="form-group">
+                                <div class="col-xs-3">
+                                    <label>Due Date</label>
+                                </div>
+                                <div class="col-xs-9">
+                                    <!-- #section:custom/file-input -->
+                                    <input type="text" id="DUE_DATE" name="DUE_DATE" style="background-color: #FBEC88;" />
                                 </div>
                             </div>
 
