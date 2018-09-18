@@ -326,6 +326,7 @@
                         swal({html: true, title: "Informasi", text: data.message, type: "info"});
                         //return data.success;
                     }else{
+                        // alert('masuk');
                         if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
                             modal_lov_submitter_show(params_submit, params_back_summary); 
                         } else {

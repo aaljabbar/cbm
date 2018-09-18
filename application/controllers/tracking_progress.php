@@ -465,11 +465,13 @@ class Tracking_progress extends CI_Controller
         $p_map_pks_id = $this->input->post('p_map_pks_id', 0);
 
         if($p_map_pks_id > 0){
-            $sql = "SELECT COUNT (*)
+
+            $sql = "SELECT 1
                       FROM SIGNING_STEP
                      WHERE SIGN_DOC_TYPE = 1 
                      AND EXTERNAL_ID = ".$p_map_pks_id."
-                     AND STATUS <> 'WAIT' OR STATUS <> 'OPEN'";
+                     AND STATUS = 'WAIT' OR STATUS = 'OPEN'";
+                     
 
             $qs = $this->jqGrid->db->query($sql);
 
