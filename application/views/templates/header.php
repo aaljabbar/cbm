@@ -27,6 +27,7 @@
     <!-- text fonts -->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/ace-fonts.css" />
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/spinners.css" />
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datetimepicker.min.css" />
 
     <!-- ace styles -->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />

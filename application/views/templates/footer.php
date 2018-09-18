@@ -177,6 +177,7 @@
 <script src="<?php echo base_url(); ?>assets/js/ace/ace.searchbox-autocomplete.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/spin.js"></script>
 
+<script src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
 
 <!--Data table-->
 <script src="<?php echo base_url(); ?>assets/js/dataTables/jquery.dataTables.js"></script>
@@ -213,6 +214,7 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/bootdialog/bootstrap-dialog.min.css"/>
 <script src="<?php echo base_url(); ?>assets/bootdialog/bootstrap-dialog.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.simplePagination.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 <script>
     function showBootDialog(bootclosable, boottype, boottitle, bootmessage) {
         BootstrapDialog.show({

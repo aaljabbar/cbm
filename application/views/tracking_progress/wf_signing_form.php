@@ -163,11 +163,11 @@
                                             <th data-column-id="P_REFERENCE_LIST_ID" data-visible="false">ID</th>
                                             <th data-column-id="DOC_TYPE_ID" data-visible="false">ID</th>
                                             <th data-column-id="REFERENCE_NAME">Signing Step</th> 
-                                            <th data-column-id="START_DATE" data-width="100" data-header-align="center" data-align="center">Start Date</th>
-                                            <th data-column-id="FINISH_DATE" data-width="100" data-header-align="center" data-align="center">Finish Date</th>
+                                            <th data-column-id="START_DATE" data-width="150" data-header-align="center" data-align="center">Start Date</th>
+                                            <th data-column-id="FINISH_DATE" data-width="150" data-header-align="center" data-align="center">Finish Date</th>
                                             <th data-column-id="DUE_DATE_NUM" data-width="100" data-header-align="center" data-align="center">Due Date</th>
                                             <th data-column-id="STATUS" data-width="100" data-header-align="center" >Status</th>  
-                                            <th data-column-id="action" data-formatter="action" data-width="100" data-header-align="center" data-align="center">#</th>               
+                                            <th data-column-id="action" data-formatter="action" data-width="160" data-header-align="center" data-align="center">Action</th>               
                                                                               
                                       </tr>
                                     </thead>
@@ -203,6 +203,7 @@
 
 <?php 
     $this->load->view('wf/lov_submitter.php'); 
+    $this->load->view('tracking_progress/lov_signing.php'); 
 ?>
 
 <script src="<?php echo base_url(); ?>assets/js/fuelux/fuelux.wizard.js"></script>
@@ -321,7 +322,8 @@
                 timeout: 10000,
                 success: function(data) {
                     if (!data.success) {
-                        swal("Informasi",data.message,"info");
+                        // swal("Informasi",data.message,"info");
+                        swal({html: true, title: "Informasi", text: data.message, type: "info"});
                         //return data.success;
                     }else{
                         if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
@@ -350,7 +352,19 @@
                     "action": function(column, row)
                     {
                         var SIGNING_STEP_ID = row.SIGNING_STEP_ID;
-                        return '<button type="button" class="btn btn-xs btn-primary" onclick="update('+SIGNING_STEP_ID+')"> Update </button>';
+                        var STATUS = row.STATUS;
+                        var REFERENCE_NAME = row.REFERENCE_NAME;
+                        var START_DATE = row.START_DATE;
+                        var FINISH_DATE = row.FINISH_DATE;
+                        var REF_LIST_ID = row.REF_LIST_ID;
+                        var SIGN_DOC_TYPE = row.SIGN_DOC_TYPE;
+                        var EXTERNAL_ID = row.EXTERNAL_ID;
+
+                        if(STATUS == 'OPEN'){
+                            return '<button type="button" class="btn btn-xs btn-primary" onclick="updateSign(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\')"> Update </button> <button type="button" class="btn btn-xs btn-danger" onclick="updateCancel(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\')"> Cancel </button>';
+                        }else if (STATUS == 'CLOSE'){
+                            return '';
+                        }
                     }
 
                 }
@@ -413,5 +427,33 @@
         url += "&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>";
         window.location = url;
         // window.location = url;
+    }
+
+
+    function updateSign(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID){
+        // alert(EXTERNAL_ID);
+        modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID);
+    }
+
+    function updateCancel(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID){
+        $.ajax({
+                type: 'POST',
+                dataType: "json",
+                url: '<?php echo site_url('tracking_progress/cancelStatus');?>',
+                data: { 
+                    SIGNING_STEP_ID : SIGNING_STEP_ID,
+                    REFERENCE_NAME : REFERENCE_NAME,
+                    STATUS : STATUS,
+                    START_DATE : START_DATE,
+                    FINISH_DATE : FINISH_DATE,
+                    REF_LIST_ID : REF_LIST_ID,
+                    SIGN_DOC_TYPE : SIGN_DOC_TYPE,
+                    EXTERNAL_ID : EXTERNAL_ID
+                },
+                timeout: 10000,
+                success: function(data) {                    
+                    $('#grid-signing').bootgrid('reload');
+                }
+            });
     }
 </script>

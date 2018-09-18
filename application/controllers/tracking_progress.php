@@ -478,18 +478,129 @@ class Tracking_progress extends CI_Controller
                 $data['message'] = '';
             }else{
                 $data['success'] = false;
-                $data['message'] = 'Tidak bisa submit ! Status belum Finish !';
+                $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> Status Signing Step belum selesai';
             }
 
             
 
         }else{
             $data['success'] = false;
-            $data['message'] = 'Tidak bisa submit ! p_map_pks_id tidak ditemukan';
+            $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> Status Signing Step belum selesai';
         }
 
         echo json_encode($data);
         exit;
+    }
+
+    public function update_signing(){
+        $FINISH_DATE = $this->input->post('FINISH_DATE');
+        $START_DATE = $this->input->post('START_DATE');
+        $SIGNING_STEP_ID = $this->input->post('SIGNING_STEP_ID');
+        if(empty($FINISH_DATE)){
+            $val_finish_date = "null";
+        }else{
+            $val_finish_date = "to_date('".$FINISH_DATE."','DD/MM/YYYY HH24:MI:SS')";
+        }
+
+        if(empty($START_DATE)){
+            $val_start_date = "null";
+        }else{
+            $val_start_date = "to_date('".$START_DATE."','DD/MM/YYYY HH24:MI:SS')";
+        }
+
+        try {
+        
+            $sql = "UPDATE SIGNING_STEP SET
+                    START_DATE = ".$val_start_date.",
+                    FINISH_DATE = ".$val_finish_date."
+                    WHERE SIGNING_STEP_ID = ".$SIGNING_STEP_ID;
+
+            $this->db->query($sql);
+
+            if(!empty($FINISH_DATE)){
+                $type = 1; //next
+                $doc_type = (integer)$this->input->post('SIGN_DOC_TYPE');
+                $external_id = (integer)$this->input->post('EXTERNAL_ID');
+                $ref_list_id = (integer)$this->input->post('REF_LIST_ID');
+
+                // echo $doc_type." - ".$external_id." - ".$ref_list_id;
+
+                $sqlfin = "BEGIN "
+                        . " prc_update_status_sign_pks("
+                        . " :i_doc_type, "
+                        . " :i_external_id,"
+                        . " :i_ref_list_id,"
+                        . " :i_type"
+                        . "); END;";
+
+
+                $stmt = oci_parse($this->db->conn_id, $sqlfin);
+
+                //  Bind the input parameter
+                oci_bind_by_name($stmt, ':i_doc_type', $doc_type);
+                oci_bind_by_name($stmt, ':i_external_id', $external_id);
+                oci_bind_by_name($stmt, ':i_ref_list_id', $ref_list_id);
+                oci_bind_by_name($stmt, ':i_type', $type);
+
+
+
+                ociexecute($stmt);
+            }
+
+            $result['success'] = true;
+            $result['message'] = "Data Berhasil Diupdate";
+
+        } catch (Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
+    }
+
+    function cancelStatus(){
+        $FINISH_DATE = $this->input->post('FINISH_DATE');
+        try {
+        
+            if(!empty($FINISH_DATE)){
+                $type = 2; //cancel
+                $doc_type = (integer)$this->input->post('SIGN_DOC_TYPE');
+                $external_id = (integer)$this->input->post('EXTERNAL_ID');
+                $ref_list_id = (integer)$this->input->post('REF_LIST_ID');
+
+                // echo $doc_type." - ".$external_id." - ".$ref_list_id;
+
+                $sqlfin = "BEGIN "
+                        . " prc_update_status_sign_pks("
+                        . " :i_doc_type, "
+                        . " :i_external_id,"
+                        . " :i_ref_list_id,"
+                        . " :i_type"
+                        . "); END;";
+
+
+                $stmt = oci_parse($this->db->conn_id, $sqlfin);
+
+                //  Bind the input parameter
+                oci_bind_by_name($stmt, ':i_doc_type', $doc_type);
+                oci_bind_by_name($stmt, ':i_external_id', $external_id);
+                oci_bind_by_name($stmt, ':i_ref_list_id', $ref_list_id);
+                oci_bind_by_name($stmt, ':i_type', $type);
+
+
+
+                ociexecute($stmt);
+            }
+
+            $result['success'] = true;
+            $result['message'] = "Data Berhasil Dicancel";
+
+        } catch (Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
     }
 
 }
