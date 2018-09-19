@@ -607,4 +607,141 @@ class Tracking_progress extends CI_Controller
         echo json_encode($result);
     }
 
+    public function save_pks_doc_final(){
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+        $p_map_pks_id = $this->input->post('idd');
+        $desc = $this->input->post('desc');
+        
+        try {
+        
+            $config['upload_path'] = './application/third_party/doc_pks';
+            $config['allowed_types'] = '*';
+            $config['max_size'] = '10000000';
+            $config['overwrite'] = TRUE;
+            $file_id = date("YmdHis");
+            $config['file_name'] = "PKS_FINAL_" .$p_map_pks_id.'_'. $file_id;
+
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload("filename")) {
+
+                $error = $this->upload->display_errors();
+                $result['success'] = false;
+                $result['message'] = $error;
+
+                echo json_encode($result);
+                exit;
+            }else{
+                
+                // Do Upload
+                $data = $this->upload->data();          
+
+                $idd = gen_id('DOC_ID', 'PKS_DOC');
+
+                $sql = "INSERT INTO PKS_DOC(DOC_ID, 
+                                            P_MAP_PKS_ID, 
+                                            FILE_NAME, 
+                                            PATH_FILE, 
+                                            DESCRIPTION, 
+                                            CREATED_DATE, 
+                                            CREATE_BY, 
+                                            UPDATE_DATE, 
+                                            UPDATE_BY, 
+                                            DOC_DATE, 
+                                            DOC_TYPE_ID, 
+                                            ORG_FILENAME) 
+                            VALUES (".$idd.", 
+                                    ".$p_map_pks_id.",
+                                    '".$data['file_name']."',
+                                    'application/third_party/doc_pks', 
+                                    '".$desc."',  
+                                    SYSDATE, 
+                                    '".$CREATED_BY."',
+                                    SYSDATE, 
+                                    '".$UPDATED_BY."', 
+                                    SYSDATE,  
+                                    36,
+                                    '".$data['client_name']."'
+                                    )";
+
+                $this->db->query($sql);
+                
+
+                $result['success'] = true;
+                $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
+
+            }
+
+        }catch(Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
+
+
+    }
+
+    public function update_no_pks() {
+        $p_map_pks_id = $this->input->post('p_map_pks_id', 0);
+        $no_pks = $this->input->post('no_pks');
+        $valid_from = $this->input->post('valid_from');
+        $valid_until = $this->input->post('valid_until');
+
+        if($p_map_pks_id > 0){
+            $sql = "UPDATE p_map_pks SET
+                    NO_PKS = '".$no_pks."',
+                    VALID_FROM = to_date('".$valid_from."', 'YYYY-MM-DD'),
+                    VALID_UNTIL = to_date('".$valid_until."', 'YYYY-MM-DD')
+                    WHERE P_MAP_PKS_ID = ".$p_map_pks_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Data berhasil diverifikasi';
+        }else{
+            $data['success'] = true;
+            $data['msg'] = 'Data gagal diverifikasi';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function cekStatusFinish(){
+        $p_map_pks_id = $this->input->post('p_map_pks_id', 0);
+
+        if($p_map_pks_id > 0){
+
+            $sql = "SELECT 1
+                      FROM P_MAP_PKS
+                     WHERE P_MAP_PKS_ID = ".$p_map_pks_id."
+                     AND NO_PKS IS NOT NULL
+                     AND VALID_FROM IS NOT NULL
+                     AND VALID_UNTIL IS NOT NULL";
+                     
+
+            $qs = $this->jqGrid->db->query($sql);
+
+            if($qs->num_rows() == 0){
+                $data['success'] = true;
+                $data['message'] = '';
+            }else{
+                $data['success'] = false;
+                $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> No. PKS Belum ada';
+            }
+
+            
+
+        }else{
+            $data['success'] = false;
+            $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> No. PKS Belum ada';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
 }

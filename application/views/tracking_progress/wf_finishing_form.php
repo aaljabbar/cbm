@@ -182,21 +182,35 @@
 
                             <div class="step-pane" data-step="3">
                                 <div class="col-sm-12">
-                                                                       
+                                    <center><h3>Upload Dokumen</h3></center>
+                                    <hr>
+                                    <br>
                                 </div>
-                                <div style="padding-bottom: 10px">
-                                    <a id="add_log" class="btn btn-white btn-sm btn-round">
-                                        <i class="ace-icon fa fa-plus green"></i>
-                                        Add Upload
-                                    </a> 
-                                </div>
+
+                                <form class="form-horizontal" id="finished-form">
+
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-1" style="text-align: left;" for="name">No. PKS</label>
+                                        <div class="col-sm-10">
+                                            <div class="clearfix">
+                                                <input type="text" placeholder="No. PKS" id="NO_PKS" name="NO_PKS" class="col-sm-4" style="margin-right: 10px;" />
+                                                <input type="text" placeholder="VALID FROM" id="VALID_FROM" name="VALID_FROM" class="col-sm-2" style="margin-right: 10px;" />
+                                                <input type="text" placeholder="VALID UNTIL" id="VALID_UNTIL" name="VALID_UNTIL" class="col-sm-2" style="margin-right: 10px;" />
+                                                <button type="button" class="btn btn-xs btn-success" id="add_upload"> Add Upload </button>
+                                                <button type="button" class="btn btn-xs btn-primary" id="btn-submit"> Submit </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </form>
                                 <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
                                     <thead>
                                       <tr>
                                             <th data-column-id="P_MAP_PKS_ID" data-visible="false">ID</th>
-                                            <th data-column-id="ORG_FILENAME" data-width="200">Filename</th>
+                                            <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
                                             <th data-column-id="DESCRIPTION">Description</th>                                             
-                                            <th data-column-id="action" data-formatter="action" data-width="100" data-header-align="center" data-align="center">Download</th>                                                                                       
+                                            <th data-column-id="action" data-formatter="action" data-width="150" data-header-align="center" data-align="center">Download</th>                                                                                       
                                       </tr>
                                     </thead>
                                 </table>  
@@ -231,7 +245,7 @@
 
 <?php 
     $this->load->view('wf/lov_submitter.php'); 
-    $this->load->view('tracking_progress/lov_pks_doc.php'); 
+    $this->load->view('tracking_progress/lov_pks_doc_final.php'); 
 ?>
 
 <script src="<?php echo base_url(); ?>assets/js/fuelux/fuelux.wizard.js"></script>
@@ -277,14 +291,14 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            // cekStatus($('#p_map_pks_id').val(), params_submit, params_back_summary);
+            cekStatus($('#p_map_pks_id').val(), params_submit, params_back_summary);
 
             
-            if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
-                 modal_lov_submitter_show(params_submit, params_back_summary); 
-            } else {
-                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );                
-            }
+            // if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+            //      modal_lov_submitter_show(params_submit, params_back_summary); 
+            // } else {
+            //     loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );                
+            // }
 
             
         });  
@@ -405,9 +419,123 @@
             {
                 var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
                 var file_name = row.FILE_NAME;
-                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
+                var ids = row.P_MAP_PKS_ID;
+                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button> <button type="button" class="btn btn-xs btn-danger" onclick="deleteDoc(\''+ids+'\')"> Delete </button>';
             }
 
         }
     });
+
+    $('#add_upload').on('click', function(){
+        var p_map_pks_id = $('#p_map_pks_id').val();
+        modal_lov_pks_doc_show(p_map_pks_id);
+    });
+
+    function deleteDoc(ids){
+        
+        swal({
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, Delete!',
+            cancelButtonText: "Tidak, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+         },
+         function(isConfirm){
+            if (isConfirm){
+
+                $.ajax({
+                    type: 'POST',
+                    datatype: "json",
+                    url: '<?php echo site_url('tracking_progress/delete_pks_doc');?>',
+                    timeout: 10000,
+                    data: { id : ids},
+                    success: function(data) {
+                         $('#grid-detail-upload').bootgrid('reload');
+                    }
+                });
+
+            } else {
+                swal("Cancelled", "Data tidak jadi disubmit :)", "error");
+            }
+         });        
+        
+    }
+
+    $("#VALID_FROM").datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            orientation : 'top',
+            todayHighlight : true
+        });
+
+    $("#VALID_UNTIL").datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation : 'top',
+        todayHighlight : true
+    });
+
+    $('#btn-submit').on('click', function() {
+        var p_map_pks_id = $('#p_map_pks_id').val();
+        var no_pks = $('#NO_PKS').val();
+        var valid_frm = $('#VALID_FROM').val();
+        var valid_utl = $('#VALID_UNTIL').val();
+
+        if(no_pks == ''){
+            swal({html: true, title: "Informasi", text: "No. PKS Belum diisi", type: "info"});
+            return false;
+        }
+
+        if(valid_frm == ''){
+            swal({html: true, title: "Informasi", text: "Valid From Belum diisi", type: "info"});
+            return false;
+        }
+
+        if(valid_utl == ''){
+            swal({html: true, title: "Informasi", text: "Valid Until Belum diisi", type: "info"});
+            return false;
+        }
+
+        $.ajax({
+            type: 'POST',
+            datatype: "json",
+            url: '<?php echo site_url('tracking_progress/update_no_pks');?>',
+            timeout: 10000,
+            data: { p_map_pks_id : p_map_pks_id, no_pks : no_pks, valid_from : valid_frm, valid_until : valid_utl},
+            success: function(data) {
+                 $('#grid-detail-upload').bootgrid('reload');
+            }
+        });
+    });
+
+
+    function cekStatus(p_map_pks_id, params_submit, params_back_summary){
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                url: '<?php echo site_url('tracking_progress/cekStatusFinish');?>',
+                data: { p_map_pks_id : p_map_pks_id
+                },
+                timeout: 10000,
+                success: function(data) {
+                    if (!data.success) {
+                        // swal("Informasi",data.message,"info");
+                        swal({html: true, title: "Informasi", text: data.message, type: "info"});
+                        //return data.success;
+                    }else{
+                        // alert('masuk');
+                        if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+                            modal_lov_submitter_show(params_submit, params_back_summary); 
+                        } else {
+                            loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
+                        }
+                    };
+                    // return data.success;
+                }
+            });
+        }
 </script>
