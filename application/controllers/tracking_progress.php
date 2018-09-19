@@ -731,7 +731,15 @@ class Tracking_progress extends CI_Controller
 
         if($p_map_pks_id > 0){
 
-            $sql = "SELECT 1
+            $sql_fin = "SELECT 1 
+                        FROM pks_doc 
+                        WHERE P_MAP_PKS_ID = ".$p_map_pks_id."
+                        AND DOC_TYPE_ID = get_val_reflist_signer('FINISHING DOC')";
+
+            $qs1 = $this->jqGrid->db->query($sql_fin);
+
+            if($qs1->num_rows() > 0){
+                $sql = "SELECT 1
                       FROM P_MAP_PKS
                      WHERE P_MAP_PKS_ID = ".$p_map_pks_id."
                      AND NO_PKS IS NOT NULL
@@ -739,17 +747,19 @@ class Tracking_progress extends CI_Controller
                      AND VALID_UNTIL IS NOT NULL";
                      
 
-            $qs = $this->jqGrid->db->query($sql);
+                $qs = $this->jqGrid->db->query($sql);
 
-            if($qs->num_rows() > 0){
-                $data['success'] = true;
-                $data['message'] = '';
+                if($qs->num_rows() > 0){
+                    $data['success'] = true;
+                    $data['message'] = '';
+                }else{
+                    $data['success'] = false;
+                    $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> No. PKS Belum ada';
+                }
             }else{
                 $data['success'] = false;
-                $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> No. PKS Belum ada';
+                $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> Mohon untuk upload dokumen';
             }
-
-            
 
         }else{
             $data['success'] = false;
