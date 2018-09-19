@@ -178,7 +178,8 @@
         today: 'fa fa-arrows ',
         clear: 'fa fa-trash',
         close: 'fa fa-times'
-     }
+     },
+     minDate : '09/18/2018',
     }).next().on(ace.click_event, function(){
         $(this).prev().focus();
     });
