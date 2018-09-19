@@ -192,11 +192,9 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
-                modal_lov_submitter_show(params_submit, params_back_summary); 
-            } else {
-                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
-            }
+            cekStatus($('#status_approval').text(), params_submit, params_back_summary);
+            
+            
         }); 
 
         /*ketika link 'workflow summary' diklik, maka kembali ke summary */
@@ -309,5 +307,19 @@
         url += "&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>";
         window.location = url;
         // window.location = url;
+    }
+
+    function cekStatus(status_approval, params_submit, params_back_summary){
+        //alert(status_approval);
+        if (status_approval == 'NOT APPROVED') {
+            swal({html: true, title: "Informasi", text: "Maaf Anda tidak bisa melakukan submit <br> Anda belum melakukan approval", type: "info"});
+        }else{
+            // alert('masuk');
+            if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+                modal_lov_submitter_show(params_submit, params_back_summary); 
+            } else {
+                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
+            }
+        };
     }
 </script>
