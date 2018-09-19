@@ -494,31 +494,6 @@ class Tracking_progress extends CI_Controller
         exit;
     }
 
-    public function toDate(){
-        $date = $this->input->post('date');
-        try {
-            $hasil = array();
-        
-            $sql = $this->db->query("SELECT TO_CHAR(to_date('".$date."','DD/MM/YYYY HH24:MI:SS'),'MM/DD/YYYY') as tanggal 
-                            FROM DUAL");
-
-            //$this->db->query($sql);
-
-            if($sql->num_rows() > 0)
-                $tgl = $sql->result();
-
-            $hasil['success'] = true;
-            $hasil['tanggal'] = $tgl;
-            $hasil['message'] = "Sukses Formatting Date";
-
-        } catch (Exception $e) {
-            $hasil['success'] = false;
-            $hasil['message'] = $e->getMessage();
-        }
-
-        echo json_encode($hasil);
-    }
-
     public function update_signing(){
         $FINISH_DATE = $this->input->post('FINISH_DATE');
         $START_DATE = $this->input->post('START_DATE');
