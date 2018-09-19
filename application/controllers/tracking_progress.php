@@ -258,7 +258,7 @@ class Tracking_progress extends CI_Controller
                                     SYSDATE, 
                                     '".$UPDATED_BY."', 
                                     SYSDATE,  
-                                    35,
+                                    get_val_reflist_signer('INITIAL DOC'),
                                     '".$data['client_name']."'
                                     )";
 
@@ -440,7 +440,8 @@ class Tracking_progress extends CI_Controller
         $result = array();
         $sql = $this->db->query("SELECT *
                                   FROM VW_PKS_SIGNING_STEP                
-                                 WHERE SIGN_DOC_TYPE = 1 AND EXTERNAL_ID = ".$this->input->post('p_map_pks_id')." ");
+                                 WHERE SIGN_DOC_TYPE = get_val_reflist_signer('SIGNING PKS')
+                                 AND EXTERNAL_ID = ".$this->input->post('p_map_pks_id')." "); //DOC_TYPE_ID PKS
         if($sql->num_rows() > 0)
             $result = $sql->result();
         
@@ -466,22 +467,37 @@ class Tracking_progress extends CI_Controller
 
         if($p_map_pks_id > 0){
 
-            $sql = "SELECT 1
+            $sql_ck = "SELECT 1
                       FROM SIGNING_STEP
-                     WHERE SIGN_DOC_TYPE = 1 
-                     AND EXTERNAL_ID = ".$p_map_pks_id."
-                     AND STATUS <> 'CLOSE'";
+                     WHERE SIGN_DOC_TYPE = get_val_reflist_signer('SIGNING PKS')
+                     AND EXTERNAL_ID = ".$p_map_pks_id;
+
+            $qs1 = $this->jqGrid->db->query($sql_ck);
+
+            if($qs1->num_rows() > 0){
+                $sql = "SELECT 1
+                          FROM SIGNING_STEP
+                         WHERE SIGN_DOC_TYPE = get_val_reflist_signer('SIGNING PKS')
+                         AND EXTERNAL_ID = ".$p_map_pks_id."
+                         AND STATUS <> 'CLOSE'";
                      
 
-            $qs = $this->jqGrid->db->query($sql);
+                $qs = $this->jqGrid->db->query($sql);
 
-            if($qs->num_rows() == 0){
-                $data['success'] = true;
-                $data['message'] = '';
+                if($qs->num_rows() == 0){
+                    $data['success'] = true;
+                    $data['message'] = '';
+                }else{
+                    $data['success'] = false;
+                    $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> Status Signing Step belum selesai';
+                }
+                
             }else{
                 $data['success'] = false;
-                $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> Status Signing Step belum selesai';
+                $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> Anda belum melakukan generate';
             }
+
+            
 
             
 
@@ -662,7 +678,7 @@ class Tracking_progress extends CI_Controller
                                     SYSDATE, 
                                     '".$UPDATED_BY."', 
                                     SYSDATE,  
-                                    36,
+                                    get_val_reflist_signer('FINISHING DOC'),
                                     '".$data['client_name']."'
                                     )";
 
@@ -725,7 +741,7 @@ class Tracking_progress extends CI_Controller
 
             $qs = $this->jqGrid->db->query($sql);
 
-            if($qs->num_rows() == 0){
+            if($qs->num_rows() > 0){
                 $data['success'] = true;
                 $data['message'] = '';
             }else{
@@ -742,6 +758,69 @@ class Tracking_progress extends CI_Controller
 
         echo json_encode($data);
         exit;
+    }
+
+    public function listSigner(){
+
+        $list = "";
+        $result = array();
+
+        $sql = "SELECT *
+                  FROM P_REF_TYPE_SIGNER
+                 WHERE doc_type_id = get_val_reflist_signer('SIGNING PKS')";
+
+        $qs = $this->jqGrid->db->query($sql);
+
+        if($qs->num_rows() > 0)
+            $result = $qs->result();
+
+        /*echo json_encode($result);
+        exit;*/
+
+        $option = "";
+        foreach($result as $content){
+            $option  .= "<option value=".$content->P_REFERENCE_TYPE_ID.">".$content->REFERENCE_NAME."</option>";
+        }
+        echo $option;
+    }
+
+    function generateSign(){
+        try {
+            $sign_step = (integer)$this->input->post('SIGNING_STEP_ID');
+            $external_id = (integer)$this->input->post('P_MAP_PKS_ID');
+
+            // echo $sign_step." - ".$external_id;
+
+            $sqlfin = "BEGIN "
+                    . " p_generate_signer_pks("
+                    . " :i_sign_step, "
+                    . " :i_external_id,"
+                    . " :i_result"
+                    . "); END;";
+
+
+            $stmt = oci_parse($this->db->conn_id, $sqlfin);
+
+            //  Bind the input parameter
+            oci_bind_by_name($stmt, ':i_sign_step', $sign_step);
+            oci_bind_by_name($stmt, ':i_external_id', $external_id);
+
+            //bind output
+            oci_bind_by_name($stmt, ':i_result', $msg, 2000000);
+
+
+
+            ociexecute($stmt);
+
+            $result['success'] = true;
+            $result['message'] = $msg;
+
+        } catch (Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
     }
 
 }

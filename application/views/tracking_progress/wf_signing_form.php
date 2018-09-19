@@ -151,6 +151,13 @@
                                         <i class="ace-icon fa fa-plus green"></i>
                                         Add
                                     </a> -->
+                                    <select id="signer_type" name="signer_type">
+                                    </select>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a id="generate_signer" class="btn btn-green btn-sm btn-round">
+                                        <strong>Generate</strong>
+                                    </a> 
+                                <br><br>
                                 </div>
                                 <table id="grid-signing" class="table table-striped table-bordered table-hover">
                                     <thead>
@@ -440,28 +447,90 @@
 
     function updateCancel(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE){
         $.ajax({
-                type: 'POST',
-                dataType: "json",
-                url: '<?php echo site_url('tracking_progress/cancelStatus');?>',
-                data: { 
-                    SIGNING_STEP_ID : SIGNING_STEP_ID,
-                    REFERENCE_NAME : REFERENCE_NAME,
-                    STATUS : STATUS,
-                    START_DATE : START_DATE,
-                    FINISH_DATE : FINISH_DATE,
-                    REF_LIST_ID : REF_LIST_ID,
-                    SIGN_DOC_TYPE : SIGN_DOC_TYPE,
-                    EXTERNAL_ID : EXTERNAL_ID,
-                    DUE_DATE : DUE_DATE
-                },
-                timeout: 10000,
-                success: function(data) {                    
-                    $('#grid-signing').bootgrid('reload');
-                }
-            });
+            type: 'POST',
+            dataType: "json",
+            url: '<?php echo site_url('tracking_progress/cancelStatus');?>',
+            data: { 
+                SIGNING_STEP_ID : SIGNING_STEP_ID,
+                REFERENCE_NAME : REFERENCE_NAME,
+                STATUS : STATUS,
+                START_DATE : START_DATE,
+                FINISH_DATE : FINISH_DATE,
+                REF_LIST_ID : REF_LIST_ID,
+                SIGN_DOC_TYPE : SIGN_DOC_TYPE,
+                EXTERNAL_ID : EXTERNAL_ID,
+                DUE_DATE : DUE_DATE
+            },
+            timeout: 10000,
+            success: function(data) {                    
+                $('#grid-signing').bootgrid('reload');
+            }
+        });
     }
 
-    // $('#START_DATE').on('change', function(){
-    //     alert('test');
-    // });
+    $('#generate_signer').on('click', function(){
+        // alert($("#signer_type").val());
+        var signer_id = $("#signer_type").val();
+        var p_map_pks_id = $("#p_map_pks_id").val();
+
+        swal({
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin akan melakukan Generate ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, Generate!',
+            cancelButtonText: "Tidak, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+         },
+         function(isConfirm){
+            if (isConfirm){
+
+                // alert('masuk');
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    url: '<?php echo site_url('tracking_progress/generateSign');?>',
+                    data: { 
+                        SIGNING_STEP_ID : signer_id,
+                        P_MAP_PKS_ID : p_map_pks_id
+                    },
+                    timeout: 10000,
+                    success: function(data) {       
+                        if (data.success) {
+                            swal("", "Sukses Generate", "success");  
+                        }else{
+                            swal("", "Gagal Generate", "success"); 
+                        };
+                                   
+                        $('#grid-signing').bootgrid('reload');
+                        // alert(data.message);
+                    }
+                });
+
+            } else {
+                swal("Cancelled", "Tidak dilakukan Generate :)", "error");
+            }
+         });
+        
+        // return false;
+    });
+
+    $.ajax({
+        type: "POST",
+        dataType: "html",
+        url: '<?php echo site_url('tracking_progress/listSigner');?>',
+        success: function(msg){
+            // jika tidak ada data
+            if(msg == ''){
+                //alert('Tidak ada mitra');
+            }
+            // jika dapat mengambil data,, tampilkan di combo box kota
+            else{
+                $("#signer_type").html(msg);
+            }
+        }
+    });
 </script>

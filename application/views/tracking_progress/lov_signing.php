@@ -213,6 +213,7 @@
         /*console.log('change start');
         console.log(e.date);*/
         jQuery('#FINISH_DATE').data("DateTimePicker").minDate(e.date);
+        jQuery('#FINISH_DATE').val('');
     });
 
     function isNumberKey(evt){
