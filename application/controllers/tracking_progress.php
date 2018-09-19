@@ -306,7 +306,7 @@ class Tracking_progress extends CI_Controller
         $dir = $this->input->post('dir');
 
         $result = array();
-        $sql = $this->db->query("SELECT * FROM v_pks_doc WHERE T_CUSTOMER_ORDER_ID = ".$this->input->post('t_customer_order_id')." ");
+        $sql = $this->db->query("SELECT * FROM v_pks_doc WHERE T_CUSTOMER_ORDER_ID = ".$this->input->post('t_customer_order_id')." AND DOC_TYPE_STATUS like '%".$this->input->post('status')."%' ");
         if($sql->num_rows() > 0)
             $result = $sql->result();
         
@@ -470,7 +470,7 @@ class Tracking_progress extends CI_Controller
                       FROM SIGNING_STEP
                      WHERE SIGN_DOC_TYPE = 1 
                      AND EXTERNAL_ID = ".$p_map_pks_id."
-                     AND STATUS = 'WAIT' OR STATUS = 'OPEN'";
+                     AND STATUS <> 'CLOSE'";
                      
 
             $qs = $this->jqGrid->db->query($sql);

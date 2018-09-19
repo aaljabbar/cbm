@@ -1,6 +1,6 @@
 <!-- #section:basics/content.breadcrumbs -->
 <div class="breadcrumbs" id="breadcrumbs">
-    <?php echo getBreadcrumb(array('Workflow Summary','Signing Step')); ?>
+    <?php echo getBreadcrumb(array('Workflow Summary','Finishing Step')); ?>
 </div>
 
 <div class="page-content">
@@ -59,6 +59,11 @@
                                 <li data-step="2">
                                     <span class="step">2</span>
                                     <span class="title">Signing Step</span>
+                                </li>
+
+                                <li data-step="3">
+                                    <span class="step">3</span>
+                                    <span class="title">Finishing Step</span>
                                 </li>
 
                             </ul>
@@ -166,12 +171,35 @@
                                             <th data-column-id="START_DATE" data-width="150" data-header-align="center" data-align="center">Start Date</th>
                                             <th data-column-id="FINISH_DATE" data-width="150" data-header-align="center" data-align="center">Finish Date</th>
                                             <th data-column-id="DUE_DATE_NUM" data-width="100" data-header-align="center" data-align="center">Due Date</th>
-                                            <th data-column-id="STATUS" data-width="100" data-header-align="center" data-align="center">Status</th>  
-                                            <th data-column-id="action" data-formatter="action" data-width="160" data-header-align="center" data-align="center">Action</th>               
+                                            <th data-column-id="STATUS" data-width="100" data-header-align="center" data-align="center">Status</th>               
                                                                               
                                       </tr>
                                     </thead>
                                 </table>
+
+                            </div>
+
+
+                            <div class="step-pane" data-step="3">
+                                <div class="col-sm-12">
+                                                                       
+                                </div>
+                                <div style="padding-bottom: 10px">
+                                    <a id="add_log" class="btn btn-white btn-sm btn-round">
+                                        <i class="ace-icon fa fa-plus green"></i>
+                                        Add Upload
+                                    </a> 
+                                </div>
+                                <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <tr>
+                                            <th data-column-id="P_MAP_PKS_ID" data-visible="false">ID</th>
+                                            <th data-column-id="ORG_FILENAME" data-width="200">Filename</th>
+                                            <th data-column-id="DESCRIPTION">Description</th>                                             
+                                            <th data-column-id="action" data-formatter="action" data-width="100" data-header-align="center" data-align="center">Download</th>                                                                                       
+                                      </tr>
+                                    </thead>
+                                </table>  
 
                             </div>
 
@@ -203,7 +231,7 @@
 
 <?php 
     $this->load->view('wf/lov_submitter.php'); 
-    $this->load->view('tracking_progress/lov_signing.php'); 
+    $this->load->view('tracking_progress/lov_pks_doc.php'); 
 ?>
 
 <script src="<?php echo base_url(); ?>assets/js/fuelux/fuelux.wizard.js"></script>
@@ -249,15 +277,14 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            cekStatus($('#p_map_pks_id').val(), params_submit, params_back_summary);
+            // cekStatus($('#p_map_pks_id').val(), params_submit, params_back_summary);
 
-            /*if(cekStatus($('#p_map_pks_id').val())){
-                if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
-                modal_lov_submitter_show(params_submit, params_back_summary); 
-                } else {
-                    loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
-                }
-            }*/
+            
+            if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+                 modal_lov_submitter_show(params_submit, params_back_summary); 
+            } else {
+                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );                
+            }
 
             
         });  
@@ -312,31 +339,6 @@
             }
         });
 
-        function cekStatus(p_map_pks_id, params_submit, params_back_summary){
-            $.ajax({
-                type: 'POST',
-                dataType: "json",
-                url: '<?php echo site_url('tracking_progress/cekStatus');?>',
-                data: { p_map_pks_id : p_map_pks_id
-                },
-                timeout: 10000,
-                success: function(data) {
-                    if (!data.success) {
-                        // swal("Informasi",data.message,"info");
-                        swal({html: true, title: "Informasi", text: data.message, type: "info"});
-                        //return data.success;
-                    }else{
-                        // alert('masuk');
-                        if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
-                            modal_lov_submitter_show(params_submit, params_back_summary); 
-                        } else {
-                            loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
-                        }
-                    };
-                    // return data.success;
-                }
-            });
-        }
 
         function loadgrid(p_map_pks_id){
             $("#grid-signing").bootgrid({
@@ -349,54 +351,9 @@
                 },
                 url: "<?php echo site_url('tracking_progress/getSigningPKS');?>",
                 navigation:0,
-                formatters: {
-                    "action": function(column, row)
-                    {
-                        var SIGNING_STEP_ID = row.SIGNING_STEP_ID;
-                        var STATUS = row.STATUS;
-                        var REFERENCE_NAME = row.REFERENCE_NAME;
-                        var START_DATE = row.START_DATE;
-                        var FINISH_DATE = row.FINISH_DATE;
-                        var REF_LIST_ID = row.REF_LIST_ID;
-                        var SIGN_DOC_TYPE = row.SIGN_DOC_TYPE;
-                        var EXTERNAL_ID = row.EXTERNAL_ID;
-                        var DUE_DATE_NUM = row.DUE_DATE_NUM;
-
-                        if(STATUS == 'OPEN'){
-                            return '<button type="button" class="btn btn-xs btn-primary" onclick="updateSign(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\')"> Update </button> <button type="button" class="btn btn-xs btn-danger" onclick="updateCancel(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\')"> Cancel </button>';
-                        }else if (STATUS == 'CLOSE'){
-                            return '';
-                        }
-                    }
-
-                }
+                formatters: {}
             });
         }
-
-        /*menyimpan data customer order */
-        $("#btn-approval").on('click', (function (e) {
-            var data = $(this).serialize();
-            $.ajax({
-                url: "<?php echo site_url('tracking_progress/update_ver_mitra');?>", // Url to which the request is send
-                type: "POST",             // Type of request to be send, called as method
-                data: {
-                    p_map_pks_id: $("#p_map_pks_id").val()
-                }, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
-                dataType: "json",
-                success: function (data)   // A function to be called if request succeeds
-                {
-                    if (data.success == true) {
-                        swal("", data.msg, "success");
-                        $("#status_approval").text('APPROVED By Mitra');
-                        $("#btn-approval").hide();
-                    } else {
-                        swal("", data.msg, "error");
-                        $("#status_approval").text('NOT APPROVED');
-                    }
-                }
-            });
-            return false;
-        }));
         
     });
 
@@ -432,36 +389,25 @@
         // window.location = url;
     }
 
+    $("#grid-detail-upload").bootgrid({
+        ajax: true,
+        post: function ()
+        {
+            return {
+                "t_customer_order_id": $("#CURR_DOC_ID").val(),
+                "status" : 'FINISHING DOC'
+            };
+        },
+        url: "<?php echo site_url('tracking_progress/getDetailPKS');?>",
+        navigation:0,
+        formatters: {
+            "action": function(column, row)
+            {
+                var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
+                var file_name = row.FILE_NAME;
+                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
+            }
 
-    function updateSign(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE){
-        // alert(DUE_DATE);
-        modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE);
-    }
-
-    function updateCancel(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE){
-        $.ajax({
-                type: 'POST',
-                dataType: "json",
-                url: '<?php echo site_url('tracking_progress/cancelStatus');?>',
-                data: { 
-                    SIGNING_STEP_ID : SIGNING_STEP_ID,
-                    REFERENCE_NAME : REFERENCE_NAME,
-                    STATUS : STATUS,
-                    START_DATE : START_DATE,
-                    FINISH_DATE : FINISH_DATE,
-                    REF_LIST_ID : REF_LIST_ID,
-                    SIGN_DOC_TYPE : SIGN_DOC_TYPE,
-                    EXTERNAL_ID : EXTERNAL_ID,
-                    DUE_DATE : DUE_DATE
-                },
-                timeout: 10000,
-                success: function(data) {                    
-                    $('#grid-signing').bootgrid('reload');
-                }
-            });
-    }
-
-    // $('#START_DATE').on('change', function(){
-    //     alert('test');
-    // });
+        }
+    });
 </script>

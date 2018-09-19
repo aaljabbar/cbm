@@ -283,7 +283,8 @@
         post: function ()
         {
             return {
-                "t_customer_order_id": $("#CURR_DOC_ID").val()
+                "t_customer_order_id": $("#CURR_DOC_ID").val(),
+                "status" : 'INITIAL DOC'
             };
         },
         url: "<?php echo site_url('tracking_progress/getDetailPKS');?>",
