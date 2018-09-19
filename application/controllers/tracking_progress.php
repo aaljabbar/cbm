@@ -494,10 +494,36 @@ class Tracking_progress extends CI_Controller
         exit;
     }
 
+    public function toDate(){
+        $date = $this->input->post('date');
+        try {
+            $hasil = array();
+        
+            $sql = $this->db->query("SELECT TO_CHAR(to_date('".$date."','DD/MM/YYYY HH24:MI:SS'),'MM/DD/YYYY') as tanggal 
+                            FROM DUAL");
+
+            //$this->db->query($sql);
+
+            if($sql->num_rows() > 0)
+                $tgl = $sql->result();
+
+            $hasil['success'] = true;
+            $hasil['tanggal'] = $tgl;
+            $hasil['message'] = "Sukses Formatting Date";
+
+        } catch (Exception $e) {
+            $hasil['success'] = false;
+            $hasil['message'] = $e->getMessage();
+        }
+
+        echo json_encode($hasil);
+    }
+
     public function update_signing(){
         $FINISH_DATE = $this->input->post('FINISH_DATE');
         $START_DATE = $this->input->post('START_DATE');
         $SIGNING_STEP_ID = $this->input->post('SIGNING_STEP_ID');
+        $DUE_DATE_NUM = $this->input->post('DUE_DATE_NUM');
         if(empty($FINISH_DATE)){
             $val_finish_date = "null";
         }else{
@@ -514,7 +540,8 @@ class Tracking_progress extends CI_Controller
         
             $sql = "UPDATE SIGNING_STEP SET
                     START_DATE = ".$val_start_date.",
-                    FINISH_DATE = ".$val_finish_date."
+                    FINISH_DATE = ".$val_finish_date.",
+                    DUE_DATE_NUM = ".$DUE_DATE_NUM."
                     WHERE SIGNING_STEP_ID = ".$SIGNING_STEP_ID;
 
             $this->db->query($sql);

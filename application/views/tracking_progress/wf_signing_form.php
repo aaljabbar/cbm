@@ -360,9 +360,10 @@
                         var REF_LIST_ID = row.REF_LIST_ID;
                         var SIGN_DOC_TYPE = row.SIGN_DOC_TYPE;
                         var EXTERNAL_ID = row.EXTERNAL_ID;
+                        var DUE_DATE_NUM = row.DUE_DATE_NUM;
 
                         if(STATUS == 'OPEN'){
-                            return '<button type="button" class="btn btn-xs btn-primary" onclick="updateSign(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\')"> Update </button> <button type="button" class="btn btn-xs btn-danger" onclick="updateCancel(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\')"> Cancel </button>';
+                            return '<button type="button" class="btn btn-xs btn-primary" onclick="updateSign(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\')"> Update </button> <button type="button" class="btn btn-xs btn-danger" onclick="updateCancel(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\')"> Cancel </button>';
                         }else if (STATUS == 'CLOSE'){
                             return '';
                         }
@@ -431,12 +432,12 @@
     }
 
 
-    function updateSign(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID){
-        // alert(EXTERNAL_ID);
-        modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID);
+    function updateSign(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE){
+        // alert(DUE_DATE);
+        modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE);
     }
 
-    function updateCancel(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID){
+    function updateCancel(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE){
         $.ajax({
                 type: 'POST',
                 dataType: "json",
@@ -449,7 +450,8 @@
                     FINISH_DATE : FINISH_DATE,
                     REF_LIST_ID : REF_LIST_ID,
                     SIGN_DOC_TYPE : SIGN_DOC_TYPE,
-                    EXTERNAL_ID : EXTERNAL_ID
+                    EXTERNAL_ID : EXTERNAL_ID,
+                    DUE_DATE : DUE_DATE
                 },
                 timeout: 10000,
                 success: function(data) {                    

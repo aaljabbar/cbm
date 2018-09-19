@@ -59,7 +59,8 @@
                                 </div>
                                 <div class="col-xs-9">
                                     <!-- #section:custom/file-input -->
-                                    <input type="text" id="DUE_DATE" name="DUE_DATE" style="background-color: #FBEC88;" />
+                                    <input type="number" onkeypress="return isNumberKey(event)" id="DUE_DATE_NUM" name="DUE_DATE_NUM" style="background-color: #FBEC88; width: 100px;" />
+                                    <label>&emsp;Day</label>
                                 </div>
                             </div>
 
@@ -93,8 +94,23 @@
     $(function() {
         /* submit */
         $("#form_signing").on('submit', (function (e) {
+            var startDate = $('#START_DATE').val();
+            var due_date_num = $('#DUE_DATE_NUM').val();
+
+            if (startDate == "" || startDate == null) {
+                swal("Informasi","Start Date Harus Diisi !","info");
+                return false;
+            }
+            if(due_date_num == "" || due_date_num == null){
+                swal("Informasi","Due Date Harus Diisi !","info");
+                return false;
+            };
+
+            // alert('masuk');
+            
             e.preventDefault();   
             var data = new FormData(this);
+
             $.ajax({
                 type: 'POST',
                 dataType: "json",
@@ -121,13 +137,13 @@
         
     });
 
-    function modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID) {
+    function modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM) {
         // alert(EXTERNAL_ID);
-        modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID);
+        modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM);
         $("#modal_lov_signing").modal({backdrop: 'static'});
     }
 
-    function modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID) {
+    function modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM) {
 
         $('#SIGNING_STEP_ID').val(SIGNING_STEP_ID);
         $('#REFERENCE_NAME').val(REFERENCE_NAME);
@@ -143,8 +159,10 @@
         if(FINISH_DATE == 'null'){
             FINISH_DATE = null;
         }
+
         $('#START_DATE').val(START_DATE);
         $('#FINISH_DATE').val(FINISH_DATE);
+        $('#DUE_DATE_NUM').val(DUE_DATE_NUM);
 
     }
 
@@ -164,7 +182,15 @@
      }
     }).next().on(ace.click_event, function(){
         $(this).prev().focus();
-    });
+    })/*.next().on(ace.change_event, function(){
+        $('#FINISH_DATE').val('');
+        alert('masuk');
+    })*/;/*
+
+    $('#START_DATE').on('change'){
+        //$('#FINISH_DATE').val('');
+        alert('masuk');
+    };*/
 
     if(!ace.vars['old_ie']) $('#FINISH_DATE').datetimepicker({
      format: 'DD/MM/YYYY hh:mm:ss',//use this option to display seconds
@@ -179,10 +205,23 @@
         clear: 'fa fa-trash',
         close: 'fa fa-times'
      },
-     minDate : '09/18/2018',
     }).next().on(ace.click_event, function(){
         $(this).prev().focus();
     });
+
+    jQuery("#START_DATE").on("dp.change", function (e) {
+        /*console.log('change start');
+        console.log(e.date);*/
+        jQuery('#FINISH_DATE').data("DateTimePicker").minDate(e.date);
+    });
+
+    function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
 
     
 </script>
