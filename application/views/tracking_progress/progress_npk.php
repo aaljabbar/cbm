@@ -110,25 +110,16 @@ $prv = getPrivilege($menu_id); ?>
                                                 <!-- <input type="hidden" name="celValue" id="celValue" value="<?php echo $_POST['celValue'] ?>"> -->
                                                 <input type="hidden" name="p_map_npk_id" id="p_map_npk_id" >
 
-                                                <!-- <input type="hidden" name="file_path" id="file_path">
                                                 <div class="form-group" id="divFile">
-                                                    <label class="control-label col-md-3">File Name</label>
+                                                    <label class="control-label col-md-3">Dokumen Pendukung</label>
                                                     <div class="col-md-8">
-                                                        <label class="control-label" id="name_file">File Name</label>
+                                                        <label class="control-label" id="name_file">Dokumen Pendukung</label>
                                                     </div>
-                                                </div> -->
-                                                
-                                                <!-- <div class="space-2"></div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-3">Deskripsi</label>
-                                                        <div class="col-md-8">
-                                                            <textarea rows="5" class="form-control" id="deskripsi" name="deskripsi" ></textarea>  
-                                                        </div>
-                                                    </div> -->
+                                                </div>
 
                                                 <div class="form-actions">
                                                     <div class="row">
-                                                        <div class="col-md-offset-5 col-md-5">
+                                                        <div class="col-xs-offset-5 col-xs-5">
                                                             <a   class="btn btn-outline green button-next " id="btn-tambah" onclick="ClearForm();">ADD
                                                             </a>
                                                             <button type="submit"  class="btn  btn-primary " id="btn-insert" onclick="SaveData();"> SAVE
@@ -362,7 +353,39 @@ $prv = getPrivilege($menu_id); ?>
                                     readonly: "readonly"
                     },
                     editrules: {edithidden: true, required:false}
-                },                
+                },
+                {   
+                    label: 'File Name x',
+                    name: 'FILE_NAME', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: true
+                },
+                {   
+                    label: 'Periode',
+                    name: 'PERIOD', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: true
+                },  
+                {   
+                    label: 'File Path',
+                    name: 'FILE_PATH', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: true
+                },  
+                {   
+                    label: 'File Name',
+                    name: 'ORG_FILENAME', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: false
+                },
                 {label: 'Tgl Pembuatan', name: 'CREATION_DATE', width: 120, align: "left", hidden:true, editable: false},
                 {label: 'Dibuat Oleh', name: 'CREATED_BY', width: 120, align: "left", hidden:true, editable: false},
                 {label: 'Tgl Update', name: 'UPDATED_DATE', width: 120, align: "left", hidden:true, editable: false},
@@ -379,35 +402,7 @@ $prv = getPrivilege($menu_id); ?>
             shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
-                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
-                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
-                var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
-                //var custId = $('#cust_id');
-
-                      //alert(custId);
-                if(status == ""){
-                    status = 1;
-                }
-                if(!celValue){
-                    $('#edit_grid-table').show();
-                    $('#del_grid-table').show();
-                }else{
-                    if (status == 1){
-                        $('#edit_grid-table').show();
-                        $('#del_grid-table').show();
-                    }else{
-                        $('#edit_grid-table').hide();
-                        $('#del_grid-table').hide();
-                    }
-                    
-                }
-                //alert(status);
-         
-                $('#tab_customer_order_id').val(celValue);
-                $('#tab_order_no').val(celCode);
-                $('#tab_status').val(status);
-
-                // $('#form_upload').style.display = ""; 
+                setData(rowid);
             },
             onSortCol: clearSelection,
             onPaging: clearSelection,
@@ -421,6 +416,7 @@ $prv = getPrivilege($menu_id); ?>
                 var table = this;
                 setTimeout(function () {
                     updatePagerIcons(table);
+                    $("#grid-table").setSelection($("#grid-table").getDataIDs()[0],true);
                 }, 0);
 
             },
@@ -676,6 +672,9 @@ $prv = getPrivilege($menu_id); ?>
             var periode = $('#periode').val();
             var filename = $('#filename').val();
 
+            var data = new FormData(this);
+            var p_map_npk_id = $('#p_map_npk_id').val();
+
             // alert(filename);
 
             if (pgl_name == "") {
@@ -688,21 +687,19 @@ $prv = getPrivilege($menu_id); ?>
                 return false;
             };
 
-            if (filename == "") {
-                swal({html: true, title: "Informasi", text: "Dokumen Belum Diupload", type: "info"});
-                return false;
-            };
+            // alert(p_map_npk_id);
 
-            var data = new FormData(this);
-            var p_map_npk_id = $('#p_map_npk_id').val();
-
-
+            if (p_map_npk_id == ""){
+                if (filename == "") {
+                    swal({html: true, title: "Informasi", text: "Dokumen Belum Diupload", type: "info"});
+                    return false;
+                };
+            }
+            // alert('masuk');
             // console.log(data);
             var var_url = '<?php echo site_url('tracking_progress_npk/crud_progress_npk');?>';
             // console.log($('#ba_file_id').val());
-            if (p_map_npk_id){
-                var_url = '<?php echo site_url('tracking_progress_npk/crud_progress_npk');?>';
-            }
+            
             $.ajax({
                 type: 'POST',
                 dataType: "json",
@@ -724,6 +721,7 @@ $prv = getPrivilege($menu_id); ?>
                    
                 }
             });
+
             return false;
         }));
         
@@ -734,16 +732,16 @@ $prv = getPrivilege($menu_id); ?>
         $('#pgl_name').val('');
         $('#PGL_ADDR').val('');
         $('#periode').val('');
+        $('#p_map_npk_id').val('');
         $('#filename').ace_file_input('reset_input');
 
-        // $('#divFile').css('display','none');
+        $('#divFile').css('display','none');
         $("#grid-table").jqGrid('resetSelection');
 
         //alert('123');
         
         $('#btn-insert').css('display','');
         $('#btn-delete').css('display','none');
-        //$('#btn-update').css('display','none');
         $('#btn-tambah').css('display','none');
     } 
 
@@ -759,6 +757,10 @@ $prv = getPrivilege($menu_id); ?>
         onchange: null,
         thumbnail: false
     });
+        
+    $('#btn-insert').css('display','none');
+    $('#btn-delete').css('display','none');
+    $('#btn-tambah').css('display','');
 
     function cekDetail(p_map_npk_id,custId, idoc_type, ireq_type){
         $.ajax({
@@ -784,6 +786,57 @@ $prv = getPrivilege($menu_id); ?>
                 }
             }
         });
+    }
+
+    function setData(rowid){
+        var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
+        var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
+        var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
+        var p_map_npk_id = $('#grid-table').jqGrid('getCell', rowid, 'P_MAP_NPK_ID');
+        // PGL_ID PGL_NAME PGL_ADDR PERIOD  FILE_PATH ORG_FILENAME
+        var PGL_ID = $('#grid-table').jqGrid('getCell', rowid, 'PGL_ID');
+        var PGL_NAME = $('#grid-table').jqGrid('getCell', rowid, 'PGL_NAME');
+        var PGL_ADDR = $('#grid-table').jqGrid('getCell', rowid, 'PGL_ADDR');
+        var PERIOD = $('#grid-table').jqGrid('getCell', rowid, 'PERIOD');
+        var FILE_PATH = $('#grid-table').jqGrid('getCell', rowid, 'FILE_PATH');
+        var ORG_FILENAME = $('#grid-table').jqGrid('getCell', rowid, 'ORG_FILENAME');
+        //var custId = $('#cust_id');
+
+              // alert(FILE_PATH+' - '+ORG_FILENAME);
+        if(status == ""){
+            status = 1;
+        }
+        if(!celValue){
+            $('#edit_grid-table').show();
+            $('#del_grid-table').show();
+        }else{
+            if (status == 1){
+                $('#edit_grid-table').show();
+                $('#del_grid-table').show();
+            }else{
+                $('#edit_grid-table').hide();
+                $('#del_grid-table').hide();
+            }
+            
+        }
+        //alert(status);
+ 
+        $('#tab_customer_order_id').val(celValue);
+        $('#tab_order_no').val(celCode);
+        $('#tab_status').val(status);
+
+        $('#pgl_id').val(PGL_ID);
+        $('#pgl_name').val(PGL_NAME);
+        $('#PGL_ADDR').val(PGL_ADDR);
+        $('#periode').val(PERIOD);
+        $('#p_map_npk_id').val(p_map_npk_id);
+        // $('#filename').val(ORG_FILENAME);
+        $('#name_file').text(ORG_FILENAME);
+        // $('#filename').ace_file_input('reset_input');
+
+        $('#btn-insert').css('display','');
+        $('#btn-delete').css('display','');
+        $('#btn-tambah').css('display','');
     }
     
 </script>
