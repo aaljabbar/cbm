@@ -160,7 +160,7 @@ class Tracking_progress_npk extends CI_Controller
                     $result['success'] = true;
                     $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
                 }else{
-
+                    
                 }
                 
 
@@ -513,7 +513,7 @@ class Tracking_progress_npk extends CI_Controller
         exit;
     }
 
-    public function getSigningnpk(){
+    public function getSigningNPK(){
         $page = intval($this->input->post('current')) ;
         $limit = $this->input->post('rowCount');
         $sort = $this->input->post('sort');
@@ -625,7 +625,7 @@ class Tracking_progress_npk extends CI_Controller
                 $external_id = (integer)$this->input->post('EXTERNAL_ID');
                 $ref_list_id = (integer)$this->input->post('REF_LIST_ID');
 
-                // echo $doc_type." - ".$external_id." - ".$ref_list_id;
+                echo $doc_type." - ".$external_id." - ".$ref_list_id;
 
                 $sqlfin = "BEGIN "
                         . " prc_update_status_sign_npk("
