@@ -407,15 +407,15 @@ class Tracking_progress_npk extends CI_Controller
 
     }
 
-    public function delete_npk_doc(){
+    public function delete_npk(){
         try {
 
-            /*$id_ = $this->input->post('id');
-            $this->db->where('DOC_ID', $id_);
-            $this->db->delete('npk_DOC');*/
+            $id_ = $this->input->post('P_MAP_NPK_ID');
+            $this->db->where('P_MAP_NPK_ID', $id_);
+            $this->db->delete('P_MAP_NPK');
 
             $result['success'] = true;
-            $result['message'] = 'Dokumen Pendukung Berhasil Dihapus';
+            $result['message'] = 'Data Berhasil Dihapus';
 
         } catch (Exception $e) {
             $result['success'] = false;

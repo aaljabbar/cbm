@@ -746,7 +746,47 @@ $prv = getPrivilege($menu_id); ?>
     } 
 
     function HapusData(){
-        alert('test');
+        var p_map_npk_id = $('#p_map_npk_id').val();
+
+        swal({
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin akan menghapus data ini?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: "Tidak, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+         },
+         function(isConfirm){
+            if (isConfirm){
+
+                $.ajax({
+                    type: 'POST',
+                    datatype: "json",
+                    url: '<?php echo site_url('tracking_progress_npk/delete_npk');?>',
+                    data: { 
+                        P_MAP_NPK_ID :p_map_npk_id
+                    },
+                    timeout: 10000,
+                    success: function(data) {
+                        var response = JSON.parse(data);
+                        if(response.success) {
+                            jQuery('#grid-table').trigger("reloadGrid");
+                            // $('#edit_grid-table').show();
+                            // $('#del_grid-table').show();
+                            swal("Submitted!", "Data berhasil dihapus !", "success");
+                        }else {
+                            swal("", data.message, "warning");
+                        }
+                    }
+                });
+               
+            } else {
+                swal("Cancelled", "Data tidak jadi dihapus :)", "error");
+            }
+         });
     }
 
     $('#filename').ace_file_input({
