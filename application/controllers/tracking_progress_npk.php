@@ -97,6 +97,8 @@ class Tracking_progress_npk extends CI_Controller
     }
 
     public function crud_progress_npk() {
+
+
         $CREATED_BY = $this->session->userdata('d_user_name');
         $UPDATED_BY = $this->session->userdata('d_user_name');
         $p_map_npk_id = $this->input->post('p_map_npk_id',0);
@@ -104,30 +106,31 @@ class Tracking_progress_npk extends CI_Controller
         $periode = $this->input->post('periode');
         $desc = $this->input->post('desc');
         
+
+        $config['upload_path'] = './application/third_party/doc_npk';
+        $config['allowed_types'] = '*';
+        $config['max_size'] = '10000000';
+        $config['overwrite'] = TRUE;
+        $file_id = date("YmdHis");
+        $config['file_name'] = "NPK_" .$file_id;
+
+        $this->load->library('upload');
+        $this->upload->initialize($config);
         try {
-        
-            $config['upload_path'] = './application/third_party/doc_npk';
-            $config['allowed_types'] = '*';
-            $config['max_size'] = '10000000';
-            $config['overwrite'] = TRUE;
-            $file_id = date("YmdHis");
-            $config['file_name'] = "NPK_" .$file_id;
+            if ($p_map_npk_id == 0) {
 
-            $this->load->library('upload');
-            $this->upload->initialize($config);
+                if (!$this->upload->do_upload("filename")) {
 
-            if (!$this->upload->do_upload("filename")) {
+                    $error = $this->upload->display_errors();
+                    $result['success'] = false;
+                    $result['message'] = $error;
 
-                $error = $this->upload->display_errors();
-                $result['success'] = false;
-                $result['message'] = $error;
-
-                echo json_encode($result);
-                exit;
-            }else{
-                
-                // Do Upload
-                if ($p_map_npk_id == 0) {
+                    echo json_encode($result);
+                    exit;
+                }else{
+                    
+                    // Do Upload
+                    
                     $data = $this->upload->data();    
 
                     $idd = gen_id('P_MAP_NPK_ID', 'P_MAP_NPK');      
@@ -150,7 +153,7 @@ class Tracking_progress_npk extends CI_Controller
                                         '".$CREATED_BY."',
                                         '".$UPDATED_BY."', 
                                         '".$data['file_name']."',
-                                        'application/third_party/doc_pks', 
+                                        'application/third_party/doc_npk', 
                                         '".$data['client_name']."'
                                         )";
 
@@ -158,12 +161,54 @@ class Tracking_progress_npk extends CI_Controller
                     
 
                     $result['success'] = true;
-                    $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
-                }else{
+                    $result['message'] = 'Data Berhasil Ditambah';
                     
-                }
-                
 
+                }
+            }else{
+                if (empty($_FILES["filename"]["name"])) {
+                    // die("Ada");
+                    $sql = "UPDATE P_MAP_NPK
+                            SET    PGL_ID              = ".$pgl_id.",
+                                   PERIOD              = '".$periode."',
+                                   UPDATE_DATE         = SYSDATE,
+                                   UPDATE_BY           = '".$UPDATED_BY."'
+                            WHERE  P_MAP_NPK_ID        = ".$p_map_npk_id;
+
+                    $this->db->query($sql);
+                }else{
+                    // die("Kosong");
+                    if (!$this->upload->do_upload("filename")) {
+
+                        $error = $this->upload->display_errors();
+                        $result['success'] = false;
+                        $result['message'] = $error;
+
+                        echo json_encode($result);
+                        exit;
+                    }else{
+                        
+                        // Do Upload
+                        
+                        $data = $this->upload->data();
+                        $sql = "UPDATE P_MAP_NPK
+                                SET    PGL_ID              = ".$pgl_id.",
+                                       PERIOD              = '".$periode."',
+                                       UPDATE_DATE         = SYSDATE,
+                                       UPDATE_BY           = '".$UPDATED_BY."',
+                                       FILE_NAME           = '".$data['file_name']."',
+                                       FILE_PATH           = 'application/third_party/doc_npk',
+                                       ORG_FILENAME        = '".$data['client_name']."'
+                                WHERE  P_MAP_NPK_ID        = ".$p_map_npk_id;
+
+                        $this->db->query($sql);
+                        
+
+                    }
+
+                    $result['success'] = true;
+                    $result['message'] = 'Data Berhasil Diupdate';
+                }
             }
 
         }catch(Exception $e) {
