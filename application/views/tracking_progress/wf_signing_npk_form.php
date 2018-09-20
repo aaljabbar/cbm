@@ -245,9 +245,9 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            cekStatus($('#p_map_pks_id').val(), params_submit, params_back_summary);
+            cekStatus($('#p_map_npk_id').val(), params_submit, params_back_summary);
 
-            /*if(cekStatus($('#p_map_pks_id').val())){
+            /*if(cekStatus($('#p_map_npk_id').val())){
                 if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
                 modal_lov_submitter_show(params_submit, params_back_summary); 
                 } else {
@@ -313,12 +313,12 @@
             }
         });
 
-        function cekStatus(p_map_pks_id, params_submit, params_back_summary){
+        function cekStatus(p_map_npk_id, params_submit, params_back_summary){
             $.ajax({
                 type: 'POST',
                 dataType: "json",
-                url: '<?php echo site_url('tracking_progress/cekStatus');?>',
-                data: { p_map_pks_id : p_map_pks_id
+                url: '<?php echo site_url('tracking_progress_npk/cekStatus');?>',
+                data: { p_map_npk_id : p_map_npk_id
                 },
                 timeout: 10000,
                 success: function(data) {
