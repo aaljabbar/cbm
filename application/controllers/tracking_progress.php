@@ -111,6 +111,11 @@ class Tracking_progress extends CI_Controller
         $username = $this->session->userdata('d_user_name');
 
         try {
+            $sql_upd = "UPDATE P_MAP_PKS SET
+                        STATUS = get_val_reflist_signer('INITIAL STEP')
+                        WHERE P_MAP_PKS_ID =".$p_map_pks_id;
+
+            $this->db->query($sql_upd);
 
             $sql = "  BEGIN ".
                             "  p_first_submit_engine(:i_doc_type_id, :i_cust_req_id, :i_req_type_id, :i_map_pks_id, :i_username, :o_result_code, :o_result_msg ); END;";
