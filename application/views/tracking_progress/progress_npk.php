@@ -712,7 +712,8 @@ $prv = getPrivilege($menu_id); ?>
                 success: function(data) {
                     //console.log(data);
                     if(data.success) {
-                        $("#filename").val('');
+                        // $("#filename").val('');
+                        // ClearForm();
                         $("#grid-table").trigger("reloadGrid");
                         swal("Sukses", data.message, "info");
                     }else{
@@ -829,6 +830,7 @@ $prv = getPrivilege($menu_id); ?>
     }
 
     function setData(rowid){
+
         var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
         var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
         var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
@@ -842,7 +844,7 @@ $prv = getPrivilege($menu_id); ?>
         var ORG_FILENAME = $('#grid-table').jqGrid('getCell', rowid, 'ORG_FILENAME');
         //var custId = $('#cust_id');
 
-              // alert(FILE_PATH+' - '+ORG_FILENAME);
+              // alert(ORG_FILENAME);
         if(status == ""){
             status = 1;
         }
