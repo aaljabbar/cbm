@@ -191,8 +191,7 @@ $prv = getPrivilege($menu_id); ?>
             custId = 0;
         };
         var idoc_type = 1; //WF PEMBUATAN INVOICE
-        var ireq_type = 2; //WF PEMBUATAN INVOICE
-        //var user_name = rowObject['T_CUSTOMER_ORDER_ID'];
+        var ireq_type = 1; //WF PEMBUATAN INVOICE
         swal({
             title: "Konfirmasi",
             text: "Apakah Anda yakin akan melakukan submit?",
@@ -206,35 +205,15 @@ $prv = getPrivilege($menu_id); ?>
          },
          function(isConfirm){
             if (isConfirm){
-                // alert('masuk');
-                $.ajax({
-                    type: 'POST',
-                    datatype: "json",
-                    url: '<?php echo site_url('tracking_progress_npk/submitWF');?>',
-                    data: { 
-                            DOC_TYPE : idoc_type,
-                            REQ_TYPE : ireq_type,
-                            T_CUSTOMER_ORDER_ID :custId,
-                            P_MAP_NPK_ID :p_map_npk_id
-                    },
-                    timeout: 10000,
-                    success: function(data) {
-                        var response = JSON.parse(data);
-                        if(response.success) {
-                            jQuery('#grid-table').trigger("reloadGrid");
-                            swal("Submitted!", "Data berhasil disubmit !", "success");
-                        }else {
-                            swal("", data.message, "warning");
-                        }
-                    }
-                });
+
+                cekDetail(map_npk_id,custId, idoc_type, ireq_type);
+               
 
             } else {
                 swal("Cancelled", "Data tidak jadi disubmit :)", "error");
             }
          });
-        return false;
-        //alert(map_npk_id);
+        
 
     }
 
@@ -428,7 +407,7 @@ $prv = getPrivilege($menu_id); ?>
                 $('#tab_order_no').val(celCode);
                 $('#tab_status').val(status);
 
-                $('#form_upload').style.display = ""; 
+                // $('#form_upload').style.display = ""; 
             },
             onSortCol: clearSelection,
             onPaging: clearSelection,
@@ -454,34 +433,10 @@ $prv = getPrivilege($menu_id); ?>
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options
                 edit : false,
-                /*edit: <?php
-                if ($prv['UBAH'] == "Y") {
-                    echo 'true';
-                } else {
-                    echo 'false';
-
-                }
-                ?>,*/
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
-                /*add:  <?php
-                if ($prv['TAMBAH'] == "Y") {
-                    echo 'true';
-                } else {
-                    echo 'false';
-
-                }
-                ?>,*/
                 addicon: 'ace-icon fa fa-plus-circle purple',
                 del: false,
-                /*del: <?php
-                if ($prv['HAPUS'] == "Y") {
-                    echo 'true';
-                } else {
-                    echo 'false';
-
-                }
-                ?>,*/
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: true,
                 searchicon: 'ace-icon fa fa-search orange',
@@ -709,47 +664,7 @@ $prv = getPrivilege($menu_id); ?>
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
     }
 
-    /*function cekDetail(p_map_npk_id,custId, idoc_type, ireq_type){
-        $.ajax({
-            type: 'POST',
-            dataType: "json",
-            url: '<?php echo site_url('tracking_progress_npk/cekDetailNPK');?>',
-            data: { p_map_npk_id : p_map_npk_id
-            },
-            timeout: 10000,
-            success: function(data) {
-                if (!data.success) {
-                    swal("Informasi",data.message,"info");
-                   // return false;
-                }else{
-                    $.ajax({
-                        type: 'POST',
-                        datatype: "json",
-                        url: '<?php echo site_url('tracking_progress_npk/submitWF');?>',
-                        data: { 
-                                DOC_TYPE : idoc_type,
-                                REQ_TYPE : ireq_type,
-                                T_CUSTOMER_ORDER_ID :custId,
-                                P_MAP_NPK_ID :p_map_npk_id
-                        },
-                        timeout: 10000,
-                        success: function(data) {
-                            var response = JSON.parse(data);
-                            if(response.success) {
-                                jQuery('#grid-table').trigger("reloadGrid");
-                                $('#edit_grid-table').show();
-                                $('#del_grid-table').show();
-                                swal("Submitted!", "Data berhasil disubmit !", "success");
-                            }else {
-                                swal("", data.message, "warning");
-                            }
-                        }
-                    });
-                };
-            }
-        });
-    }*/
-
+    
 
     $(function() {
         /* submit */
@@ -833,7 +748,7 @@ $prv = getPrivilege($menu_id); ?>
     } 
 
     function HapusData(){
-
+        alert('test');
     }
 
     $('#filename').ace_file_input({
@@ -844,5 +759,31 @@ $prv = getPrivilege($menu_id); ?>
         onchange: null,
         thumbnail: false
     });
+
+    function cekDetail(p_map_npk_id,custId, idoc_type, ireq_type){
+        $.ajax({
+            type: 'POST',
+            datatype: "json",
+            url: '<?php echo site_url('tracking_progress_npk/submitWF');?>',
+            data: { 
+                    DOC_TYPE : idoc_type,
+                    REQ_TYPE : ireq_type,
+                    T_CUSTOMER_ORDER_ID :custId,
+                    P_MAP_NPK_ID :p_map_npk_id
+            },
+            timeout: 10000,
+            success: function(data) {
+                var response = JSON.parse(data);
+                if(response.success) {
+                    jQuery('#grid-table').trigger("reloadGrid");
+                    // $('#edit_grid-table').show();
+                    // $('#del_grid-table').show();
+                    swal("Submitted!", "Data berhasil disubmit !", "success");
+                }else {
+                    swal("", data.message, "warning");
+                }
+            }
+        });
+    }
     
 </script>

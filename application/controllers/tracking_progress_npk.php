@@ -188,6 +188,12 @@ class Tracking_progress_npk extends CI_Controller
 
         try {
 
+            $sql_upd = "UPDATE P_MAP_NPK SET
+                        STATUS = get_val_reflist_signer('SIGNING STEP')
+                        WHERE P_MAP_NPK_ID =".$p_map_npk_id;
+
+            $this->db->query($sql_upd);
+
             $sql = "  BEGIN ".
                             "  p_first_submit_engine_npk(:i_doc_type_id, :i_cust_req_id, :i_req_type_id, :i_map_npk_id, :i_username, :o_result_code, :o_result_msg ); END;";
 
