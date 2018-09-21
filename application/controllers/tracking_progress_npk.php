@@ -97,131 +97,10 @@ class Tracking_progress_npk extends CI_Controller
     }
 
     public function crud_progress_npk() {
-
-
-        $CREATED_BY = $this->session->userdata('d_user_name');
-        $UPDATED_BY = $this->session->userdata('d_user_name');
-        $p_map_npk_id = $this->input->post('p_map_npk_id',0);
-        $pgl_id = $this->input->post('pgl_id',0);
-        $periode = $this->input->post('periode');
-        $desc = $this->input->post('desc');
-        
-
-        $config['upload_path'] = './application/third_party/doc_npk';
-        $config['allowed_types'] = '*';
-        $config['max_size'] = '10000000';
-        $config['overwrite'] = TRUE;
-        $file_id = date("YmdHis");
-        $config['file_name'] = "NPK_" .$file_id;
-
-        $this->load->library('upload');
-        $this->upload->initialize($config);
-        try {
-            if ($p_map_npk_id == 0) {
-
-                if (!$this->upload->do_upload("filename")) {
-
-                    $error = $this->upload->display_errors();
-                    $result['success'] = false;
-                    $result['message'] = $error;
-
-                    echo json_encode($result);
-                    exit;
-                }else{
-                    
-                    // Do Upload
-                    
-                    $data = $this->upload->data();    
-
-                    $idd = gen_id('P_MAP_NPK_ID', 'P_MAP_NPK');      
-
-                    $sql = "INSERT INTO P_MAP_NPK(P_MAP_NPK_ID,
-                                                PGL_ID,
-                                                PERIOD,
-                                                CREATED_DATE,
-                                                UPDATE_DATE,
-                                                CREATE_BY,
-                                                UPDATE_BY,
-                                                FILE_NAME,
-                                                FILE_PATH,
-                                                ORG_FILENAME) 
-                                VALUES (".$idd.", 
-                                        ".$pgl_id.",
-                                        '".$periode."',
-                                        SYSDATE, 
-                                        SYSDATE, 
-                                        '".$CREATED_BY."',
-                                        '".$UPDATED_BY."', 
-                                        '".$data['file_name']."',
-                                        'application/third_party/doc_npk', 
-                                        '".$data['client_name']."'
-                                        )";
-
-                    $this->db->query($sql);
-                    
-
-                    $result['success'] = true;
-                    $result['message'] = 'Data Berhasil Ditambah';
-                    
-
-                }
-            }else{
-                if (empty($_FILES["filename"]["name"])) {
-                    // die("Ada");
-                    $sql = "UPDATE P_MAP_NPK
-                            SET    PGL_ID              = ".$pgl_id.",
-                                   PERIOD              = '".$periode."',
-                                   UPDATE_DATE         = SYSDATE,
-                                   UPDATE_BY           = '".$UPDATED_BY."'
-                            WHERE  P_MAP_NPK_ID        = ".$p_map_npk_id;
-
-                    $this->db->query($sql);
-                }else{
-                    // die("Kosong");
-                    if (!$this->upload->do_upload("filename")) {
-
-                        $error = $this->upload->display_errors();
-                        $result['success'] = false;
-                        $result['message'] = $error;
-
-                        echo json_encode($result);
-                        exit;
-                    }else{
-                        
-                        // Do Upload
-                        
-                        $data = $this->upload->data();
-                        $sql = "UPDATE P_MAP_NPK
-                                SET    PGL_ID              = ".$pgl_id.",
-                                       PERIOD              = '".$periode."',
-                                       UPDATE_DATE         = SYSDATE,
-                                       UPDATE_BY           = '".$UPDATED_BY."',
-                                       FILE_NAME           = '".$data['file_name']."',
-                                       FILE_PATH           = 'application/third_party/doc_npk',
-                                       ORG_FILENAME        = '".$data['client_name']."'
-                                WHERE  P_MAP_NPK_ID        = ".$p_map_npk_id;
-
-                        $this->db->query($sql);
-                        
-
-                    }
-
-                    $result['success'] = true;
-                    $result['message'] = 'Data Berhasil Diupdate';
-                }
-            }
-
-        }catch(Exception $e) {
-            $result['success'] = false;
-            $result['message'] = $e->getMessage();
-        }
+        $result = $this->tp->crud_progress_npk();
 
         echo json_encode($result);
-
-        /*$result = $this->tp->crud_progress_npk();
-
-        echo json_encode($result);
-        exit;*/
+        exit;
     }
 
     public function submitWF() {
@@ -269,7 +148,7 @@ class Tracking_progress_npk extends CI_Controller
         echo json_encode($data);
     }
 
-    /*public function grid_npk_doc() {
+    public function grid_npk_doc() {
 
         $page = intval($_REQUEST['page']);
         $limit = $_REQUEST['rows'];
@@ -294,7 +173,7 @@ class Tracking_progress_npk extends CI_Controller
         );
 
         // Filter Table *
-        $req_param['where'] = array('P_MAP_npk_ID = '.$this->input->post('p_map_npk_id'));
+        $req_param['where'] = array('P_MAP_NPK_ID = '.$this->input->post('p_map_npk_id'));
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
         // print_r($row);exit;
@@ -328,9 +207,9 @@ class Tracking_progress_npk extends CI_Controller
         $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
         echo json_encode($result);
 
-    }*/
+    }
 
-    public function save_npk_doc(){
+     public function save_npk_doc(){
         $CREATED_BY = $this->session->userdata('d_user_name');
         $UPDATED_BY = $this->session->userdata('d_user_name');
         $p_map_npk_id = $this->input->post('p_map_npk_id');
@@ -343,7 +222,7 @@ class Tracking_progress_npk extends CI_Controller
             $config['max_size'] = '10000000';
             $config['overwrite'] = TRUE;
             $file_id = date("YmdHis");
-            $config['file_name'] = "NPK_" .$p_map_npk_id.'_'. $file_id;
+            $config['file_name'] = "PKS_". $file_id;
 
             $this->load->library('upload');
             $this->upload->initialize($config);
@@ -359,12 +238,12 @@ class Tracking_progress_npk extends CI_Controller
             }else{
                 
                 // Do Upload
-                /*$data = $this->upload->data();          
+                $data = $this->upload->data();          
 
-                $idd = gen_id('DOC_ID', 'npk_DOC');
+                $idd = gen_id('DOC_ID', 'NPK_DOC');
 
-                $sql = "INSERT INTO npk_DOC(DOC_ID, 
-                                            P_MAP_npk_ID, 
+                $sql = "INSERT INTO NPK_DOC(DOC_ID, 
+                                            P_MAP_NPK_ID, 
                                             FILE_NAME, 
                                             PATH_FILE, 
                                             DESCRIPTION, 
@@ -378,7 +257,7 @@ class Tracking_progress_npk extends CI_Controller
                             VALUES (".$idd.", 
                                     ".$p_map_npk_id.",
                                     '".$data['file_name']."',
-                                    'application/third_party/doc_npk', 
+                                    'application/third_party/doc_pks', 
                                     '".$desc."',  
                                     SYSDATE, 
                                     '".$CREATED_BY."',
@@ -389,7 +268,7 @@ class Tracking_progress_npk extends CI_Controller
                                     '".$data['client_name']."'
                                     )";
 
-                $this->db->query($sql);*/
+                $this->db->query($sql);
                 
 
                 $result['success'] = true;
@@ -407,15 +286,15 @@ class Tracking_progress_npk extends CI_Controller
 
     }
 
-    public function delete_npk(){
+    public function delete_npk_doc(){
         try {
 
-            $id_ = $this->input->post('P_MAP_NPK_ID');
-            $this->db->where('P_MAP_NPK_ID', $id_);
-            $this->db->delete('P_MAP_NPK');
+            $id_ = $this->input->post('id');
+            $this->db->where('DOC_ID', $id_);
+            $this->db->delete('NPK_DOC');
 
             $result['success'] = true;
-            $result['message'] = 'Data Berhasil Dihapus';
+            $result['message'] = 'Dokumen Pendukung Berhasil Dihapus';
 
         } catch (Exception $e) {
             $result['success'] = false;
@@ -535,7 +414,7 @@ class Tracking_progress_npk extends CI_Controller
 
         if($p_map_npk_id > 0){
             $sql = "SELECT * FROM npk_doc
-                    WHERE P_MAP_npk_ID = ".$p_map_npk_id;
+                    WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
             $qs = $this->jqGrid->db->query($sql);
 
@@ -551,7 +430,7 @@ class Tracking_progress_npk extends CI_Controller
 
         }else{
             $data['success'] = false;
-            $data['message'] = 'Dokumen Pendukung untuk p_map_npk_id tidak ditemukan';
+            $data['message'] = 'Dokumen Pendukung untuk tidak ditemukan';
         }
 
         echo json_encode($data);
@@ -763,7 +642,7 @@ class Tracking_progress_npk extends CI_Controller
             $config['max_size'] = '10000000';
             $config['overwrite'] = TRUE;
             $file_id = date("YmdHis");
-            $config['file_name'] = "npk_FINAL_" .$p_map_npk_id.'_'. $file_id;
+            $config['file_name'] = "NPK_FINAL_" .$p_map_npk_id.'_'. $file_id;
 
             $this->load->library('upload');
             $this->upload->initialize($config);
@@ -779,12 +658,12 @@ class Tracking_progress_npk extends CI_Controller
             }else{
                 
                 // Do Upload
-                /*$data = $this->upload->data();          
+                $data = $this->upload->data();          
 
-                $idd = gen_id('DOC_ID', 'npk_DOC');
+                $idd = gen_id('DOC_ID', 'NPK_DOC');
 
                 $sql = "INSERT INTO NPK_DOC(DOC_ID, 
-                                            P_MAP_npk_ID, 
+                                            P_MAP_NPK_ID, 
                                             FILE_NAME, 
                                             PATH_FILE, 
                                             DESCRIPTION, 
@@ -809,7 +688,7 @@ class Tracking_progress_npk extends CI_Controller
                                     '".$data['client_name']."'
                                     )";
 
-                $this->db->query($sql);*/
+                $this->db->query($sql);
                 
 
                 $result['success'] = true;
@@ -829,15 +708,11 @@ class Tracking_progress_npk extends CI_Controller
 
     public function update_no_npk() {
         $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
-        $no_npk = $this->input->post('no_npk');
-        $valid_from = $this->input->post('valid_from');
-        $valid_until = $this->input->post('valid_until');
+        $doc_no = $this->input->post('doc_no');
 
         if($p_map_npk_id > 0){
             $sql = "UPDATE p_map_npk SET
-                    NO_NPK = '".$no_npk."',
-                    VALID_FROM = to_date('".$valid_from."', 'YYYY-MM-DD'),
-                    VALID_UNTIL = to_date('".$valid_until."', 'YYYY-MM-DD')
+                    DOC_NO = '".$doc_no."'
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
             $this->jqGrid->db->query($sql);
@@ -958,6 +833,153 @@ class Tracking_progress_npk extends CI_Controller
         }
 
         echo json_encode($result);
+    }
+
+    public function update_logistic() {
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+        $no_npk = $this->input->post('no_npk');
+        $entry = $this->input->post('ENTRY_LOGISTIC');
+        $finish = $this->input->post('FINISH_LOGISTIC');
+
+        if($p_map_npk_id > 0){
+            $sql = "UPDATE p_map_npk SET
+                    ENTRY_LOGISTIC = to_date('".$entry."', 'YYYY-MM-DD'),
+                    FINISH_LOGISTIC = to_date('".$finish."', 'YYYY-MM-DD')
+                    WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Data berhasil disimpan';
+        }else{
+            $data['success'] = true;
+            $data['msg'] = 'Data gagal disimpan';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function update_finance() {
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+        $no_npk = $this->input->post('no_npk');
+        $entry = $this->input->post('ENTRY_FINANCE_DATE');
+        $finish = $this->input->post('FINISH_FINANCE_DATE');
+
+        if($p_map_npk_id > 0){
+            $sql = "UPDATE p_map_npk SET
+                    ENTRY_FINANCE_DATE = to_date('".$entry."', 'YYYY-MM-DD'),
+                    FINISH_FINANCE_DATE = to_date('".$finish."', 'YYYY-MM-DD')
+                    WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Data berhasil disimpan';
+        }else{
+            $data['success'] = true;
+            $data['msg'] = 'Data gagal disimpan';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function update_payment() {
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+        $no_npk = $this->input->post('no_npk');
+        $entry = $this->input->post('ENTRY_PAYMENT');
+        $finish = $this->input->post('FINISH_PAYMENT');
+
+        if($p_map_npk_id > 0){
+            $sql = "UPDATE p_map_npk SET
+                    ENTRY_PAYMENT = to_date('".$entry."', 'YYYY-MM-DD'),
+                    FINISH_PAYMENT = to_date('".$finish."', 'YYYY-MM-DD')
+                    WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Data berhasil disimpan';
+        }else{
+            $data['success'] = true;
+            $data['msg'] = 'Data gagal disimpan';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function cekStatusLogistic(){
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+
+        $sql = "SELECT 1
+                      FROM P_MAP_NPK
+                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id."
+                     AND ENTRY_LOGISTIC IS NOT NULL
+                     AND FINISH_LOGISTIC IS NOT NULL";
+                     
+
+        $qs = $this->jqGrid->db->query($sql);
+
+        if($qs->num_rows() > 0){
+            $data['success'] = true;
+            $data['message'] = '';
+        }else{
+            $data['success'] = false;
+            $data['message'] = 'Maaf Submit NPK Logistik dan Finish NPK Logistik belum disubmit ';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function cekStatusFinance(){
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+
+        $sql = "SELECT 1
+                      FROM P_MAP_NPK
+                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id."
+                     AND ENTRY_FINANCE_DATE IS NOT NULL
+                     AND FINISH_FINANCE_DATE IS NOT NULL";
+                     
+
+        $qs = $this->jqGrid->db->query($sql);
+
+        if($qs->num_rows() > 0){
+            $data['success'] = true;
+            $data['message'] = '';
+        }else{
+            $data['success'] = false;
+            $data['message'] = 'Maaf Submit NPK Finance dan Finish NPK Finance belum disubmit ';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    public function cekStatusPayment(){
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+
+        $sql = "SELECT 1
+                      FROM P_MAP_NPK
+                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id."
+                     AND ENTRY_PAYMENT IS NOT NULL
+                     AND FINISH_PAYMENT IS NOT NULL";
+                     
+
+        $qs = $this->jqGrid->db->query($sql);
+
+        if($qs->num_rows() > 0){
+            $data['success'] = true;
+            $data['message'] = '';
+        }else{
+            $data['success'] = false;
+            $data['message'] = 'Maaf Submit NPK Payment dan Finish NPK Payment belum disubmit ';
+        }
+
+        echo json_encode($data);
+        exit;
     }
 
 }

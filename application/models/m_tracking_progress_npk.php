@@ -14,7 +14,7 @@ class M_tracking_progress_npk extends CI_Model
         $id_ = $this->input->post('id');
                 
         $PGL_ID = $this->input->post('PGL_ID'); 
-        // $DESCRIPTION = $this->input->post('DESCRIPTION'); 
+        $PERIOD = $this->input->post('PERIOD'); 
         
         $CREATED_BY = $this->session->userdata('d_user_name');
         $UPDATED_BY = $this->session->userdata('d_user_name');
@@ -28,7 +28,7 @@ class M_tracking_progress_npk extends CI_Model
                     $p_map_npk_id = gen_id('P_MAP_NPK_ID', 'P_MAP_NPK');
                     $this->db->set('P_MAP_NPK_ID', $p_map_npk_id);                       
                     $this->db->set('PGL_ID', $PGL_ID);                       
-                    // $this->db->set('DESCRIPTION', $DESCRIPTION);                       
+                    $this->db->set('PERIOD', $PERIOD);                       
                     // $this->db->set('STATUS', 31);    
                     $this->db->set('CREATED_DATE',"sysdate",false);
                     $this->db->set('CREATE_BY',$CREATED_BY);   
@@ -57,11 +57,12 @@ class M_tracking_progress_npk extends CI_Model
                 try {
 
                     $p_map_npk_id = $this->input->post('P_MAP_NPK_ID'); 
-                    $this->db->set('P_MAP_NPK_ID', $p_map_npk_id);                       
+                                          
                     $this->db->set('PGL_ID', $PGL_ID);                       
-                    // $this->db->set('DESCRIPTION', $DESCRIPTION);
+                    $this->db->set('PERIOD', $PERIOD);
                     $this->db->set('UPDATE_DATE',"sysdate",false);                   
-                    $this->db->set('UPDATE_BY',$UPDATED_BY);                   
+                    $this->db->set('UPDATE_BY',$UPDATED_BY);  
+                    $this->db->where('P_MAP_NPK_ID', $p_map_npk_id);        
                     $this->db->update('P_MAP_NPK');
                     
                     $result['success'] = true;

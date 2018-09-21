@@ -120,16 +120,19 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name">Dokumen:</label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">   
-                                                <div id="dokumen"></div>                                            
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </form>
+
+                                <table id="grid-detail-download" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <tr>
+                                            <th data-column-id="P_MAP_PKS_ID" data-visible="false">ID</th>
+                                            <th data-column-id="ORG_FILENAME" data-width="200">Filename</th>
+                                            <th data-column-id="DESCRIPTION">Description</th>                                             
+                                            <th data-column-id="action" data-formatter="action" data-width="100" data-header-align="center" data-align="center">Download</th>                                                                                       
+                                      </tr>
+                                    </thead>
+                                </table>
+                               
                                
                             </div>
 
@@ -302,12 +305,6 @@
                 $("#p_map_npk_id").val( items.P_MAP_NPK_ID );
                 $("#alamat_mitra").val( items.PGL_ADDR );
                 $("#period").val( items.PERIOD );
-                
-                var location = "./"+items.PATH_FILE+"/"+items.FILE_NAME;
-                var file_name = items.FILE_NAME;
-                var original_name = items.ORG_FILENAME;
-
-                $("#dokumen").html(original_name + ' <button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>');
 
                 loadgrid(items.P_MAP_NPK_ID);
             }
@@ -480,6 +477,28 @@
             else{
                 $("#signer_type").html(msg);
             }
+        }
+    });
+
+    $("#grid-detail-download").bootgrid({
+        ajax: true,
+        post: function ()
+        {
+            return {
+                "t_customer_order_id": $("#CURR_DOC_ID").val(),
+                "status" : 'INITIAL DOC'
+            };
+        },
+        url: "<?php echo site_url('tracking_progress_npk/getDetailNPK');?>",
+        navigation:0,
+        formatters: {
+            "action": function(column, row)
+            {
+                var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
+                var file_name = row.FILE_NAME;
+                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
+            }
+
         }
     });
 </script>
