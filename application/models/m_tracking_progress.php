@@ -57,11 +57,12 @@ class M_tracking_progress extends CI_Model
                 try {
 
                     $p_map_pks_id = $this->input->post('P_MAP_PKS_ID'); 
-                    $this->db->set('P_MAP_PKS_ID', $p_map_pks_id);                       
+                                        
                     $this->db->set('PGL_ID', $PGL_ID);                       
                     $this->db->set('DESCRIPTION', $DESCRIPTION);
                     $this->db->set('UPDATE_DATE',"sysdate",false);                   
-                    $this->db->set('UPDATE_BY',$UPDATED_BY);                   
+                    $this->db->set('UPDATE_BY',$UPDATED_BY);
+                    $this->db->where('P_MAP_PKS_ID', $p_map_pks_id);                      
                     $this->db->update('P_MAP_PKS');
                     
                     $result['success'] = true;
