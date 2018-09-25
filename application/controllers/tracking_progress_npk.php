@@ -155,7 +155,7 @@ class Tracking_progress_npk extends CI_Controller
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
 
-        $table = "SELECT * FROM NPK_DOC";
+        $table = "SELECT * FROM V_NPK_DOC_STATUS";
 
         $req_param = array(
             "table" => $table,
@@ -257,7 +257,7 @@ class Tracking_progress_npk extends CI_Controller
                             VALUES (".$idd.", 
                                     ".$p_map_npk_id.",
                                     '".$data['file_name']."',
-                                    'application/third_party/doc_pks', 
+                                    'application/third_party/doc_npk', 
                                     '".$desc."',  
                                     SYSDATE, 
                                     '".$CREATED_BY."',
@@ -731,10 +731,14 @@ class Tracking_progress_npk extends CI_Controller
     public function cekStatusFinish(){
         $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
 
+        $this->cekStatusLogistic();
+        $this->cekStatusFinance();
+        $this->cekStatusPayment();
+
         if($p_map_npk_id > 0){
 
             $sql_fin = "SELECT 1 
-                        FROM npk_doc 
+                        FROM NPK_DOC 
                         WHERE P_MAP_NPK_ID = ".$p_map_npk_id."
                         AND DOC_TYPE_ID = get_val_reflist_signer('FINISHING DOC')";
 
@@ -742,11 +746,9 @@ class Tracking_progress_npk extends CI_Controller
 
             if($qs1->num_rows() > 0){
                 $sql = "SELECT 1
-                      FROM P_MAP_npk
-                     WHERE P_MAP_npk_ID = ".$p_map_npk_id."
-                     AND NO_npk IS NOT NULL
-                     AND VALID_FROM IS NOT NULL
-                     AND VALID_UNTIL IS NOT NULL";
+                      FROM P_MAP_NPK
+                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id."
+                     AND DOC_NO IS NOT NULL";
                      
 
                 $qs = $this->jqGrid->db->query($sql);
@@ -838,13 +840,27 @@ class Tracking_progress_npk extends CI_Controller
     public function update_logistic() {
         $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
         $no_npk = $this->input->post('no_npk');
+        $docno = $this->input->post('DOC_NO');
         $entry = $this->input->post('ENTRY_LOGISTIC');
         $finish = $this->input->post('FINISH_LOGISTIC');
 
+        if(empty($entry)){
+            $entry = "null";
+        }else{
+            $entry = "to_date('".$entry."', 'YYYY-MM-DD')";
+        }
+
+        if(empty($finish)){
+            $finish = "null";
+        }else{
+            $finish = "to_date('".$finish."', 'YYYY-MM-DD')";
+        }
+
         if($p_map_npk_id > 0){
             $sql = "UPDATE p_map_npk SET
-                    ENTRY_LOGISTIC = to_date('".$entry."', 'YYYY-MM-DD'),
-                    FINISH_LOGISTIC = to_date('".$finish."', 'YYYY-MM-DD')
+                    DOC_NO = '".$docno."',
+                    ENTRY_LOGISTIC = ".$entry.",
+                    FINISH_LOGISTIC = ".$finish."
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
             $this->jqGrid->db->query($sql);
@@ -866,10 +882,22 @@ class Tracking_progress_npk extends CI_Controller
         $entry = $this->input->post('ENTRY_FINANCE_DATE');
         $finish = $this->input->post('FINISH_FINANCE_DATE');
 
+        if(empty($entry)){
+            $entry = "null";
+        }else{
+            $entry = "to_date('".$entry."', 'YYYY-MM-DD')";
+        }
+
+        if(empty($finish)){
+            $finish = "null";
+        }else{
+            $finish = "to_date('".$finish."', 'YYYY-MM-DD')";
+        }
+
         if($p_map_npk_id > 0){
             $sql = "UPDATE p_map_npk SET
-                    ENTRY_FINANCE_DATE = to_date('".$entry."', 'YYYY-MM-DD'),
-                    FINISH_FINANCE_DATE = to_date('".$finish."', 'YYYY-MM-DD')
+                    ENTRY_FINANCE_DATE = ".$entry.",
+                    FINISH_FINANCE_DATE = ".$finish."
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
             $this->jqGrid->db->query($sql);
@@ -891,10 +919,22 @@ class Tracking_progress_npk extends CI_Controller
         $entry = $this->input->post('ENTRY_PAYMENT');
         $finish = $this->input->post('FINISH_PAYMENT');
 
+        if(empty($entry)){
+            $entry = "null";
+        }else{
+            $entry = "to_date('".$entry."', 'YYYY-MM-DD')";
+        }
+
+        if(empty($finish)){
+            $finish = "null";
+        }else{
+            $finish = "to_date('".$finish."', 'YYYY-MM-DD')";
+        }
+
         if($p_map_npk_id > 0){
             $sql = "UPDATE p_map_npk SET
-                    ENTRY_PAYMENT = to_date('".$entry."', 'YYYY-MM-DD'),
-                    FINISH_PAYMENT = to_date('".$finish."', 'YYYY-MM-DD')
+                    ENTRY_PAYMENT = ".$entry.",
+                    FINISH_PAYMENT = ".$finish."
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
             $this->jqGrid->db->query($sql);
@@ -922,16 +962,15 @@ class Tracking_progress_npk extends CI_Controller
 
         $qs = $this->jqGrid->db->query($sql);
 
-        if($qs->num_rows() > 0){
-            $data['success'] = true;
-            $data['message'] = '';
-        }else{
+        if($qs->num_rows() == 0){
             $data['success'] = false;
-            $data['message'] = 'Maaf Submit NPK Logistik dan Finish NPK Logistik belum disubmit ';
+            $data['message'] = 'Maaf Data Submit atau Finish NPK Logistik belum disimpan ';
+
+            echo json_encode($data);
+            exit;
         }
 
-        echo json_encode($data);
-        exit;
+        
     }
 
     public function cekStatusFinance(){
@@ -946,16 +985,15 @@ class Tracking_progress_npk extends CI_Controller
 
         $qs = $this->jqGrid->db->query($sql);
 
-        if($qs->num_rows() > 0){
-            $data['success'] = true;
-            $data['message'] = '';
-        }else{
+        if($qs->num_rows() == 0){
             $data['success'] = false;
-            $data['message'] = 'Maaf Submit NPK Finance dan Finish NPK Finance belum disubmit ';
+            $data['message'] = 'Maaf Data Submit atau Finish NPK Finance belum disimpan ';
+
+            echo json_encode($data);
+            exit;
         }
 
-        echo json_encode($data);
-        exit;
+        
     }
 
     public function cekStatusPayment(){
@@ -970,16 +1008,15 @@ class Tracking_progress_npk extends CI_Controller
 
         $qs = $this->jqGrid->db->query($sql);
 
-        if($qs->num_rows() > 0){
-            $data['success'] = true;
-            $data['message'] = '';
-        }else{
+        if($qs->num_rows() == 0){
             $data['success'] = false;
-            $data['message'] = 'Maaf Submit NPK Payment dan Finish NPK Payment belum disubmit ';
+            $data['message'] = 'Maaf Data Submit atau Finish NPK Payment belum disimpan ';
+
+            echo json_encode($data);
+            exit;
         }
 
-        echo json_encode($data);
-        exit;
+        
     }
 
 }

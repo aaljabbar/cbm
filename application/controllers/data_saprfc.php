@@ -10,7 +10,7 @@ class Data_saprfc extends CI_Controller
     }
 
 
-    public function getdata()
+    public function getdata($sapnodoc)
     {
         $items = array('success' => true, 'total'=> 0, 'message'=> '', 'rfc_system_info' => array(),'data' => array());
 
@@ -23,10 +23,10 @@ class Data_saprfc extends CI_Controller
         $l["ASHOST"] = '10.6.1.134';
         $l["SYSNR"] = '00';
         $l["CLIENT"] = '100';
-        $l["USER"] = 'USR_ARIESA';
-        // $l["USER"] = '641459';
-        $l["PASSWD"] = 'telkom#123';
-        // $l["PASSWD"] = 'Telkom2018';
+        // $l["USER"] = 'USR_ARIESA';
+        $l["USER"] = '641459';
+        // $l["PASSWD"] = 'telkom#123';
+        $l["PASSWD"] = 'Telkom2018';
         $l["MSHOST"] = null;
         $l["R3NAME"] = null;
         $l["GROUP"] = null;
@@ -103,7 +103,8 @@ class Data_saprfc extends CI_Controller
         $vararray["LASTR"] = null; 
         $vararray["SRTGB"] = null; 
         $vararray["KOSTL"] = null; 
-        $vararray["BELNR"] = "1900116331";
+        // $vararray["BELNR"] = "1900138627";
+        $vararray["BELNR"] = $sapnodoc;
         $vararray["XBLNR"] = null; 
         $vararray["BUDAT"] = null; 
         $vararray["BLDAT"] = null; 

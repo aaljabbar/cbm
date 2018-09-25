@@ -173,7 +173,7 @@ $prv = getPrivilege($menu_id); ?>
                             return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
                         }else{
                             if(status == 1){
-                                return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>>';
+                                return '<button type="button" class="btn btn-white btn-sm btn-primary" onclick="submitWF('+custId+','+map_pks_id+');">Submit</button>';
                             }else if(status == 2){
                                 return '<label style="color:green; font-size: 11px;">IN-PROCESS</label>';
                             }else{
@@ -218,8 +218,8 @@ $prv = getPrivilege($menu_id); ?>
                     hidden: true
                 },
                 {
-                    label: 'No. PKS',
-                    name: 'NO_PKS', 
+                    label: 'No. NPK',
+                    name: 'DOC_NO', 
                     width: 200, 
                     sortable: true, 
                     editable: false

@@ -75,7 +75,7 @@
                                 <th width="80">Terima</th>
                                 <th>Pekerjaan</th>
                                 <th>Dokumen</th>
-                                <th width="60">Pesan</th>
+                                <!-- <th width="60">Pesan</th> -->
                             </tr>
                         </thead>
                         

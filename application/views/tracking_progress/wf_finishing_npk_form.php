@@ -58,27 +58,27 @@
 
                                 <li data-step="2">
                                     <span class="step">2</span>
-                                    <span class="title">Signing Step</span>
+                                    <span class="title">Upload Dokumen</span>
                                 </li>
 
                                 <li data-step="3">
                                     <span class="step">3</span>
-                                    <span class="title">Logistik</span>
+                                    <span class="title">Signing Step</span>
                                 </li>
 
                                 <li data-step="4">
                                     <span class="step">4</span>
-                                    <span class="title">Finance</span>
+                                    <span class="title">Logistik</span>
                                 </li>
 
                                 <li data-step="5">
                                     <span class="step">5</span>
-                                    <span class="title">Payment</span>
+                                    <span class="title">Finance</span>
                                 </li>
 
                                 <li data-step="6">
                                     <span class="step">6</span>
-                                    <span class="title">Finishing Step</span>
+                                    <span class="title">Payment</span>
                                 </li>
 
                             </ul>
@@ -157,6 +157,26 @@
 
                             <div class="step-pane" data-step="2">
                                 <div class="col-sm-12">
+                                    <center><h3>Upload Dokumen</h3></center>
+                                    <hr>
+                                    <br>
+                                </div>
+                                <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <tr>
+                                            <th data-column-id="DOC_ID" data-visible="false">DOC ID</th>
+                                            <th data-column-id="P_MAP_NPK_ID" data-visible="false">ID</th>
+                                            <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
+                                            <th data-column-id="DESCRIPTION">Description</th>                                             
+                                            <th data-column-id="action" data-formatter="action" data-width="150" data-header-align="center" data-align="center">Download</th>                                                                                       
+                                      </tr>
+                                    </thead>
+                                </table>  
+
+                            </div>
+
+                            <div class="step-pane" data-step="3">
+                                <div class="col-sm-12">
                                     <center><h3>Table Status Signing</h3></center>
                                     <!-- <a id="add_log" class="btn btn-white btn-sm btn-round">
                                         <i class="ace-icon fa fa-plus green"></i>
@@ -185,13 +205,22 @@
 
                             </div>
 
-                            <div class="step-pane active" data-step="3">
+                            <div class="step-pane active" data-step="4">
                                 <div class="col-sm-12">
                                     <center><h3>Entry Logistic</h3></center>
                                     <hr>
                                     <br>
                                 </div>
                                 <form class="form-horizontal" id="sample-form">
+
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" for="name">No. Document:</label>
+                                        <div class="col-sm-10">
+                                            <div class="clearfix">
+                                                <input type="text" placeholder="No. DOC" id="DOC_NO" name="DOC_NO" class="col-sm-4" style="margin-right: 10px;" />
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-sm-2" for="name">Submit NPK Logistik:</label>
@@ -224,7 +253,7 @@
                                 </form>
                             </div>
 
-                            <div class="step-pane active" data-step="4">
+                            <div class="step-pane active" data-step="5">
                                 <div class="col-sm-12">
                                     <center><h3>Entry Finance</h3></center>
                                     <hr>
@@ -263,7 +292,7 @@
                                 </form>
                             </div>
 
-                            <div class="step-pane active" data-step="5">
+                            <div class="step-pane active" data-step="6">
                                 <div class="col-sm-12">
                                     <center><h3>Entry Payment</h3></center>
                                     <hr>
@@ -301,41 +330,7 @@
 
                                 </form>
                             </div>
-
-                            <div class="step-pane" data-step="6">
-                                <div class="col-sm-12">
-                                    <center><h3>Upload Dokumen</h3></center>
-                                    <hr>
-                                    <br>
-                                </div>
-
-                                <form class="form-horizontal" id="finished-form">
-
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-1" style="text-align: left;" for="name">No. DOC</label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">
-                                                <input type="text" placeholder="No. DOC" id="DOC_NO" name="DOC_NO" class="col-sm-4" style="margin-right: 10px;" />
-                                                <button type="button" class="btn btn-xs btn-success" id="add_upload"> Add Upload </button>
-                                                <button type="button" class="btn btn-xs btn-primary" id="btn-submit"> Submit </button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </form>
-                                <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                      <tr>
-                                            <th data-column-id="P_MAP_NPK_ID" data-visible="false">ID</th>
-                                            <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
-                                            <th data-column-id="DESCRIPTION">Description</th>                                             
-                                            <th data-column-id="action" data-formatter="action" data-width="150" data-header-align="center" data-align="center">Download</th>                                                                                       
-                                      </tr>
-                                    </thead>
-                                </table>  
-
-                            </div>
+                            
 
                         </div>
 
@@ -365,7 +360,6 @@
 
 <?php 
     $this->load->view('wf/lov_submitter.php'); 
-    $this->load->view('tracking_progress/lov_npk_doc_final.php'); 
 ?>
 
 <script src="<?php echo base_url(); ?>assets/js/fuelux/fuelux.wizard.js"></script>
@@ -386,7 +380,12 @@
         $('#fuelux-wizard-container').ace_wizard()
         .on('actionclicked.fu.wizard' , function(e, info){
                 // console.log(e);
-                    if(info.step == 3 && info.direction == "next") {
+                    if(info.step == 4 && info.direction == "next") {
+                        if($('#DOC_NO').val() == ''){
+                            swal({html: true, title: "Informasi", text: "No. Document  Belum diisi", type: "info"});
+                            return false;
+                        }
+
                         if($('#ENTRY_LOGISTIC').val() == ''){
                             swal({html: true, title: "Informasi", text: "Submit NPK Logistik Belum diisi", type: "info"});
                             return false;
@@ -400,7 +399,7 @@
                         // cekLogistic();
                     }
 
-                    if(info.step == 4 && info.direction == "next") {
+                    if(info.step == 5 && info.direction == "next") {
                         if($('#ENTRY_FINANCE_DATE').val() == ''){
                             swal({html: true, title: "Informasi", text: "Submit NPK Finance Belum diisi", type: "info"});
                             return false;
@@ -414,21 +413,19 @@
                         // cekFinance();
                     }
 
-                    if(info.step == 5 && info.direction == "next") {
-                        if($('#ENTRY_PAYMENT').val() == ''){
-                            swal({html: true, title: "Informasi", text: "Submit NPK Payment Belum diisi", type: "info"});
-                            return false;
-                        }
-
-                        if($('#FINISH_PAYMENT').val() == ''){
-                            swal({html: true, title: "Informasi", text: "Finish NPK Payment Belum diisi", type: "info"});
-                            return false;
-                        }
-
-                        // cekPayment();
-                    }
                 })
         .on('finished.fu.wizard', function(e) {
+
+            if($('#ENTRY_PAYMENT').val() == ''){
+                swal({html: true, title: "Informasi", text: "Submit NPK Payment Belum diisi", type: "info"});
+                return false;
+            }
+
+            if($('#FINISH_PAYMENT').val() == ''){
+                swal({html: true, title: "Informasi", text: "Finish NPK Payment Belum diisi", type: "info"});
+                return false;
+            }
+
             var params_submit = {};
             
             params_submit.CURR_DOC_ID         = $('#CURR_DOC_ID').val();  
@@ -486,6 +483,9 @@
         /* cek jika tipe view */
         if (  $('#ACTION_STATUS').val() == 'VIEW' ) {
             $('#btn-submit').hide();
+            $('#btn-logistic').hide();
+            $('#btn-finance').hide();
+            $('#btn-payment').hide();
         }
 
         /* mengisi form customer order */
@@ -519,6 +519,7 @@
                 $("#FINISH_LOGISTIC").val( items.FINISH_LOGISTIC );
                 $("#FINISH_FINANCE_DATE").val( items.FINISH_FINANCE_DATE );
                 $("#FINISH_PAYMENT").val( items.FINISH_PAYMENT );
+                $("#DOC_NO").val( items.DOC_NO );
 
                 loadgrid(items.P_MAP_NPK_ID);
             }
@@ -590,51 +591,13 @@
             {
                 var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
                 var file_name = row.FILE_NAME;
-                var ids = row.P_MAP_NPK_ID;
-                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button> <button type="button" class="btn btn-xs btn-danger" onclick="deleteDoc(\''+ids+'\')"> Delete </button>';
+                // var ids = row.P_MAP_NPK_ID;
+                var ids = row.DOC_ID;
+                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
             }
 
         }
     });
-
-    $('#add_upload').on('click', function(){
-        var p_map_npk_id = $('#p_map_npk_id').val();
-        modal_lov_pks_doc_show(p_map_npk_id);
-    });
-
-    function deleteDoc(ids){
-        
-        swal({
-            title: "Konfirmasi",
-            text: "Apakah Anda yakin?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: 'Ya, Delete!',
-            cancelButtonText: "Tidak, cancel!",
-            closeOnConfirm: false,
-            closeOnCancel: false
-         },
-         function(isConfirm){
-            if (isConfirm){
-
-                $.ajax({
-                    type: 'POST',
-                    datatype: "json",
-                    url: '<?php echo site_url('tracking_progress_npk/delete_npk_doc');?>',
-                    timeout: 10000,
-                    data: { id : ids},
-                    success: function(data) {
-                         $('#grid-detail-upload').bootgrid('reload');
-                    }
-                });
-
-            } else {
-                swal("Cancelled", "Data tidak jadi didelete :)", "error");
-            }
-         });        
-        
-    }
 
     $(".datepicker").datepicker({
             autoclose: true,
@@ -694,6 +657,7 @@
 
     $('#btn-logistic').on('click', function() {
         var p_map_npk_id = $('#p_map_npk_id').val();
+        var docno = $('#DOC_NO').val();
         var entry = $('#ENTRY_LOGISTIC').val();
         var finish = $('#FINISH_LOGISTIC').val();
 
@@ -702,7 +666,7 @@
             datatype: "json",
             url: '<?php echo site_url('tracking_progress_npk/update_logistic');?>',
             timeout: 10000,
-            data: { p_map_npk_id : p_map_npk_id, ENTRY_LOGISTIC : entry, FINISH_LOGISTIC : finish},
+            data: { p_map_npk_id : p_map_npk_id, ENTRY_LOGISTIC : entry, FINISH_LOGISTIC : finish, DOC_NO: docno},
             success: function(data) {
                  $('#grid-detail-upload').bootgrid('reload');
             }

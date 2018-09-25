@@ -207,6 +207,7 @@
                                 <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
                                     <thead>
                                       <tr>
+                                            <th data-column-id="DOC_ID" data-visible="false">DOC ID</th>
                                             <th data-column-id="P_MAP_PKS_ID" data-visible="false">ID</th>
                                             <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
                                             <th data-column-id="DESCRIPTION">Description</th>                                             
@@ -348,6 +349,9 @@
                 $("#alamat_mitra").val( items.PGL_ADDR );
                 $("#approval_telkom").val( items.VER_DATE_TLK );
                 $("#approval_mitra").val( items.VER_DATE_MITRA );
+                $("#NO_PKS").val( items.NO_PKS );
+                $("#VALID_FROM").val( items.VALID_FROM );
+                $("#VALID_UNTIL").val( items.VALID_UNTIL );
                 
                 loadgrid(items.P_MAP_PKS_ID);
             }
@@ -419,7 +423,8 @@
             {
                 var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
                 var file_name = row.FILE_NAME;
-                var ids = row.P_MAP_PKS_ID;
+                //var ids = row.P_MAP_PKS_ID;
+                var ids = row.DOC_ID;
                 return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button> <button type="button" class="btn btn-xs btn-danger" onclick="deleteDoc(\''+ids+'\')"> Delete </button>';
             }
 

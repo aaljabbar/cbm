@@ -10,7 +10,7 @@ class Wf extends CI_Controller {
         $this->load->model('M_jqGrid', 'jqGrid');
     }
 
-    public function list_inbox() {
+    public function list_inbox_old() {
         $user_name = $this->session->userdata("d_user_name");
         $items = $this->workflow->getListInbox($user_name);
 
@@ -54,6 +54,53 @@ class Wf extends CI_Controller {
                                 <h4 class="blue" style="text-align:right;"> Jumlah Pekerjaan Tersedia : '.$total.'</h4>
                             </div>
                       </div>';
+
+        echo $strOutput;
+    }
+
+    public function list_inbox() {
+        $user_name = $this->session->userdata("d_user_name");
+        $items = $this->workflow->getListInbox($user_name);
+
+        $strOutput = '';
+        $total = 0;
+        $strOutput = '
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <table class="table table-hover table-striped">
+                                <tr>
+                                    <th class="red">Nama Pekerjaan</th>
+                                    <th class="red" style="text-align:center;">Jumlah</th>
+                                    <th class="red" style="text-align:center;">Lihat Detail</th>
+                                </tr>';
+
+        foreach($items as $item) {
+
+            $url_arr = explode("#", $item['URL']);
+            $summary = str_replace("/", "-", $url_arr[0]);
+            $str_params = $url_arr[1];
+
+            $total += $item['JUMLAH'];
+
+            if($item['JUMLAH'] == 0)
+                $btnOpenInbox = '&nbsp;';
+            else
+                $btnOpenInbox = '<button type="button" onClick="loadContentWithParams(\''.$summary.'\','.$str_params.');" class="btn btn-xs btn-danger"> Lihat Detail </button>';
+
+            $strOutput .= '<tr>';
+            $strOutput .= '<td>'.$item['PROFILE_TYPE'].'</td>';
+            $strOutput .= '<td align="center"><strong>'.$item['JUMLAH'].'</strong></td>';
+            $strOutput .= '<td align="center">'.$btnOpenInbox.'</td>';
+            $strOutput .= '</tr>';
+        }
+
+        $strOutput .= '<tr class="red">
+                            <td colspan="2" align="right"><h4>Jumlah Pekerjaan Tersedia : '.$total.' </h4></td>
+                            <td>&nbsp;</td>
+                        </tr>';
+        $strOutput .= '</table>
+                        </div>
+                        </div>';
 
         echo $strOutput;
     }
@@ -195,7 +242,7 @@ class Wf extends CI_Controller {
     
     public function emptyTaskList() {
         return '<tr>
-                        <td colspan="4" align="center"> Tidak ada data untuk ditampilkan </td>
+                        <td colspan="3" align="center"> Tidak ada data untuk ditampilkan </td>
                     </tr>';
 
     }
@@ -211,7 +258,7 @@ class Wf extends CI_Controller {
         $result  = '';
         foreach($items as $item) {
             $result .= '<tr>
-                            <td colspan="4"> <span class="green"><strong>'.$item['CUST_INFO'].'</strong></span></td>
+                            <td colspan="3"> <span class="green"><strong>'.$item['CUST_INFO'].'</strong></span></td>
                         </tr>';
             
             $result .= '<tr>';
@@ -262,7 +309,7 @@ class Wf extends CI_Controller {
                                 <tr>
                                     <td>Nama Pekerjaan</td>
                                     <td>:</td>
-                                    <td colspan="2"><span class="red"><strong>'.$item['LTASK'].'</strong></span></td>
+                                    <td colspan="2" width="10"><span class="red"><strong>'.$item['LTASK'].'</strong></span></td>
                                 </tr>
                                 <tr>
                                     <td>Pengirim</td>
@@ -320,8 +367,12 @@ class Wf extends CI_Controller {
                                 </tr>
                             </table>
                         </td>'; /* dokumen */
-            $result .= '<td>'.$item['MESSAGE'].'</td>'; /* pesan */
+            //$result .= '<td>'.$item['MESSAGE'].'</td>'; /* pesan */
             $result .= '</tr>';
+
+            $result .= '<tr>
+                <td colspan="3"> <span class="red"><strong>Pesan : '.$item['MESSAGE'].'</strong></span></td>
+            </tr>';
         }
         
         return $result;
