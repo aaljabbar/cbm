@@ -154,7 +154,7 @@ class Tracking_progress extends CI_Controller
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
 
-        $table = "SELECT * FROM PKS_DOC";
+        $table = "SELECT * FROM V_PKS_DOC_STATUS";
 
         $req_param = array(
             "table" => $table,

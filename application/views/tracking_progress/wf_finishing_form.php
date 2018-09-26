@@ -322,6 +322,7 @@
         /* cek jika tipe view */
         if (  $('#ACTION_STATUS').val() == 'VIEW' ) {
             $('#btn-submit').hide();
+            $('#add_upload').hide();
         }
 
         /* mengisi form customer order */
@@ -425,7 +426,11 @@
                 var file_name = row.FILE_NAME;
                 //var ids = row.P_MAP_PKS_ID;
                 var ids = row.DOC_ID;
-                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button> <button type="button" class="btn btn-xs btn-danger" onclick="deleteDoc(\''+ids+'\')"> Delete </button>';
+                if (  $('#ACTION_STATUS').val() == 'VIEW' ) {
+                    return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
+                }else{
+                    return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button> <button type="button" class="btn btn-xs btn-danger" onclick="deleteDoc(\''+ids+'\')"> Delete </button>';
+                }
             }
 
         }

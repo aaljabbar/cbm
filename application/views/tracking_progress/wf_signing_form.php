@@ -287,6 +287,7 @@
         /* cek jika tipe view */
         if (  $('#ACTION_STATUS').val() == 'VIEW' ) {
             $('#btn-submit').hide();
+            $('#generate_signer').hide();
         }
 
         /* mengisi form customer order */

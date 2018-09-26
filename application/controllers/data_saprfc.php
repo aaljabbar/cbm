@@ -10,9 +10,22 @@ class Data_saprfc extends CI_Controller
     }
 
 
-    public function getdata($sapnodoc)
+    public function getdata()
     {
-        $items = array('success' => true, 'total'=> 0, 'message'=> '', 'rfc_system_info' => array(),'data' => array());
+        // print_r($sapnodoc); exit;
+        $postdate = $this->input->get('postdate', '');
+        $docno = $this->input->get('docno', '');
+
+        header('Content-Type: application/json');
+        $items = array('success' => true, 'total'=> 0, 'message'=> '', 'data' => array());
+
+        if($postdate == '' || $docno == ''){
+            $items['success'] = false;
+            $items['message'] = 'parameter postdate dan docno tidak ada';
+
+            echo json_encode($items);
+            exit;
+        }
 
         if (!extension_loaded ("saprfc")){
                echo "SAPRFC extension not loaded";
@@ -23,9 +36,7 @@ class Data_saprfc extends CI_Controller
         $l["ASHOST"] = '10.6.1.134';
         $l["SYSNR"] = '00';
         $l["CLIENT"] = '100';
-        // $l["USER"] = 'USR_ARIESA';
         $l["USER"] = '641459';
-        // $l["PASSWD"] = 'telkom#123';
         $l["PASSWD"] = 'Telkom2018';
         $l["MSHOST"] = null;
         $l["R3NAME"] = null;
@@ -60,7 +71,7 @@ class Data_saprfc extends CI_Controller
              {
                   // retrieve export (output) parametr RFCSI_EXPORT
                   $sysinfo = saprfc_export ($sysinfo_fce,"RFCSI_EXPORT");
-                  $items['rfc_system_info'] = $sysinfo;
+                  // $items['rfc_system_info'] = $sysinfo;
                   // $RFC_SYSTEM_INFO = sprintf ("system id: %s (%s), client=%03d, user=%s, application server=%s (%s,%s,%s), database=%s (%s)",
                   //                              $sysinfo["RFCSYSID"],$sysinfo["RFCSAPRL"],$l["CLIENT"],$l["USER"],$sysinfo["RFCHOST"], $sysinfo["RFCOPSYS"],
                   //                              $sysinfo["RFCIPADDR"],$sysinfo["RFCKERNRL"], $sysinfo["RFCDBHOST"], $sysinfo["RFCDBSYS"] );
@@ -72,7 +83,7 @@ class Data_saprfc extends CI_Controller
         // other, use function module RFC_FUNCTION_SEARCH to
         // get a list of RFC functions of target R/3
         $search_fce = saprfc_function_discover ($rfc,"RFC_FUNCTION_SEARCH");
-        $function = "ZRFC_FINEST_SPB_STATUS_V3";
+        $function = "ZRFC_FINEST_SPB_STATUS_V2";
 
         
 
@@ -90,92 +101,22 @@ class Data_saprfc extends CI_Controller
         }
 
         $def = @saprfc_function_interface($fce);               // retrieve definition of interface in array $def
-        $vararray =  array();
 
-        $vararray["LAUFD"] = null; 
-        $vararray["LAUFI"] = null; 
-        $vararray["ZBUKR"] = null; 
-        $vararray["LIFNR"] = null; 
-        $vararray["VBLNR"] = null; 
-        $vararray["PYORD"] = null; 
-        $vararray["TDPROCSS"] = null; 
-        $vararray["TDCOPIES"] = null; 
-        $vararray["LASTR"] = null; 
-        $vararray["SRTGB"] = null; 
-        $vararray["KOSTL"] = null; 
-        // $vararray["BELNR"] = "1900138627";
-        $vararray["BELNR"] = $sapnodoc;
-        $vararray["XBLNR"] = null; 
-        $vararray["BUDAT"] = null; 
-        $vararray["BLDAT"] = null; 
-        $vararray["GSBER"] = null; 
-        $vararray["TRIW"] = null; 
-        $vararray["ACDRK"] = null; 
-        $vararray["ANGTH"] = null; 
-        $vararray["REKNG"] = null; 
-        $vararray["LOGTR"] = null; 
-        $vararray["PERKD"] = null; 
-        $vararray["WAERS"] = null; 
-        $vararray["RWBTR"] = null; 
-        $vararray["ZNME1"] = null; 
-        $vararray["ZSTRA"] = null; 
-        $vararray["ZORT1"] = null; 
-        $vararray["ZPSTL"] = null; 
-        $vararray["ZBNKN"] = null; 
-        $vararray["ZBANK"] = null; 
-        $vararray["ZBRNC"] = null; 
-        $vararray["ZBNKY"] = null; 
-        $vararray["ZBNKS"] = null; 
-        $vararray["SGTXT"] = null; 
-        $vararray["TGBTR"] = null; 
-        $vararray["UMBTR"] = null; 
-        $vararray["PNBTR"] = null; 
-        $vararray["PHBTR1"] = null; 
-        $vararray["PHBTR2"] = null; 
-        $vararray["PHBTR3"] = null; 
-        $vararray["PHBTR5"] = null; 
-        $vararray["PHBTR4"] = null; 
-        $vararray["PHBTR6"] = null; 
-        $vararray["PHBTRDD"] = null; 
-        $vararray["SGORT1"] = null; 
-        $vararray["SGDAT1"] = null; 
-        $vararray["OFFCR1"] = null; 
-        $vararray["JOBTT1"] = null; 
-        $vararray["NIKNR1"] = null; 
-        $vararray["SGORT2"] = null; 
-        $vararray["SGDAT2"] = null; 
-        $vararray["OFFCR2"] = null; 
-        $vararray["JOBTT2"] = null; 
-        $vararray["NIKNR2"] = null; 
-        $vararray["UNAME"] = null; 
-        $vararray["UDATE"] = null; 
-        $vararray["UZEIT"] = null; 
-        $vararray["STATS"] = null; 
-        $vararray["SNAME"] = null; 
-        $vararray["SDATE"] = null; 
-        $vararray["SZEIT"] = null; 
-        $vararray["BUKRS"] = null; 
-        $vararray["HBKID"] = null; 
-        $vararray["HKTID"] = null; 
-        $vararray["REFNO"] = null; 
-        $vararray["PNAME"] = null; 
-        $vararray["PDATE"] = null; 
-        $vararray["PZEIT"] = null; 
-        $vararray["BTRCP"] = null; 
-        $vararray["STACH"] = null; 
-        $vararray["CHUSR"] = null; 
-        $vararray["CHDTE"] = null; 
-        $vararray["CHHRS"] = null; 
-        $vararray["BLUSR"] = null; 
-        $vararray["BLDTE"] = null; 
-        $vararray["BLHRS"] = null; 
-        $vararray["AUGDT1"] = null; 
-        $vararray["AUGBL1"] = null; 
-        $vararray["AUGDT2"] = null; 
-        $vararray["AUGBL2"] = null; 
-        $vararray["DESC_STAT"] = null; 
-        saprfc_table_init ($fce,'T_REPORT');
-        saprfc_table_append ($fce,'T_REPORT', $vararray);
+        saprfc_import ($fce,"IM_BUKRS","1000");  // set import parameters
+
+
+        saprfc_table_init ($fce,"T_BUDAT");
+
+        $vararray =  array();
+        $vararray["SIGN"] = "I"; 
+        $vararray["OPTION"] = "EQ"; 
+        // $vararray["LOW"] = "20180718"; 
+        // $vararray["HIGH"] = "20180718";
+        $vararray["LOW"] = $postdate; 
+        $vararray["HIGH"] = $postdate;
+        saprfc_table_append ($fce,'T_BUDAT', $vararray);
+
+      
 
         // rfc call function in connected R/3
         $retval = @saprfc_call_and_receive ($fce);
@@ -190,7 +131,7 @@ class Data_saprfc extends CI_Controller
             echo json_encode($items);
             exit;
         }
-
+        $data = array();
         for ($i=0;$i<count($def);$i++)
         {
             $interface = $def[$i];
@@ -200,7 +141,8 @@ class Data_saprfc extends CI_Controller
                 // unset ($vararray);
                 $rows = saprfc_table_rows ($fce,$interface["name"]);
                 for ($j=1;$j<=$rows;$j++)
-                    $items['data'][] = saprfc_table_read($fce,$interface["name"],$j);
+                    // $items['data'][] = saprfc_table_read($fce,$interface["name"],$j);
+                    $data[] = saprfc_table_read($fce,$interface["name"],$j);
                 // $form .= show_table_out ($interface["name"],$interface["def"],$vararray);
             }
         }
@@ -208,6 +150,15 @@ class Data_saprfc extends CI_Controller
         // free resources and close rfc connection
         @saprfc_function_free($fce);
         @saprfc_close($rfc);
+
+        $items['success'] = true;
+        $items['total'] = 1;
+        $items['message'] = 'success';
+
+        $found_key = array_search($docno, array_column($data, 'BELNR'));
+        if($found_key){
+            $items['data'] = $data[$found_key];
+        }
 
         echo json_encode($items);
         exit;

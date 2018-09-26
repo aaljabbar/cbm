@@ -86,7 +86,7 @@
                 {
                     label: 'Nama File', 
                     name: 'ORG_FILENAME', 
-                    width: 120, 
+                    width: 200, 
                     align: "left",  
                     editable: false,
                     formatter: function(cellvalue, options, row) {
@@ -96,6 +96,13 @@
                 {
                     label: 'Deskripsi',
                     name: 'DESCRIPTION', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                },
+                {
+                    label: 'Status Dokumen',
+                    name: 'REFERENCE_NAME', 
                     width: 200, 
                     sortable: true, 
                     editable: false
