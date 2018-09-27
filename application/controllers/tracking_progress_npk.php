@@ -222,7 +222,7 @@ class Tracking_progress_npk extends CI_Controller
             $config['max_size'] = '10000000';
             $config['overwrite'] = TRUE;
             $file_id = date("YmdHis");
-            $config['file_name'] = "PKS_". $file_id;
+            $config['file_name'] = "NPK_". $file_id;
 
             $this->load->library('upload');
             $this->upload->initialize($config);
@@ -336,12 +336,18 @@ class Tracking_progress_npk extends CI_Controller
     function download()
     {
         $path = $this->input->get('location',''); //getVarClean('location', 'str', '');
+        // $path_v2 = 'application/third_party/doc_npk/NPK_20180927124220.docx';
         
         $name = $this->input->get('file_name',''); //getVarClean('file_name', 'str', '');
+
+        // echo($path." ------------- FILE_NAME : ".$name);
+        // echo($path);
+        // echo(is_file($path));
 
       // make sure it's a file before doing anything!
         if(is_file($path))
         {
+            // die('masuk sini');
         // required for IE
             if(ini_get('zlib.output_compression')) { ini_set('zlib.output_compression', 'Off'); }
 
@@ -364,7 +370,9 @@ class Tracking_progress_npk extends CI_Controller
             header('Connection: close');
             readfile($path); // push it out
             exit();
-        }   
+        }else{
+            // die('  masuk else');
+        }
     }
 
     public function update_ver_telkom() {
