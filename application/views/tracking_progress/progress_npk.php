@@ -289,7 +289,15 @@ $prv = getPrivilege($menu_id); ?>
                                     readonly: "readonly"
                     },
                     editrules: {edithidden: true, required:false}
-                },
+                }, 
+                {
+                    label: 'Message',
+                    name: 'MESSAGE_TXT', 
+                    edittype: 'textarea',
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                }, 
                 // {
                 //     label: 'Keterangan',
                 //     name: 'DESCRIPTION', 

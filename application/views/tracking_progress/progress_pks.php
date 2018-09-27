@@ -292,7 +292,15 @@ $prv = getPrivilege($menu_id); ?>
                                     rows : 3
                     },
                     editrules: {edithidden: true, required:false}
-                },                
+                },  
+                {
+                    label: 'Message',
+                    name: 'MESSAGE_TXT', 
+                    edittype: 'textarea',
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                },              
                 {label: 'Tgl Pembuatan', name: 'CREATION_DATE', width: 120, align: "left", hidden:true, editable: false},
                 {label: 'Dibuat Oleh', name: 'CREATED_BY', width: 120, align: "left", hidden:true, editable: false},
                 {label: 'Tgl Update', name: 'UPDATED_DATE', width: 120, align: "left", hidden:true, editable: false},
