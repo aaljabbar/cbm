@@ -96,7 +96,6 @@
                         var location = PATH_FILE+"/"+FILE_NAME;
                         // alert(PATH_FILE+"/"+FILE_NAME);
                         // return "<a href=\"<?php echo base_url(); ?>"+row.PATH_FILE+"/"+row.FILE_NAME+"\">"+row.ORG_FILENAME+"</a> ";
-                        // return '<button type="button" onclick="downloadDoc('+location+','+ORG_FILENAME+');">'+ORG_FILENAME+'</button>';
                         return "<a href=\"<?php echo base_url(); ?>tracking_progress_npk/download?location="+location+"&file_name="+FILE_NAME+"\">"+ORG_FILENAME+"</a> ";
                     }
                 },
@@ -113,22 +112,6 @@
                     width: 200, 
                     sortable: true, 
                     editable: false
-                },
-                {
-                    label: 'PATH FILE',
-                    name: 'PATH_FILE', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: false,
-                    hidden:true
-                },
-                {
-                    label: 'FILE NAME',
-                    name: 'FILE_NAME', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: false,
-                    hidden:true
                 },
                 {label: 'Tgl Pembuatan', name: 'CREATION_DATE', width: 120, align: "left", editable: false, hidden: true},
                 {label: 'Dibuat Oleh', name: 'CREATED_BY', width: 120, align: "left", editable: false, hidden: true},
@@ -361,36 +344,6 @@
         var parent_column = $(grid_selector).closest('[class*="col-"]');
         $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
-    }
-//location, file_name
-    function downloadDoc(location, file_name){
-        // alert('test');
-        /*var grid = $('#grid-table');
-        var rowid = grid.jqGrid ('getGridParam', 'selrow');
-        var path_file = grid.jqGrid ('getCell', rowid, 'PATH_FILE');
-        var nama_file = grid.jqGrid ('getCell', rowid, 'FILE_NAME');
-
-        var location = String(path_file+'/'+nama_file);
-        var file_name = String(grid.jqGrid ('getCell', rowid, 'ORG_FILENAME'));*/
-        alert(location+" - "+file_name);
-        // return false;
-        $.ajax({
-            type: 'POST',
-            dataType: "json",
-            url: '<?php echo site_url('tracking_progress_npk/download');?>',
-            data: { location : location,
-                    file_name : file_name
-            },
-            timeout: 10000,
-            success: function(data) {
-                /*if (!data.success) {
-                    //swal("Informasi",data.message,"info");
-                   // return false;
-                }else{
-                    
-                };*/
-            }
-        });
     }
 
     // $("#legal_doc").on('click',function(){
