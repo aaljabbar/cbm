@@ -135,6 +135,7 @@ $prv = getPrivilege($menu_id); ?>
 
 
     jQuery(function($) {
+        $('#check_grid-table').show();
         
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
@@ -333,20 +334,27 @@ $prv = getPrivilege($menu_id); ?>
                 var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
                 //var custId = $('#cust_id');
 
-                      //alert(custId);
+                      // alert(status);
                 if(status == ""){
                     status = 1;
                 }
                 if(!celValue){
                     $('#edit_grid-table').show();
                     $('#del_grid-table').show();
+                    $('#check_grid-table').hide();
                 }else{
                     if (status == 1){
                         $('#edit_grid-table').show();
                         $('#del_grid-table').show();
+                        $('#check_grid-table').hide();
+                    }else if (status == 3){
+                        $('#edit_grid-table').hide();
+                        $('#del_grid-table').hide();
+                        $('#check_grid-table').show();
                     }else{
                         $('#edit_grid-table').hide();
                         $('#del_grid-table').hide();
+                        $('#check_grid-table').hide();
                     }
                     
                 }
@@ -367,6 +375,7 @@ $prv = getPrivilege($menu_id); ?>
             },
             loadComplete: function () {
                 var table = this;
+                $('#check_grid-table').hide();
                 setTimeout(function () {
                     updatePagerIcons(table);
                 }, 0);
@@ -544,6 +553,16 @@ $prv = getPrivilege($menu_id); ?>
                 }
             }
         );
+
+        $('#grid-table').navButtonAdd('#grid-pager',
+        {
+            id: "check_grid-table",
+            buttonicon: "fa-cloud-upload",
+            title: "Cek Status Bayar",
+            caption: "",
+            position: "last"/*,
+            onClickButton: customButtonClicked*/
+        });
         
     }); /* end jquery onload */
 
@@ -663,6 +682,7 @@ $prv = getPrivilege($menu_id); ?>
                                 jQuery('#grid-table').trigger("reloadGrid");
                                 $('#edit_grid-table').show();
                                 $('#del_grid-table').show();
+                                $('#check_grid-table').hide();
                                 swal("Submitted!", "Data berhasil disubmit !", "success");
                             }else {
                                 swal("", data.message, "warning");
