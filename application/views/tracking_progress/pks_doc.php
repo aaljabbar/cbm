@@ -90,7 +90,14 @@
                     align: "left",  
                     editable: false,
                     formatter: function(cellvalue, options, row) {
-                        return "<a href=\"<?php echo base_url(); ?>"+row.PATH_FILE+"/"+row.FILE_NAME+"\">"+row.ORG_FILENAME+"</a> ";
+                        var ORG_FILENAME = String(row['ORG_FILENAME']);
+                        var PATH_FILE = String(row['PATH_FILE']);
+                        var FILE_NAME = String(row['FILE_NAME']);
+                        var location = PATH_FILE+"/"+FILE_NAME;
+                        // alert(PATH_FILE+"/"+FILE_NAME);
+                        // return "<a href=\"<?php echo base_url(); ?>"+row.PATH_FILE+"/"+row.FILE_NAME+"\">"+row.ORG_FILENAME+"</a> ";
+                        return "<a href=\"<?php echo base_url(); ?>tracking_progress/download?location="+location+"&file_name="+FILE_NAME+"\">"+ORG_FILENAME+"</a> ";
+                        
                     }
                 },
                 {
