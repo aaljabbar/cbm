@@ -218,7 +218,7 @@ $prv = getPrivilege($menu_id); ?>
                     hidden: true
                 },
                 {
-                    label: 'No. NPK',
+                    label: 'No. Dokumen Finest',
                     name: 'DOC_NO', 
                     width: 200, 
                     sortable: true, 
