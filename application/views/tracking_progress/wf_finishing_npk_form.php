@@ -42,7 +42,7 @@
     <div class="row">
         <div class="widget-box">
             <div class="widget-header widget-header-blue widget-header-flat">
-                <h4 class="widget-title lighter"> SIGNING STEP </h4>
+                <h4 class="widget-title lighter"> FINISHING STEP </h4>
             </div>
 
 
@@ -157,7 +157,7 @@
 
                             <div class="step-pane" data-step="2">
                                 <div class="col-sm-12">
-                                    <center><h3>Upload Dokumen</h3></center>
+                                    <center><h3>Final Dokumen</h3></center>
                                     <hr>
                                     <br>
                                 </div>
@@ -226,7 +226,7 @@
                                         <label class="control-label col-sm-2" for="name">Submit NPK Logistik:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">
-                                                <input type="text" id="ENTRY_LOGISTIC" name="ENTRY_LOGISTIC" class="col-sm-2 datepicker" />
+                                                <input type="text" id="ENTRY_LOGISTIC" name="ENTRY_LOGISTIC" class="col-sm-2" />
                                             </div>
                                         </div>
                                     </div>
@@ -236,7 +236,7 @@
                                         <label class="control-label col-sm-2" for="name">Finish NPK Logistik:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">   
-                                                <input type="text" id="FINISH_LOGISTIC" name="FINISH_LOGISTIC" class="col-sm-2 datepicker" />                                            
+                                                <input type="text" id="FINISH_LOGISTIC" name="FINISH_LOGISTIC" class="col-sm-2" />                                            
                                             </div>
                                         </div>
                                     </div>
@@ -600,11 +600,30 @@
     });
 
     $(".datepicker").datepicker({
-            autoclose: true,
-            format: 'yyyy-mm-dd',
-            orientation : 'top',
-            todayHighlight : true
-        });
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation : 'top',
+        todayHighlight : true
+    });
+
+    $("#FINISH_LOGISTIC").datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation : 'top',
+        todayHighlight : true
+    });
+
+    $("#ENTRY_LOGISTIC").datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation : 'top',
+        todayHighlight : true,
+        onSelect: function() {
+            //- get date from another datepicker without language dependencies
+            var minDate = $('#ENTRY_LOGISTIC').datepicker('getDate');
+            $("#FINISH_LOGISTIC").datepicker("change", { minDate: minDate });
+        }
+    });
 
     $('#btn-submit').on('click', function() {
         var p_map_npk_id = $('#p_map_npk_id').val();
@@ -663,12 +682,13 @@
 
         $.ajax({
             type: 'POST',
-            datatype: "json",
+            dataType: "json",
             url: '<?php echo site_url('tracking_progress_npk/update_logistic');?>',
             timeout: 10000,
             data: { p_map_npk_id : p_map_npk_id, ENTRY_LOGISTIC : entry, FINISH_LOGISTIC : finish, DOC_NO: docno},
             success: function(data) {
                  $('#grid-detail-upload').bootgrid('reload');
+                 swal("Informasi",data.msg,"info");
             }
         });
     });
@@ -680,7 +700,7 @@
 
         $.ajax({
             type: 'POST',
-            datatype: "json",
+            dataType: "json",
             url: '<?php echo site_url('tracking_progress_npk/update_finance');?>',
             timeout: 10000,
             data: { p_map_npk_id : p_map_npk_id, ENTRY_FINANCE_DATE : entry, FINISH_FINANCE_DATE : finish},
@@ -697,7 +717,7 @@
 
         $.ajax({
             type: 'POST',
-            datatype: "json",
+            dataType: "json",
             url: '<?php echo site_url('tracking_progress_npk/update_payment');?>',
             timeout: 10000,
             data: { p_map_npk_id : p_map_npk_id, ENTRY_PAYMENT : entry, FINISH_PAYMENT : finish},
