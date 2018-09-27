@@ -58,6 +58,11 @@
 
                                 <li data-step="2">
                                     <span class="step">2</span>
+                                    <span class="title">Upload Document</span>
+                                </li>
+
+                                <li data-step="3">
+                                    <span class="step">3</span>
                                     <span class="title">Signing Step</span>
                                 </li>
 
@@ -137,6 +142,25 @@
                             </div>
 
                             <div class="step-pane" data-step="2">
+                                <div class="col-sm-12">
+                                    <center><h3>Final Document</h3></center>
+                                    <hr>
+                                    <br>
+                                </div>
+                                <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <tr>
+                                            <th data-column-id="DOC_ID" data-visible="false">DOC ID</th>
+                                            <th data-column-id="P_MAP_NPK_ID" data-visible="false">ID</th>
+                                            <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
+                                            <th data-column-id="DESCRIPTION">Description</th>    
+                                      </tr>
+                                    </thead>
+                                </table>  
+
+                            </div>
+
+                            <div class="step-pane" data-step="3">
                                 <div class="col-sm-12">
                                     <center><h3>Table Status Signing</h3></center>
                                     <!-- <a id="add_log" class="btn btn-white btn-sm btn-round">
@@ -336,6 +360,31 @@
                 }
             });
         }
+
+        $("#grid-detail-upload").bootgrid({
+            ajax: true,
+            post: function ()
+            {
+                return {
+                    "t_customer_order_id": $("#CURR_DOC_ID").val(),
+                    "status" : 'FINISHING DOC'
+                };
+            },
+            url: "<?php echo site_url('tracking_progress_npk/getDetailNPK');?>",
+            navigation:0,
+            formatters: {
+                /*"action": function(column, row)
+                {
+                    var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
+                    var file_name = row.FILE_NAME;
+                    // var ids = row.P_MAP_NPK_ID;
+                    var ids = row.DOC_ID;
+                    return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
+                }*/
+
+            }
+        });
+
 
         function loadgrid(p_map_npk_id){
             $("#grid-signing").bootgrid({
