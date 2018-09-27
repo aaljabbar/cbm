@@ -107,7 +107,7 @@
                     editable: false
                 },
                 {
-                    label: 'Status Dokumen',
+                    label: 'Jenis Dokumen',
                     name: 'REFERENCE_NAME', 
                     width: 200, 
                     sortable: true, 
