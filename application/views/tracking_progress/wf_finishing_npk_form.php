@@ -265,7 +265,7 @@
                                         <label class="control-label col-sm-2" for="name">Submit NPK Finance:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">
-                                                <input type="text" id="ENTRY_FINANCE_DATE" name="ENTRY_FINANCE_DATE" class="col-sm-2 datepicker" />
+                                                <input type="text" id="ENTRY_FINANCE_DATE" name="ENTRY_FINANCE_DATE" class="col-sm-2" />
                                             </div>
                                         </div>
                                     </div>
@@ -275,7 +275,7 @@
                                         <label class="control-label col-sm-2" for="name">Finish NPK Finance:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">   
-                                                <input type="text" id="FINISH_FINANCE_DATE" name="FINISH_FINANCE_DATE" class="col-sm-2 datepicker" />                                            
+                                                <input type="text" id="FINISH_FINANCE_DATE" name="FINISH_FINANCE_DATE" class="col-sm-2" />                                            
                                             </div>
                                         </div>
                                     </div>
@@ -304,7 +304,7 @@
                                         <label class="control-label col-sm-2" for="name">Submit NPK Payment:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">
-                                                <input type="text" id="ENTRY_PAYMENT" name="ENTRY_PAYMENT" class="col-sm-2 datepicker" />
+                                                <input type="text" id="ENTRY_PAYMENT" name="ENTRY_PAYMENT" class="col-sm-2" />
                                             </div>
                                         </div>
                                     </div>
@@ -314,7 +314,7 @@
                                         <label class="control-label col-sm-2" for="name">Finish NPK Payment:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">   
-                                                <input type="text" id="FINISH_PAYMENT" name="FINISH_PAYMENT" class="col-sm-2 datepicker" />                                            
+                                                <input type="text" id="FINISH_PAYMENT" name="FINISH_PAYMENT" class="col-sm-2" />                                            
                                             </div>
                                         </div>
                                     </div>
@@ -599,30 +599,129 @@
         }
     });
 
-    $(".datepicker").datepicker({
-        autoclose: true,
-        format: 'yyyy-mm-dd',
-        orientation : 'top',
-        todayHighlight : true
+    // $(".datepicker").datepicker({
+    //     autoclose: true,
+    //     format: 'yyyy-mm-dd',
+    //     orientation : 'top',
+    //     todayHighlight : true
+    // });
+
+    if(!ace.vars['old_ie']) $('#FINISH_LOGISTIC').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
     });
 
-    $("#FINISH_LOGISTIC").datepicker({
-        autoclose: true,
-        format: 'yyyy-mm-dd',
-        orientation : 'top',
-        todayHighlight : true
+    if(!ace.vars['old_ie']) $('#ENTRY_LOGISTIC').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
     });
 
-    $("#ENTRY_LOGISTIC").datepicker({
-        autoclose: true,
-        format: 'yyyy-mm-dd',
-        orientation : 'top',
-        todayHighlight : true,
-        onSelect: function() {
-            //- get date from another datepicker without language dependencies
-            var minDate = $('#ENTRY_LOGISTIC').datepicker('getDate');
-            $("#FINISH_LOGISTIC").datepicker("change", { minDate: minDate });
-        }
+    jQuery("#ENTRY_LOGISTIC").on("dp.change", function (e) {
+        jQuery('#FINISH_LOGISTIC').data("DateTimePicker").minDate(e.date);
+        jQuery('#FINISH_LOGISTIC').val('');
+    });
+
+
+    if(!ace.vars['old_ie']) $('#FINISH_FINANCE_DATE').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
+    });
+
+    if(!ace.vars['old_ie']) $('#ENTRY_FINANCE_DATE').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
+    });
+
+    jQuery("#ENTRY_FINANCE_DATE").on("dp.change", function (e) {
+        jQuery('#FINISH_FINANCE_DATE').data("DateTimePicker").minDate(e.date);
+        jQuery('#FINISH_FINANCE_DATE').val('');
+    });
+
+    if(!ace.vars['old_ie']) $('#FINISH_PAYMENT').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
+    });
+
+    if(!ace.vars['old_ie']) $('#ENTRY_PAYMENT').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
+    });
+
+    jQuery("#ENTRY_PAYMENT").on("dp.change", function (e) {
+        jQuery('#FINISH_PAYMENT').data("DateTimePicker").minDate(e.date);
+        jQuery('#FINISH_PAYMENT').val('');
     });
 
     $('#btn-submit').on('click', function() {
@@ -706,6 +805,7 @@
             data: { p_map_npk_id : p_map_npk_id, ENTRY_FINANCE_DATE : entry, FINISH_FINANCE_DATE : finish},
             success: function(data) {
                  $('#grid-detail-upload').bootgrid('reload');
+                 swal("Informasi",data.msg,"info");
             }
         });
     });
@@ -723,6 +823,7 @@
             data: { p_map_npk_id : p_map_npk_id, ENTRY_PAYMENT : entry, FINISH_PAYMENT : finish},
             success: function(data) {
                  $('#grid-detail-upload').bootgrid('reload');
+                 swal("Informasi",data.msg,"info");
             }
         });
     });
