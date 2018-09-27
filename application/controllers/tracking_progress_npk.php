@@ -1027,4 +1027,33 @@ class Tracking_progress_npk extends CI_Controller
         
     }
 
+    public function cekDetailDocFinal(){
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+
+        if($p_map_npk_id > 0){
+            $sql = "SELECT * FROM v_npk_doc
+                    WHERE P_MAP_NPK_ID = ".$p_map_npk_id."
+                    AND DOC_TYPE_STATUS = 'FINISHING DOC'";
+
+            $qs = $this->jqGrid->db->query($sql);
+
+            if($qs->num_rows() > 0){
+                $data['success'] = true;
+                $data['message'] = 'Dokumen Pendukung ditemukan';
+            }else{
+                $data['success'] = false;
+                $data['message'] = 'Dokumen Pendukung tidak ditemukan';
+            }
+
+            
+
+        }else{
+            $data['success'] = false;
+            $data['message'] = 'Dokumen Pendukung untuk p_map_npk_id tidak ditemukan';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
 }

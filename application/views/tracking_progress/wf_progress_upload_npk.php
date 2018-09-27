@@ -123,7 +123,7 @@
                                             <th data-column-id="P_MAP_NPK_ID" data-visible="false">ID</th>
                                             <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
                                             <th data-column-id="DESCRIPTION">Description</th>                                             
-                                            <th data-column-id="action" data-formatter="action" data-width="150" data-header-align="center" data-align="center">Download</th>                                                                                       
+                                            <th data-column-id="action" data-formatter="action" data-width="150" data-header-align="center" data-align="center">Action</th>                                                                                       
                                       </tr>
                                     </thead>
                                 </table> 
@@ -194,7 +194,7 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            cekStatus('APPROVED', params_submit, params_back_summary);
+            cekStatus(params_submit, params_back_summary);
 
         }); 
 
@@ -288,7 +288,7 @@
         
         swal({
             title: "Konfirmasi",
-            text: "Apakah Anda yakin?",
+            text: "Apakah Anda yakin akan menghapus dokumen ini?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -308,11 +308,12 @@
                     data: { id : ids},
                     success: function(data) {
                          $('#grid-detail-upload').bootgrid('reload');
+                         swal("Deleted", "Dokumen berhasil didelete", "info");
                     }
                 });
 
             } else {
-                swal("Cancelled", "Data tidak jadi didelete :)", "error");
+                swal("Cancelled", "Dokumen tidak jadi didelete :)", "error");
             }
          });        
         
@@ -328,9 +329,30 @@
         // window.location = url;
     }
 
-    function cekStatus(status_approval, params_submit, params_back_summary){
+    function cekStatus(params_submit, params_back_summary){
         //alert(status_approval);
-        if (status_approval == 'NOT APPROVED') {
+        var p_map_npk_id = $('#p_map_npk_id').val();
+        // alert(p_map_npk_id)
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: '<?php echo site_url('tracking_progress_npk/cekDetailDocFinal');?>',
+            data: { p_map_npk_id : p_map_npk_id
+            },
+            timeout: 10000,
+            success: function(data) {
+                if (!data.success) {
+                    swal({html: true, title: "Informasi", text: "Maaf Anda tidak bisa melakukan submit <br> Anda belum melakukan upload dokumen", type: "info"});
+                }else{
+                    if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+                        modal_lov_submitter_show(params_submit, params_back_summary); 
+                    } else {
+                        loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
+                    }
+                };
+            }
+        });
+        /*if (status_approval == 'NOT APPROVED') {
             swal({html: true, title: "Informasi", text: "Maaf Anda tidak bisa melakukan submit <br> Anda belum melakukan approval", type: "info"});
         }else{
             // alert('masuk');
@@ -339,6 +361,6 @@
             } else {
                 loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
             }
-        };
+        };*/
     }
 </script>
