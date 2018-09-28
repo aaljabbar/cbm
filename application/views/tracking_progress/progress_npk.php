@@ -714,6 +714,7 @@ $prv = getPrivilege($menu_id); ?>
         var doc_no = grid.jqGrid ('getCell', rowid, 'DOC_NO');
         var period_sappostdate = grid.jqGrid ('getCell', rowid, 'PERIOD_SAPPOSTDATE');
         var status_byr = grid.jqGrid ('getCell', rowid, 'STATUS_BYR');
+        var p_map_npk_id = grid.jqGrid ('getCell', rowid, 'P_MAP_NPK_ID');
 
         if(doc_no == ''){
             swal({html: true, title: "Informasi", text: "No. Document Finest Belum ada", type: "info"});
@@ -747,15 +748,32 @@ $prv = getPrivilege($menu_id); ?>
             if (isConfirm){
 
                 $.ajax({
-                        type: 'POST',
-                        dataType: "json",
-                        url: urls,
-                        data: {},
-                        timeout: 10000,
-                        success: function(data) {
-                            swal("Informasi", data.message, "success");                            
-                        }
-                    });
+                    type: 'POST',
+                    dataType: "json",
+                    url: urls,
+                    data: {},
+                    timeout: 10000,
+                    success: function(data) {
+                        if(data.data.STATS == 4) {
+                            $.ajax({
+                                url: '<?php echo site_url('tracking_progress_npk/updateStatusBayar');?>',
+                                type: 'POST',
+                                dataType: "json",
+                                data: {p_map_npk_id : p_map_npk_id},
+                                timeout: 10000,
+                                success: function(data) {
+                                    jQuery('#grid-table').trigger("reloadGrid");
+                                    $('#edit_grid-table').show();
+                                    $('#del_grid-table').show();
+                                    $('#check_grid-table').hide();
+                                    swal("Informasi", data.msg, "info");                     
+                                }
+                            });
+                        }else{
+                            swal("Informasi", "Status Belum Bayar", "info");  
+                        }                    
+                    }
+                });
 
             } else {
                 swal("Cancelled", "Data tidak jadi disubmit :)", "error");

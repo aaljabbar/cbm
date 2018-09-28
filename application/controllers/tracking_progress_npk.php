@@ -1135,4 +1135,25 @@ class Tracking_progress_npk extends CI_Controller
         exit;
     }
 
+    public function updateStatusBayar() {
+        $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
+
+        if($p_map_npk_id > 0){
+            $sql = "UPDATE p_map_npk SET
+                    STATUS_BYR = 'PAID'
+                    WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
+
+            $this->jqGrid->db->query($sql);
+
+            $data['success'] = true;
+            $data['msg'] = 'Status berhasil diupdate';
+        }else{
+            $data['success'] = true;
+            $data['msg'] = 'Status gagal diupdate';
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
 }
