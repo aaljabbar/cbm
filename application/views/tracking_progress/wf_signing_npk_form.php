@@ -153,7 +153,9 @@
                                             <th data-column-id="DOC_ID" data-visible="false">DOC ID</th>
                                             <th data-column-id="P_MAP_NPK_ID" data-visible="false">ID</th>
                                             <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
-                                            <th data-column-id="DESCRIPTION">Description</th>    
+                                            <th data-column-id="DESCRIPTION">Description</th>
+                                            <th data-column-id="action" data-formatter="action" data-width="150" data-header-align="center" data-align="center">Download</th>                                                                                       
+                                       
                                       </tr>
                                     </thead>
                                 </table>  
@@ -546,6 +548,29 @@
             {
                 var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
                 var file_name = row.FILE_NAME;
+                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
+            }
+        }
+    });
+
+    $("#grid-detail-upload").bootgrid({
+        ajax: true,
+        post: function ()
+        {
+            return {
+                "t_customer_order_id": $("#CURR_DOC_ID").val(),
+                "status" : 'FINISHING DOC'
+            };
+        },
+        url: "<?php echo site_url('tracking_progress_npk/getDetailNPK');?>",
+        navigation:0,
+        formatters: {
+            "action": function(column, row)
+            {
+                var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
+                var file_name = row.FILE_NAME;
+                // var ids = row.P_MAP_NPK_ID;
+                var ids = row.DOC_ID;
                 return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
             }
 
