@@ -749,7 +749,7 @@ $prv = getPrivilege($menu_id); ?>
             return false;
         }
 
-        var urls = "<?php echo base_url().'http://10.62.185.22/cbm/data_saprfc/getdata?postdate='; ?>" +period_sappostdate+'&docno='+doc_no;
+        var urls = "<?php echo base_url().'data_saprfc/getdata?postdate='; ?>" +period_sappostdate+'&docno='+doc_no;
         // alert(urls);
         swal({
             title: "Konfirmasi",
