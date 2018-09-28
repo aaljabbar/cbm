@@ -852,6 +852,10 @@ class Tracking_progress_npk extends CI_Controller
         $entry = $this->input->post('ENTRY_LOGISTIC');
         $finish = $this->input->post('FINISH_LOGISTIC');
 
+        $startdat = $this->input->post('STARTDAT');
+        $sappostdate = $this->input->post('SAPPOSTDATE');
+
+
         if(empty($entry)){
             $entry = "null";
         }else{
@@ -864,11 +868,26 @@ class Tracking_progress_npk extends CI_Controller
             $finish = "to_date('".$finish."', 'YYYY-MM-DD')";
         }
 
+
+        if(empty($startdat)){
+            $startdat = "null";
+        }else{
+            $startdat = "to_date('".$startdat."', 'YYYY-MM-DD')";
+        }
+
+        if(empty($sappostdate)){
+            $sappostdate = "null";
+        }else{
+            $sappostdate = "to_date('".$sappostdate."', 'YYYY-MM-DD')";
+        }
+
         if($p_map_npk_id > 0){
             $sql = "UPDATE p_map_npk SET
                     DOC_NO = '".$docno."',
                     ENTRY_LOGISTIC = ".$entry.",
-                    FINISH_LOGISTIC = ".$finish."
+                    FINISH_LOGISTIC = ".$finish.",
+                    STARTDAT = ".$startdat.",
+                    SAPPOSTDATE = ".$sappostdate."
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
             $this->jqGrid->db->query($sql);
@@ -1053,6 +1072,66 @@ class Tracking_progress_npk extends CI_Controller
         }
 
         echo json_encode($data);
+        exit;
+    }
+
+    public function gridLovFinest(){
+        $page = intval($this->input->post('current'));
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT to_char(DATESTART, 'YYYY-MM-DD') DATESTART, 
+                           DOCID, 
+                           to_char(SAPPOSTDATE, 'YYYY-MM-DD') SAPPOSTDATE, 
+                           SAPNODOC, 
+                           AMOUNT
+                     FROM finest.v_pertanggungan@FINNEST";
+
+        $req_param = array(
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(DOCID) LIKE upper('%" . $searchPhrase . "%') OR upper(SAPNODOC) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
         exit;
     }
 

@@ -217,7 +217,28 @@
                                         <label class="control-label col-sm-2" for="name">No. Document:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">
-                                                <input type="text" placeholder="No. DOC" id="DOC_NO" name="DOC_NO" class="col-sm-4" style="margin-right: 10px;" />
+                                                <input type="text" placeholder="No. DOC" id="DOC_NO" name="DOC_NO" class="col-sm-4" style="margin-right: 10px;" readonly />
+                                                <button class="btn btn-warning btn-sm" type="button" onclick="showLovFinest('DOC_NO','STARTDAT','SAPPOSTDATE')">
+                                                <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" for="name">Start Date:</label>
+                                        <div class="col-sm-10">
+                                            <div class="clearfix">
+                                                <input type="text" placeholder="Start Date" id="STARTDAT" name="STARTDAT" class="col-sm-2" style="margin-right: 10px;" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" for="name">SAP PostDate:</label>
+                                        <div class="col-sm-10">
+                                            <div class="clearfix">
+                                                <input type="text" placeholder="SAP PostDate" id="SAPPOSTDATE" name="SAPPOSTDATE" class="col-sm-2" style="margin-right: 10px;" readonly />
                                             </div>
                                         </div>
                                     </div>
@@ -360,6 +381,7 @@
 
 <?php 
     $this->load->view('wf/lov_submitter.php'); 
+    $this->load->view('tracking_progress/lov_doc_finest.php'); 
 ?>
 
 <script src="<?php echo base_url(); ?>assets/js/fuelux/fuelux.wizard.js"></script>
@@ -383,6 +405,16 @@
                     if(info.step == 4 && info.direction == "next") {
                         if($('#DOC_NO').val() == ''){
                             swal({html: true, title: "Informasi", text: "No. Document  Belum diisi", type: "info"});
+                            return false;
+                        }
+
+                        if($('#STARTDAT').val() == ''){
+                            swal({html: true, title: "Informasi", text: "Start Date  Belum diisi", type: "info"});
+                            return false;
+                        }
+
+                        if($('#SAPPOSTDATE').val() == ''){
+                            swal({html: true, title: "Informasi", text: "SAP PostDate  Belum diisi", type: "info"});
                             return false;
                         }
 
@@ -520,6 +552,8 @@
                 $("#FINISH_FINANCE_DATE").val( items.FINISH_FINANCE_DATE );
                 $("#FINISH_PAYMENT").val( items.FINISH_PAYMENT );
                 $("#DOC_NO").val( items.DOC_NO );
+                $('#STARTDAT').val( items.STARTDAT );
+                $('#SAPPOSTDATE').val( items.SAPPOSTDATE );
 
                 loadgrid(items.P_MAP_NPK_ID);
             }
@@ -778,13 +812,15 @@
         var docno = $('#DOC_NO').val();
         var entry = $('#ENTRY_LOGISTIC').val();
         var finish = $('#FINISH_LOGISTIC').val();
+        var start = $('#STARTDAT').val();
+        var sapdate = $('#SAPPOSTDATE').val();
 
         $.ajax({
             type: 'POST',
             dataType: "json",
             url: '<?php echo site_url('tracking_progress_npk/update_logistic');?>',
             timeout: 10000,
-            data: { p_map_npk_id : p_map_npk_id, ENTRY_LOGISTIC : entry, FINISH_LOGISTIC : finish, DOC_NO: docno},
+            data: { p_map_npk_id : p_map_npk_id, ENTRY_LOGISTIC : entry, FINISH_LOGISTIC : finish, DOC_NO: docno, STARTDAT : start, SAPPOSTDATE : sapdate},
             success: function(data) {
                  $('#grid-detail-upload').bootgrid('reload');
                  swal("Informasi",data.msg,"info");
@@ -880,5 +916,9 @@
                     }
                 }
             });
+    }
+
+    function showLovFinest(docno, startdate, postdate){
+        modal_lov_doc_finest_show(docno, startdate, postdate);
     }
 </script>

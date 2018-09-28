@@ -226,9 +226,23 @@ $prv = getPrivilege($menu_id); ?>
                     editable: false
                 },
                 {
+                    label: 'SAP PostDate',
+                    name: 'PERIOD_SAPPOSTDATE', 
+                    width: 100, 
+                    sortable: true, 
+                    editable: false
+                },
+                {
                     label: 'Nama Mitra',
                     name: 'PGL_NAME', 
-                    width: 200, 
+                    width: 230, 
+                    sortable: true, 
+                    editable: false
+                },
+                {
+                    label: 'Status Bayar',
+                    name: 'STATUS_BYR', 
+                    width: 100, 
                     sortable: true, 
                     editable: false
                 },
@@ -326,7 +340,7 @@ $prv = getPrivilege($menu_id); ?>
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
-            shrinkToFit: true,
+            shrinkToFit: false,
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
@@ -693,5 +707,61 @@ $prv = getPrivilege($menu_id); ?>
             }
         });
     }
+
+    $('#check_grid-table').on('click', function(){
+        var grid = $('#grid-table');
+        var rowid = grid.jqGrid ('getGridParam', 'selrow');
+        var doc_no = grid.jqGrid ('getCell', rowid, 'DOC_NO');
+        var period_sappostdate = grid.jqGrid ('getCell', rowid, 'PERIOD_SAPPOSTDATE');
+        var status_byr = grid.jqGrid ('getCell', rowid, 'STATUS_BYR');
+
+        if(doc_no == ''){
+            swal({html: true, title: "Informasi", text: "No. Document Finest Belum ada", type: "info"});
+            return false;
+        }
+
+        if(period_sappostdate == ''){
+            swal({html: true, title: "Informasi", text: "SAP PostDate Belum ada", type: "info"});
+            return false;
+        }
+
+        if(status_byr != ''){
+            swal({html: true, title: "Informasi", text: "Status sudah PAID", type: "info"});
+            return false;
+        }
+
+        var urls = "<?php echo base_url().'data_saprfc/getdata?postdate='; ?>" +period_sappostdate+'&docno='+doc_no;
+        // alert(urls);
+        swal({
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin akan melakukan cek status manual?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, Submit!',
+            cancelButtonText: "Tidak, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+         },
+         function(isConfirm){
+            if (isConfirm){
+
+                $.ajax({
+                        type: 'POST',
+                        dataType: "json",
+                        url: urls,
+                        data: {},
+                        timeout: 10000,
+                        success: function(data) {
+                            swal("Informasi", data.message, "success");                            
+                        }
+                    });
+
+            } else {
+                swal("Cancelled", "Data tidak jadi disubmit :)", "error");
+            }
+         });
+
+    });
     
 </script>
