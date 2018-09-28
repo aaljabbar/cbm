@@ -156,12 +156,12 @@ class Data_saprfc extends CI_Controller
         $items['message'] = 'success';
         
 
-        // $found_key = array_search($docno, array_column($data, 'BELNR'));
-        $found_key = array_search($docno, array_map(function ($each) {
-                                                     if(isset($each['BELNR'])){
-                                                             return $each['BELNR'];
-                                                         }
-                                                     }, $data));
+        $found_key = array_search($docno, array_column($data, 'BELNR'));
+        // $found_key = array_search($docno, array_map(function ($each) {
+        //                                              if(isset($each['BELNR'])){
+        //                                                      return $each['BELNR'];
+        //                                                  }
+        //                                              }, $data));
         
         if($found_key){
             $items['data'] = $data[$found_key];
