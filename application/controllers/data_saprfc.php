@@ -12,7 +12,7 @@ class Data_saprfc extends CI_Controller
 
     public function getdata()
     {
-        // print_r($sapnodoc); exit;
+        
         $postdate = $this->input->get('postdate', '');
         $docno = $this->input->get('docno', '');
 
@@ -31,7 +31,7 @@ class Data_saprfc extends CI_Controller
                echo "SAPRFC extension not loaded";
                exit;
         }
-
+        // print_r($postdate); exit;
         $l = array();
         $l["ASHOST"] = '10.6.1.134';
         $l["SYSNR"] = '00';
@@ -154,8 +154,15 @@ class Data_saprfc extends CI_Controller
         $items['success'] = true;
         $items['total'] = 1;
         $items['message'] = 'success';
+        
 
-        $found_key = array_search($docno, array_column($data, 'BELNR'));
+        // $found_key = array_search($docno, array_column($data, 'BELNR'));
+        $found_key = array_search($docno, array_map(function ($each) {
+                                                     if(isset($each['BELNR'])){
+                                                             return $each['BELNR'];
+                                                         }
+                                                     }, $data));
+        
         if($found_key){
             $items['data'] = $data[$found_key];
         }

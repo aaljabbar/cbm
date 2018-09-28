@@ -279,13 +279,17 @@
         var file_name = obj_summary_params.FSUMMARY;
         delete obj_summary_params.FSUMMARY;
         
-        $('#btn-submitter-submit').remove();
-        $('#btn-submitter-reject').remove();
-        $('#btn-submitter-back').remove();
-        $('#btn-submitter-close').remove();
+        // $('#btn-submitter-submit').remove();
+        // $('#btn-submitter-reject').remove();
+        // $('#btn-submitter-back').remove();
+        // $('#btn-submitter-close').remove();
 
         setTimeout(function(){
             $("#modal_lov_submitter").modal('hide'); 
+        },1000);
+
+        setTimeout(function(){
+            // $("#modal_lov_submitter").modal('hide'); 
             loadContentWithParams( file_name , obj_summary_params );
         },3000);
     }
