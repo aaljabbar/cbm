@@ -242,9 +242,22 @@ $prv = getPrivilege($menu_id); ?>
                 {
                     label: 'Status Bayar',
                     name: 'STATUS_BYR', 
+                    // formatter: fontColorFormat,
                     width: 100, 
                     sortable: true, 
-                    editable: false
+                    editable: false,
+                    formatter: function(cellvalue, options, rowObject) {
+                        var color = "green";
+                        var cellHtml = "";
+                        if(rowObject.STATUS_BYR == 'PAID'){
+                            cellHtml = "<strong><span id='STATUS_BYR' style='color:" + color + "' originalValue='" + cellvalue + "'>" + cellvalue + "</span></strong>";
+                            
+                        }else{
+                            cellHtml = '';
+                        }
+                        return cellHtml;
+                        
+                    }
                 },
                 {   label: 'Nama Mitra',
                     name: 'PGL_ID', 
@@ -346,11 +359,16 @@ $prv = getPrivilege($menu_id); ?>
                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
                 var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
                 var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
+                var status_byr = $('#grid-table').jqGrid('getCell', rowid, 'STATUS_BYR');
+
                 //var custId = $('#cust_id');
 
-                      // alert(status);
+                      // alert(status_byr.includes('PAID'));
                 if(status == ""){
                     status = 1;
+                }
+                if(status_byr.includes('PAID') == true){
+                    $('#check_grid-table').hide();
                 }
                 if(!celValue){
                     $('#edit_grid-table').show();
@@ -361,7 +379,7 @@ $prv = getPrivilege($menu_id); ?>
                         $('#edit_grid-table').show();
                         $('#del_grid-table').show();
                         $('#check_grid-table').hide();
-                    }else if (status == 3){
+                    }else if (status == 3 && status_byr.includes('PAID') != true){
                         $('#edit_grid-table').hide();
                         $('#del_grid-table').hide();
                         $('#check_grid-table').show();
@@ -372,6 +390,7 @@ $prv = getPrivilege($menu_id); ?>
                     }
                     
                 }
+
                 //alert(status);
          
                 $('#tab_customer_order_id').val(celValue);
@@ -395,7 +414,6 @@ $prv = getPrivilege($menu_id); ?>
                 }, 0);
 
             },
-
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo site_url('tracking_progress_npk/crud_progress_npk');?>',
             caption: "Progress NPK"
