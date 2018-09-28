@@ -246,6 +246,7 @@ $prv = getPrivilege($menu_id); ?>
                     width: 100, 
                     sortable: true, 
                     editable: false,
+                    align: "center",
                     formatter: function(cellvalue, options, rowObject) {
                         var color = "green";
                         var cellHtml = "";
