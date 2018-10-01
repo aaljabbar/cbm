@@ -189,18 +189,37 @@ $prv = getPrivilege($menu_id); ?>
                     name: 'PERIOD', 
                     width: 150,
                     align: "left",
-                    editable: true,
-                    editoptions: {
-                        size: 45
-                    },
-                    editrules: {required: true}
-                },
+                    editable: false
+                },                
                 {
                     label: 'No. Order',
                     name: 'ORDER_NO', 
                     width: 200, 
                     sortable: true, 
-                    editable: false
+                    editable: true,
+                    editoptions: {
+                        size: 45,
+                        readonly: "readonly"
+                    },
+                    editrules: {required: false}
+                },
+                {label: 'Period',name: 'PERIOD',width: 200, align: "left",editable: true, edittype : 'text', hidden : true, 
+                    editrules : {edithidden : true, required: true},
+                    editoptions: {
+                         dataInit: function (element) {
+                                $(element).datepicker({
+                                    autoclose: true,
+                                    format: 'yyyymm',
+                                    keyboardNavigation: false,
+                                    viewMode: "months",
+                                    minViewMode: "months",
+                                    orientation : 'top',
+                                    todayHighlight : true,
+                                    showOn: 'focus'
+                                    
+                                });
+                            }
+                    }
                 },
                 {   
                     label: 'Status Order',
@@ -318,7 +337,7 @@ $prv = getPrivilege($menu_id); ?>
                                     readonly: "readonly"
                     },
                     editrules: {edithidden: true, required:false}
-                }, 
+                },                 
                 {
                     label: 'Message',
                     name: 'MESSAGE_TXT', 
