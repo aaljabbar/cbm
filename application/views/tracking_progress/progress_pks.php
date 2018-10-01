@@ -188,7 +188,12 @@ $prv = getPrivilege($menu_id); ?>
                     name: 'ORDER_NO', 
                     width: 200, 
                     sortable: true, 
-                    editable: false
+                    editable: true,
+                    editoptions: {
+                        size: 45,
+                        readonly: "readonly"
+                    },
+                    editrules: {required: false}
                 },
                 {   
                     label: 'Status Order',
@@ -422,7 +427,7 @@ $prv = getPrivilege($menu_id); ?>
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.30*screen.height+"px"});
+                    form.css({"height": 0.40*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
                                       
                 },
@@ -454,7 +459,7 @@ $prv = getPrivilege($menu_id); ?>
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.30*screen.height+"px"});
+                    form.css({"height": 0.40*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
 
                     setTimeout( function() {    
