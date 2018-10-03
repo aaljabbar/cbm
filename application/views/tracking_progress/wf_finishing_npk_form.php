@@ -654,7 +654,7 @@
         close: 'fa fa-times'
      }
     }).next().on(ace.click_event, function(){
-        $(this).prev().focus();
+        // $(this).prev().focus();
     });
 
     if(!ace.vars['old_ie']) $('#ENTRY_LOGISTIC').datetimepicker({
@@ -671,7 +671,7 @@
         close: 'fa fa-times'
      }
     }).next().on(ace.click_event, function(){
-        $(this).prev().focus();
+        // $(this).prev().focus();
     });
 
     jQuery("#ENTRY_LOGISTIC").on("dp.change", function (e) {
@@ -694,7 +694,7 @@
         close: 'fa fa-times'
      }
     }).next().on(ace.click_event, function(){
-        $(this).prev().focus();
+        // $(this).prev().focus();
     });
 
     if(!ace.vars['old_ie']) $('#ENTRY_FINANCE_DATE').datetimepicker({
@@ -711,7 +711,7 @@
         close: 'fa fa-times'
      }
     }).next().on(ace.click_event, function(){
-        $(this).prev().focus();
+        // $(this).prev().focus();
     });
 
     jQuery("#ENTRY_FINANCE_DATE").on("dp.change", function (e) {

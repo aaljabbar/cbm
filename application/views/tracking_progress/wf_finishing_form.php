@@ -489,7 +489,7 @@
         close: 'fa fa-times'
      }
     }).next().on(ace.click_event, function(){
-        $(this).prev().focus();
+        // $(this).prev().focus();
     });
 
     if(!ace.vars['old_ie']) $('#VALID_FROM').datetimepicker({
@@ -506,7 +506,7 @@
         close: 'fa fa-times'
      }
     }).next().on(ace.click_event, function(){
-        $(this).prev().focus();
+        // $(this).prev().focus();
     });
 
     jQuery("#VALID_FROM").on("dp.change", function (e) {
