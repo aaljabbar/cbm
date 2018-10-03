@@ -76,11 +76,11 @@
                                     <span class="title">Finance</span>
                                 </li>
 
-                                <li data-step="6">
+                               <!--  <li data-step="6">
                                     <span class="step">6</span>
                                     <span class="title">Payment</span>
                                 </li>
-
+ -->
                             </ul>
 
                         </div>
@@ -313,7 +313,7 @@
                                 </form>
                             </div>
 
-                            <div class="step-pane active" data-step="6">
+                            <!-- <div class="step-pane active" data-step="6">
                                 <div class="col-sm-12">
                                     <center><h3>Entry Payment</h3></center>
                                     <hr>
@@ -350,7 +350,7 @@
                                     </div>
 
                                 </form>
-                            </div>
+                            </div> -->
                             
 
                         </div>
@@ -448,15 +448,15 @@
                 })
         .on('finished.fu.wizard', function(e) {
 
-            if($('#ENTRY_PAYMENT').val() == ''){
-                swal({html: true, title: "Informasi", text: "Submit NPK Payment Belum diisi", type: "info"});
-                return false;
-            }
+            // if($('#ENTRY_PAYMENT').val() == ''){
+            //     swal({html: true, title: "Informasi", text: "Submit NPK Payment Belum diisi", type: "info"});
+            //     return false;
+            // }
 
-            if($('#FINISH_PAYMENT').val() == ''){
-                swal({html: true, title: "Informasi", text: "Finish NPK Payment Belum diisi", type: "info"});
-                return false;
-            }
+            // if($('#FINISH_PAYMENT').val() == ''){
+            //     swal({html: true, title: "Informasi", text: "Finish NPK Payment Belum diisi", type: "info"});
+            //     return false;
+            // }
 
             var params_submit = {};
             
@@ -517,7 +517,7 @@
             $('#btn-submit').hide();
             $('#btn-logistic').hide();
             $('#btn-finance').hide();
-            $('#btn-payment').hide();
+            // $('#btn-payment').hide();
         }
 
         /* mengisi form customer order */
@@ -546,11 +546,11 @@
                 $("#period").val( items.PERIOD );
                 $("#ENTRY_LOGISTIC").val( items.ENTRY_LOGISTIC );
                 $("#ENTRY_FINANCE_DATE").val( items.ENTRY_FINANCE_DATE );
-                $("#ENTRY_PAYMENT").val( items.ENTRY_PAYMENT );
+                // $("#ENTRY_PAYMENT").val( items.ENTRY_PAYMENT );
 
                 $("#FINISH_LOGISTIC").val( items.FINISH_LOGISTIC );
                 $("#FINISH_FINANCE_DATE").val( items.FINISH_FINANCE_DATE );
-                $("#FINISH_PAYMENT").val( items.FINISH_PAYMENT );
+                // $("#FINISH_PAYMENT").val( items.FINISH_PAYMENT );
                 $("#DOC_NO").val( items.DOC_NO );
                 $('#STARTDAT').val( items.STARTDAT );
                 $('#SAPPOSTDATE').val( items.SAPPOSTDATE );
@@ -719,7 +719,7 @@
         jQuery('#FINISH_FINANCE_DATE').val('');
     });
 
-    if(!ace.vars['old_ie']) $('#FINISH_PAYMENT').datetimepicker({
+    /*if(!ace.vars['old_ie']) $('#FINISH_PAYMENT').datetimepicker({
      format: 'YYYY-MM-DD',//use this option to display seconds
      icons: {
         time: 'fa fa-clock-o',
@@ -756,7 +756,7 @@
     jQuery("#ENTRY_PAYMENT").on("dp.change", function (e) {
         jQuery('#FINISH_PAYMENT').data("DateTimePicker").minDate(e.date);
         jQuery('#FINISH_PAYMENT').val('');
-    });
+    });*/
 
     $('#btn-submit').on('click', function() {
         var p_map_npk_id = $('#p_map_npk_id').val();
@@ -845,7 +845,7 @@
             }
         });
     });
-
+/*
     $('#btn-payment').on('click', function() {
         var p_map_npk_id = $('#p_map_npk_id').val();
         var entry = $('#ENTRY_PAYMENT').val();
@@ -862,7 +862,7 @@
                  swal("Informasi",data.msg,"info");
             }
         });
-    });
+    }); */
 
     function cekLogistic(){
         $.ajax({
