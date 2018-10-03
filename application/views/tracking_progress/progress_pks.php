@@ -115,7 +115,7 @@ $prv = getPrivilege($menu_id); ?>
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Ya, Submit!',
             cancelButtonText: "Tidak, cancel!",
-            closeOnConfirm: true,
+            closeOnConfirm: false,
             closeOnCancel: true,
             html: true
          },
