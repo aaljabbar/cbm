@@ -217,6 +217,20 @@ $prv = getPrivilege($menu_id); ?>
                     width: 200, 
                     sortable: true, 
                     editable: false
+                },  
+                {
+                    label: 'Valid Form',
+                    name: 'VALID_FROM', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                }, 
+                {
+                    label: 'Valid Until',
+                    name: 'VALID_UNTIL', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
                 },
                 {
                     label: 'Nama Mitra',
