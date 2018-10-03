@@ -83,7 +83,7 @@ class Data_saprfc extends CI_Controller
         // other, use function module RFC_FUNCTION_SEARCH to
         // get a list of RFC functions of target R/3
         $search_fce = saprfc_function_discover ($rfc,"RFC_FUNCTION_SEARCH");
-        $function = "ZRFC_FINEST_SPB_STATUS_V2";
+        $function = "ZRFC_FINEST_SPB_STATUS_V3";
 
         
 
