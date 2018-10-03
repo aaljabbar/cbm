@@ -380,10 +380,11 @@ $prv = getPrivilege($menu_id); ?>
                 var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
                 var status = $('#grid-table').jqGrid('getCell', rowid, 'P_ORDER_STATUS_ID');
                 var status_byr = $('#grid-table').jqGrid('getCell', rowid, 'STATUS_BYR');
+                var DOC_NO = $('#grid-table').jqGrid('getCell', rowid, 'DOC_NO');
 
                 //var custId = $('#cust_id');
 
-                      // alert(status_byr.includes('PAID'));
+                      // alert(DOC_NO);
                 if(status == ""){
                     status = 1;
                 }
@@ -399,7 +400,7 @@ $prv = getPrivilege($menu_id); ?>
                         $('#edit_grid-table').show();
                         $('#del_grid-table').show();
                         $('#check_grid-table').hide();
-                    }else if (status == 3 && status_byr.includes('PAID') != true){
+                    }else if (status == 2 && (status_byr.includes('PAID') != true && DOC_NO != "")){
                         $('#edit_grid-table').hide();
                         $('#del_grid-table').hide();
                         $('#check_grid-table').show();
@@ -753,6 +754,7 @@ $prv = getPrivilege($menu_id); ?>
         var period_sappostdate = grid.jqGrid ('getCell', rowid, 'PERIOD_SAPPOSTDATE');
         var status_byr = grid.jqGrid ('getCell', rowid, 'STATUS_BYR');
         var p_map_npk_id = grid.jqGrid ('getCell', rowid, 'P_MAP_NPK_ID');
+        // var t_customer_order_id = grid.jqGrid ('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
 
         if(doc_no == ''){
             swal({html: true, title: "Informasi", text: "No. Document Finest Belum ada", type: "info"});
@@ -791,13 +793,18 @@ $prv = getPrivilege($menu_id); ?>
                     url: urls,
                     data: {},
                     timeout: 10000,
-                    success: function(data) {
-                        if(data.data.STATS == 4) {
+                    success: function(data) {  
+                        // alert(data.success);
+                        var status_desc = data.data.DESC_STAT.toUpperCase();
+                        var finish_payment = data.data.AUGDT2;
+                        // alert(status_desc);
+                        if(status_desc == 'PAID') {
                             $.ajax({
                                 url: '<?php echo site_url('tracking_progress_npk/updateStatusBayar');?>',
                                 type: 'POST',
                                 dataType: "json",
-                                data: {p_map_npk_id : p_map_npk_id},
+                                data: {p_map_npk_id : p_map_npk_id,
+                                       finish_payment : finish_payment},
                                 timeout: 10000,
                                 success: function(data) {
                                     jQuery('#grid-table').trigger("reloadGrid");
@@ -807,6 +814,7 @@ $prv = getPrivilege($menu_id); ?>
                                     swal("Informasi", data.msg, "info");                     
                                 }
                             });
+                            // alert('masuk sini');
                         }else{
                             swal("Informasi", "Status Belum Bayar", "info");  
                         }                    

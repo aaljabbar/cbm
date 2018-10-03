@@ -887,7 +887,8 @@ class Tracking_progress_npk extends CI_Controller
                     ENTRY_LOGISTIC = ".$entry.",
                     FINISH_LOGISTIC = ".$finish.",
                     STARTDAT = ".$startdat.",
-                    SAPPOSTDATE = ".$sappostdate."
+                    SAPPOSTDATE = ".$sappostdate.",
+                    ENTRY_PAYMENT = ".$sappostdate."
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
             $this->jqGrid->db->query($sql);
@@ -1037,7 +1038,7 @@ class Tracking_progress_npk extends CI_Controller
 
         if($qs->num_rows() == 0){
             $data['success'] = false;
-            $data['message'] = 'Maaf Data Submit atau Finish NPK Payment belum disimpan ';
+            $data['message'] = 'Maaf status Payment belum PAID';
 
             echo json_encode($data);
             exit;
@@ -1137,16 +1138,44 @@ class Tracking_progress_npk extends CI_Controller
 
     public function updateStatusBayar() {
         $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
-
+        $finish_payment = $this->input->post('finish_payment', '');
+        $username = $this->session->userdata('d_user_name');
+        $message = 'OK';
         if($p_map_npk_id > 0){
             $sql = "UPDATE p_map_npk SET
-                    STATUS_BYR = 'PAID'
+                    STATUS_BYR = 'PAID',
+                    FINISH_PAYMENT = to_date('".$finish_payment."', 'YYYYMMDD')
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
-            $this->jqGrid->db->query($sql);
+            $this->db->query($sql);
+
+            $sqlpayment = "BEGIN "
+                    . " p_submit_workflow("
+                    . " :i_map_npk_id, "
+                    . " :i_message,"
+                    . " :i_username,"
+                    . " :o_result_code,"
+                    . " :o_result_msg"
+                    . "); END;";
+
+
+            $stmt = oci_parse($this->db->conn_id, $sqlpayment);
+
+            // //  Bind the input parameter
+            oci_bind_by_name($stmt, ':i_map_npk_id', $p_map_npk_id);
+            oci_bind_by_name($stmt, ':i_message', $message);
+            oci_bind_by_name($stmt, ':i_username', $username);
+
+            // //bind output
+            oci_bind_by_name($stmt, ':o_result_code', $code, 2000000);
+            oci_bind_by_name($stmt, ':o_result_msg', $msg, 2000000);
+
+
+
+            ociexecute($stmt);
 
             $data['success'] = true;
-            $data['msg'] = 'Status berhasil diupdate';
+            $data['msg'] = $msg;
         }else{
             $data['success'] = true;
             $data['msg'] = 'Status gagal diupdate';

@@ -219,18 +219,20 @@ $prv = getPrivilege($menu_id); ?>
                     editable: false
                 },  
                 {
-                    label: 'Valid Form',
+                    label: 'Valid From',
                     name: 'VALID_FROM', 
                     width: 200, 
                     sortable: true, 
-                    editable: false
+                    editable: false,
+                    formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'd-M-Y'}
                 }, 
                 {
                     label: 'Valid Until',
                     name: 'VALID_UNTIL', 
                     width: 200, 
                     sortable: true, 
-                    editable: false
+                    editable: false,
+                    formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'd-M-Y'}
                 },
                 {
                     label: 'Nama Mitra',
