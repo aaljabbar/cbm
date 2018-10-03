@@ -111,11 +111,13 @@ $prv = getPrivilege($menu_id); ?>
             text: "Apakah Anda yakin akan melakukan submit?",
             type: "warning",
             showCancelButton: true,
+            showLoaderOnConfirm: true,
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Ya, Submit!',
             cancelButtonText: "Tidak, cancel!",
-            closeOnConfirm: false,
-            closeOnCancel: false
+            closeOnConfirm: true,
+            closeOnCancel: true,
+            html: true
          },
          function(isConfirm){
             if (isConfirm){
