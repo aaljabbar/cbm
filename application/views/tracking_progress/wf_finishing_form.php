@@ -42,7 +42,7 @@
     <div class="row">
         <div class="widget-box">
             <div class="widget-header widget-header-blue widget-header-flat">
-                <h4 class="widget-title lighter"> SIGNING STEP </h4>
+                <h4 class="widget-title lighter"> FINISHING STEP </h4>
             </div>
 
 
@@ -475,7 +475,46 @@
         
     }
 
-    $("#VALID_FROM").datepicker({
+    if(!ace.vars['old_ie']) $('#VALID_UNTIL').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
+    });
+
+    if(!ace.vars['old_ie']) $('#VALID_FROM').datetimepicker({
+     format: 'YYYY-MM-DD',//use this option to display seconds
+     icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-arrows ',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+     }
+    }).next().on(ace.click_event, function(){
+        $(this).prev().focus();
+    });
+
+    jQuery("#VALID_FROM").on("dp.change", function (e) {
+        jQuery('#VALID_UNTIL').data("DateTimePicker").minDate(e.date);
+        jQuery('#VALID_UNTIL').val('');
+    });
+
+    /*$("#VALID_FROM").datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',
             orientation : 'top',
@@ -487,7 +526,7 @@
         format: 'yyyy-mm-dd',
         orientation : 'top',
         todayHighlight : true
-    });
+    });*/
 
     $('#btn-submit').on('click', function() {
         var p_map_pks_id = $('#p_map_pks_id').val();
