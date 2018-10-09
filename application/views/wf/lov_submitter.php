@@ -286,7 +286,7 @@
 
         setTimeout(function(){
             $("#modal_lov_submitter").modal('hide'); 
-        },1000);
+        },2000);
 
         setTimeout(function(){
             // $("#modal_lov_submitter").modal('hide'); 
