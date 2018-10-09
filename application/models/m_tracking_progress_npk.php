@@ -14,7 +14,9 @@ class M_tracking_progress_npk extends CI_Model
         $id_ = $this->input->post('id');
                 
         $PGL_ID = $this->input->post('PGL_ID'); 
-        $PERIOD = $this->input->post('PERIOD'); 
+        // $PERIOD = $this->input->post('PERIOD'); 
+        $PERIOD_FROM = $this->input->post('PERIOD_FROM'); 
+        $PERIOD_UNTIL = $this->input->post('PERIOD_UNTIL'); 
         
         $CREATED_BY = $this->session->userdata('d_user_name');
         $UPDATED_BY = $this->session->userdata('d_user_name');
@@ -28,7 +30,9 @@ class M_tracking_progress_npk extends CI_Model
                     $p_map_npk_id = gen_id('P_MAP_NPK_ID', 'P_MAP_NPK');
                     $this->db->set('P_MAP_NPK_ID', $p_map_npk_id);                       
                     $this->db->set('PGL_ID', $PGL_ID);                       
-                    $this->db->set('PERIOD', $PERIOD);                       
+                    $this->db->set('PERIOD_FROM', $PERIOD_FROM);                       
+                    $this->db->set('PERIOD_UNTIL', $PERIOD_UNTIL);                       
+                    $this->db->set('PERIOD', "TO_CHAR(SYSDATE,'YYYYMM')",false);                       
                     // $this->db->set('STATUS', 31);    
                     $this->db->set('CREATED_DATE',"sysdate",false);
                     $this->db->set('CREATE_BY',$CREATED_BY);   
@@ -58,8 +62,11 @@ class M_tracking_progress_npk extends CI_Model
 
                     $p_map_npk_id = $this->input->post('P_MAP_NPK_ID'); 
                                           
-                    $this->db->set('PGL_ID', $PGL_ID);                       
-                    $this->db->set('PERIOD', $PERIOD);
+                    $this->db->set('PGL_ID', $PGL_ID);                    
+                    $this->db->set('PERIOD_FROM', $PERIOD_FROM);                       
+                    $this->db->set('PERIOD_UNTIL', $PERIOD_UNTIL);                       
+                    $this->db->set('PERIOD', "TO_CHAR(SYSDATE,'YYYYMM')");                      
+                    // $this->db->set('PERIOD', $PERIOD);
                     $this->db->set('UPDATE_DATE',"sysdate",false);                   
                     $this->db->set('UPDATE_BY',$UPDATED_BY);  
                     $this->db->where('P_MAP_NPK_ID', $p_map_npk_id);        

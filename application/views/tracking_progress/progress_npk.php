@@ -191,7 +191,8 @@ $prv = getPrivilege($menu_id); ?>
                     name: 'PERIOD', 
                     width: 150,
                     align: "left",
-                    editable: false
+                    editable: false,
+                    hidden: true
                 },                
                 {
                     label: 'No. Order',
@@ -205,7 +206,25 @@ $prv = getPrivilege($menu_id); ?>
                     },
                     editrules: {required: false}
                 },
-                {label: 'Period',name: 'PERIOD',width: 200, align: "left",editable: true, edittype : 'text', hidden : true, 
+                {label: 'Period From',name: 'PERIOD_FROM',width: 200, align: "left",editable: true, edittype : 'text', hidden : false, 
+                    editrules : {edithidden : true, required: true},
+                    editoptions: {
+                         dataInit: function (element) {
+                                $(element).datepicker({
+                                    autoclose: true,
+                                    format: 'yyyymm',
+                                    keyboardNavigation: false,
+                                    viewMode: "months",
+                                    minViewMode: "months",
+                                    orientation : 'top',
+                                    todayHighlight : true,
+                                    showOn: 'focus'
+                                    
+                                });
+                            }
+                    }
+                },
+                {label: 'Period Until',name: 'PERIOD_UNTIL',width: 200, align: "left",editable: true, edittype : 'text', hidden : false, 
                     editrules : {edithidden : true, required: true},
                     editoptions: {
                          dataInit: function (element) {
@@ -280,6 +299,14 @@ $prv = getPrivilege($menu_id); ?>
                         return cellHtml;
                         
                     }
+                },  
+                {
+                    label: 'Payment Date',
+                    name: 'FINISH_PAYMENT', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'd-M-Y'}
                 },
                 {   label: 'Nama Mitra',
                     name: 'PGL_ID', 
