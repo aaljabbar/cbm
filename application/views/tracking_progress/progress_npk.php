@@ -531,7 +531,7 @@ $prv = getPrivilege($menu_id); ?>
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.30*screen.height+"px"});
+                    form.css({"height": 0.35*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
                                       
                 },
@@ -563,7 +563,7 @@ $prv = getPrivilege($menu_id); ?>
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.30*screen.height+"px"});
+                    form.css({"height": 0.35*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
 
                     setTimeout( function() {    
@@ -786,14 +786,14 @@ $prv = getPrivilege($menu_id); ?>
     $('#check_grid-table').on('click', function(){
         var grid = $('#grid-table');
         var rowid = grid.jqGrid ('getGridParam', 'selrow');
-        var doc_no = grid.jqGrid ('getCell', rowid, 'DOC_NO');
+        var doc_no = grid.jqGrid ('getCell', rowid, 'SAP_DOC_NO');
         var period_sappostdate = grid.jqGrid ('getCell', rowid, 'PERIOD_SAPPOSTDATE');
         var status_byr = grid.jqGrid ('getCell', rowid, 'STATUS_BYR');
         var p_map_npk_id = grid.jqGrid ('getCell', rowid, 'P_MAP_NPK_ID');
         // var t_customer_order_id = grid.jqGrid ('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
 
         if(doc_no == ''){
-            swal({html: true, title: "Informasi", text: "No. Document Finest Belum ada", type: "info"});
+            swal({html: true, title: "Informasi", text: "SAP Doc. Belum ada", type: "info"});
             return false;
         }
 

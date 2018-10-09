@@ -68,12 +68,12 @@
 
                                 <li data-step="4">
                                     <span class="step">4</span>
-                                    <span class="title">Logistik</span>
+                                    <span class="title">Upload Documen Final</span>
                                 </li>
 
                                 <li data-step="5">
                                     <span class="step">5</span>
-                                    <span class="title">Finance</span>
+                                    <span class="title">Logistik</span>
                                 </li>
 
                                <!--  <li data-step="6">
@@ -161,7 +161,7 @@
                                     <hr>
                                     <br>
                                 </div>
-                                <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
+                                <table id="grid-detail-upload-final" class="table table-striped table-bordered table-hover">
                                     <thead>
                                       <tr>
                                             <th data-column-id="DOC_ID" data-visible="false">DOC ID</th>
@@ -205,7 +205,36 @@
 
                             </div>
 
+
                             <div class="step-pane active" data-step="4">
+                                <div class="col-sm-12">
+                                    <center><h3>Upload Dokumen Final</h3></center>
+                                    <hr>
+                                    <br>
+                                </div>
+                                <table id="grid-detail-upload" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <tr>
+                                            <th data-column-id="DOC_ID" data-visible="false">DOC ID</th>
+                                            <th data-column-id="P_MAP_NPK_ID" data-visible="false">ID</th>
+                                            <th data-column-id="ORG_FILENAME" data-width="250">Filename</th>
+                                            <th data-column-id="DESCRIPTION">Description</th>                                             
+                                            <th data-column-id="action" data-formatter="action" data-width="150" data-header-align="center" data-align="center">Action</th>                                                                                       
+                                      </tr>
+                                    </thead>
+                                </table> 
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <center>
+                                            <button class="btn btn-success" type="button" id="add_upload"> <i class="ace-icon fa fa-check"></i> Add Upload </button>
+                                            <button class="btn btn-primary" type="button" id="btn-submit"> Submit <i class="ace-icon fa fa-arrow-right icon-on-right"></i> </button>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-pane active" data-step="5">
                                 <div class="col-sm-12">
                                     <center><h3>Entry Logistic</h3></center>
                                     <hr>
@@ -218,7 +247,8 @@
                                         <div class="col-sm-10">
                                             <div class="clearfix">
                                                 <input type="text" placeholder="No. DOC" id="DOC_NO" name="DOC_NO" class="col-sm-4" style="margin-right: 10px;" readonly />
-                                                <button class="btn btn-warning btn-sm" type="button" onclick="showLovFinest('DOC_NO','STARTDAT','SAPPOSTDATE')">
+                                                <input type="hidden" class="col-sm-6" placeholder="SAP DOC" id="SAP_DOC_NO" name="SAP_DOC_NO" style="margin-right: 10px; margin-bottom: 5px;" readonly />
+                                                <button class="btn btn-warning btn-sm" type="button" onclick="showLovFinest('DOC_NO', 'SAP_DOC_NO', 'STARTDAT','SAPPOSTDATE')">
                                                 <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
                                                 </button>
                                             </div>
@@ -229,7 +259,7 @@
                                         <label class="control-label col-sm-2" for="name">Start Date:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">
-                                                <input type="text" placeholder="Start Date" id="STARTDAT" name="STARTDAT" class="col-sm-2" style="margin-right: 10px;" readonly />
+                                                <input type="text" placeholder="Start Date" id="STARTDAT" name="STARTDAT"  onchange="changestart()" class="col-sm-2" style="margin-right: 10px;" readonly />
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +287,7 @@
                                         <label class="control-label col-sm-2" for="name">Finish NPK Logistik:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">   
-                                                <input type="text" id="FINISH_LOGISTIC" name="FINISH_LOGISTIC" class="col-sm-2" />                                            
+                                                <input type="text" id="FINISH_LOGISTIC" name="FINISH_LOGISTIC" class="col-sm-2" readonly />                                            
                                             </div>
                                         </div>
                                     </div>
@@ -273,85 +303,7 @@
 
                                 </form>
                             </div>
-
-                            <div class="step-pane active" data-step="5">
-                                <div class="col-sm-12">
-                                    <center><h3>Entry Finance</h3></center>
-                                    <hr>
-                                    <br>
-                                </div>
-                                <form class="form-horizontal" id="sample-form">
-
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name">Submit NPK Finance:</label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">
-                                                <input type="text" id="ENTRY_FINANCE_DATE" name="ENTRY_FINANCE_DATE" class="col-sm-2" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name">Finish NPK Finance:</label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">   
-                                                <input type="text" id="FINISH_FINANCE_DATE" name="FINISH_FINANCE_DATE" class="col-sm-2" />                                            
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name"></label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">   
-                                                <button class="btn btn-success" type="button" id="btn-finance"> Submit </button>                                            
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-
-                            <!-- <div class="step-pane active" data-step="6">
-                                <div class="col-sm-12">
-                                    <center><h3>Entry Payment</h3></center>
-                                    <hr>
-                                    <br>
-                                </div>
-                                <form class="form-horizontal" id="sample-form">
-
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name">Submit NPK Payment:</label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">
-                                                <input type="text" id="ENTRY_PAYMENT" name="ENTRY_PAYMENT" class="col-sm-2" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name">Finish NPK Payment:</label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">   
-                                                <input type="text" id="FINISH_PAYMENT" name="FINISH_PAYMENT" class="col-sm-2" />                                            
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name"></label>
-                                        <div class="col-sm-10">
-                                            <div class="clearfix">   
-                                                <button class="btn btn-success" type="button" id="btn-payment"> Submit </button>                                            
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div> -->
-                            
+                           
 
                         </div>
 
@@ -382,6 +334,7 @@
 <?php 
     $this->load->view('wf/lov_submitter.php'); 
     $this->load->view('tracking_progress/lov_doc_finest.php'); 
+    $this->load->view('tracking_progress/lov_npk_doc_final.php'); 
 ?>
 
 <script src="<?php echo base_url(); ?>assets/js/fuelux/fuelux.wizard.js"></script>
@@ -402,7 +355,7 @@
         $('#fuelux-wizard-container').ace_wizard()
         .on('actionclicked.fu.wizard' , function(e, info){
                 // console.log(e);
-                    if(info.step == 4 && info.direction == "next") {
+                    if(info.step == 5 && info.direction == "next") {
                         if($('#DOC_NO').val() == ''){
                             swal({html: true, title: "Informasi", text: "No. Document  Belum diisi", type: "info"});
                             return false;
@@ -430,20 +383,7 @@
 
                         // cekLogistic();
                     }
-
-                    if(info.step == 5 && info.direction == "next") {
-                        if($('#ENTRY_FINANCE_DATE').val() == ''){
-                            swal({html: true, title: "Informasi", text: "Submit NPK Finance Belum diisi", type: "info"});
-                            return false;
-                        }
-
-                        if($('#FINISH_FINANCE_DATE').val() == ''){
-                            swal({html: true, title: "Informasi", text: "Finish NPK Finance Belum diisi", type: "info"});
-                            return false;
-                        }
-
-                        // cekFinance();
-                    }
+                    
 
                 })
         .on('finished.fu.wizard', function(e) {
@@ -552,6 +492,7 @@
                 $("#FINISH_FINANCE_DATE").val( items.FINISH_FINANCE_DATE );
                 // $("#FINISH_PAYMENT").val( items.FINISH_PAYMENT );
                 $("#DOC_NO").val( items.DOC_NO );
+                $("#SAP_DOC_NO").val( items.SAP_DOC_NO );
                 $('#STARTDAT').val( items.STARTDAT );
                 $('#SAPPOSTDATE').val( items.SAPPOSTDATE );
 
@@ -610,6 +551,31 @@
     }
 
     $("#grid-detail-upload").bootgrid({
+        ajax: true,
+        post: function ()
+        {
+            return {
+                "t_customer_order_id": $("#CURR_DOC_ID").val(),
+                "status" : 'FINISHING DOC'
+            };
+        },
+        url: "<?php echo site_url('tracking_progress_npk/getDetailNPK');?>",
+        navigation:0,
+        formatters: {
+            "action": function(column, row)
+            {
+                var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
+                var file_name = row.FILE_NAME;
+                // var ids = row.P_MAP_NPK_ID;
+                var ids = row.DOC_ID;
+                return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
+            }
+
+        }
+    });
+
+
+    $("#grid-detail-upload-final").bootgrid({
         ajax: true,
         post: function ()
         {
@@ -810,6 +776,7 @@
     $('#btn-logistic').on('click', function() {
         var p_map_npk_id = $('#p_map_npk_id').val();
         var docno = $('#DOC_NO').val();
+        var sapdocno = $('#SAP_DOC_NO').val();
         var entry = $('#ENTRY_LOGISTIC').val();
         var finish = $('#FINISH_LOGISTIC').val();
         var start = $('#STARTDAT').val();
@@ -820,7 +787,7 @@
             dataType: "json",
             url: '<?php echo site_url('tracking_progress_npk/update_logistic');?>',
             timeout: 10000,
-            data: { p_map_npk_id : p_map_npk_id, ENTRY_LOGISTIC : entry, FINISH_LOGISTIC : finish, DOC_NO: docno, STARTDAT : start, SAPPOSTDATE : sapdate},
+            data: { p_map_npk_id : p_map_npk_id, ENTRY_LOGISTIC : entry, FINISH_LOGISTIC : finish, DOC_NO: docno, STARTDAT : start, SAPPOSTDATE : sapdate, SAP_DOC_NO : sapdocno},
             success: function(data) {
                  $('#grid-detail-upload').bootgrid('reload');
                  swal("Informasi",data.msg,"info");
@@ -828,23 +795,23 @@
         });
     });
 
-    $('#btn-finance').on('click', function() {
-        var p_map_npk_id = $('#p_map_npk_id').val();
-        var entry = $('#ENTRY_FINANCE_DATE').val();
-        var finish = $('#FINISH_FINANCE_DATE').val();
+    // $('#btn-finance').on('click', function() {
+    //     var p_map_npk_id = $('#p_map_npk_id').val();
+    //     var entry = $('#ENTRY_FINANCE_DATE').val();
+    //     var finish = $('#FINISH_FINANCE_DATE').val();
 
-        $.ajax({
-            type: 'POST',
-            dataType: "json",
-            url: '<?php echo site_url('tracking_progress_npk/update_finance');?>',
-            timeout: 10000,
-            data: { p_map_npk_id : p_map_npk_id, ENTRY_FINANCE_DATE : entry, FINISH_FINANCE_DATE : finish},
-            success: function(data) {
-                 $('#grid-detail-upload').bootgrid('reload');
-                 swal("Informasi",data.msg,"info");
-            }
-        });
-    });
+    //     $.ajax({
+    //         type: 'POST',
+    //         dataType: "json",
+    //         url: '<?php echo site_url('tracking_progress_npk/update_finance');?>',
+    //         timeout: 10000,
+    //         data: { p_map_npk_id : p_map_npk_id, ENTRY_FINANCE_DATE : entry, FINISH_FINANCE_DATE : finish},
+    //         success: function(data) {
+    //              $('#grid-detail-upload').bootgrid('reload');
+    //              swal("Informasi",data.msg,"info");
+    //         }
+    //     });
+    // });
 /*
     $('#btn-payment').on('click', function() {
         var p_map_npk_id = $('#p_map_npk_id').val();
@@ -864,61 +831,52 @@
         });
     }); */
 
-    function cekLogistic(){
-        $.ajax({
-                type: 'POST',
-                dataType: "json",
-                url: '<?php echo site_url('tracking_progress_npk/cekStatusLogistic');?>',
-                data: { p_map_npk_id : $('#p_map_npk_id').val()
-                },
-                timeout: 10000,
-                success: function(data) {
-                    if (!data.success) {
-
-                        swal({html: true, title: "Informasi", text: data.message, type: "info"});
-                        return false;
-                    }
-                }
-            });
+    function showLovFinest(docno, sapdocno, startdate, postdate){
+        modal_lov_doc_finest_show(docno, sapdocno, startdate, postdate);
     }
 
-    function cekFinance(){
-        $.ajax({
-                type: 'POST',
-                dataType: "json",
-                url: '<?php echo site_url('tracking_progress_npk/cekStatusFinance');?>',
-                data: { p_map_npk_id : $('#p_map_npk_id').val()
-                },
-                timeout: 10000,
-                success: function(data) {
-                    if (!data.success) {
+    $('#add_upload').on('click', function(){
+        var p_map_npk_id = $('#p_map_npk_id').val();
+        modal_lov_npk_doc_show(p_map_npk_id);
+    });
 
-                        swal({html: true, title: "Informasi", text: data.message, type: "info"});
-                        return false;
+    function deleteDoc(ids){
+        
+        swal({
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin akan menghapus dokumen ini?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, Delete!',
+            cancelButtonText: "Tidak, cancel!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+         },
+         function(isConfirm){
+            if (isConfirm){
+
+                $.ajax({
+                    type: 'POST',
+                    datatype: "json",
+                    url: '<?php echo site_url('tracking_progress_npk/delete_npk_doc');?>',
+                    timeout: 10000,
+                    data: { id : ids},
+                    success: function(data) {
+                         $('#grid-detail-upload').bootgrid('reload');
+                         swal("Deleted", "Dokumen berhasil didelete", "info");
                     }
-                }
-            });
+                });
+
+            } else {
+                swal("Cancelled", "Dokumen tidak jadi didelete :)", "error");
+            }
+         });        
+        
     }
 
-    function cekPayment(){
-        $.ajax({
-                type: 'POST',
-                dataType: "json",
-                url: '<?php echo site_url('tracking_progress_npk/cekStatusPayment');?>',
-                data: { p_map_npk_id : $('#p_map_npk_id').val()
-                },
-                timeout: 10000,
-                success: function(data) {
-                    if (!data.success) {
-
-                        swal({html: true, title: "Informasi", text: data.message, type: "info"});
-                        return false;
-                    }
-                }
-            });
-    }
-
-    function showLovFinest(docno, startdate, postdate){
-        modal_lov_doc_finest_show(docno, startdate, postdate);
+    function changestart(){
+        var start_dat = $('#STARTDAT').val();
+        $('#FINISH_LOGISTIC').val(start_dat);
     }
 </script>

@@ -8,6 +8,7 @@
 				</div>
 			</div>
             <input type="hidden" id="modal_lov_doc_finest_doc_no" value="" />
+            <input type="hidden" id="modal_lov_doc_finest_sapdoc_no" value="" />
             <input type="hidden" id="modal_lov_doc_finest_start_date" value="" />
             <input type="hidden" id="modal_lov_doc_finest_post_date" value="" />
 
@@ -53,32 +54,38 @@
     jQuery(function($) {
         $("#modal_lov_doc_finest_btn_blank").on(ace.click_event, function() {
             $("#"+ $("#modal_lov_doc_finest_doc_no").val()).val("");
+            $("#"+ $("#modal_lov_doc_finest_sapdoc_no").val()).val("");
             $("#"+ $("#modal_lov_doc_finest_start_date").val()).val("");
             $("#"+ $("#modal_lov_doc_finest_post_date").val()).val("");
             $("#modal_lov_doc_finest").modal("toggle");
         });
     });
 
-    function modal_lov_doc_finest_show(the_doc_no_field, the_start_date_field, the_post_date_field) {
-        modal_lov_doc_finest_set_field_value(the_doc_no_field, the_start_date_field, the_post_date_field);
+    function modal_lov_doc_finest_show(the_doc_no_field, the_sapdoc_no_field, the_start_date_field, the_post_date_field) {
+        modal_lov_doc_finest_set_field_value(the_doc_no_field, the_sapdoc_no_field, the_start_date_field, the_post_date_field);
         $("#modal_lov_doc_finest").modal({backdrop: 'static'});
         modal_lov_doc_finest_prepare_table();
     }
 
 
-    function modal_lov_doc_finest_set_field_value(the_doc_no_field, the_start_date_field, the_post_date_field) {
+    function modal_lov_doc_finest_set_field_value(the_doc_no_field, the_sapdoc_no_field, the_start_date_field, the_post_date_field) {
          $("#modal_lov_doc_finest_doc_no").val(the_doc_no_field);
+         $("#modal_lov_doc_finest_sapdoc_no").val(the_sapdoc_no_field);
          $("#modal_lov_doc_finest_start_date").val(the_start_date_field);
          $("#modal_lov_doc_finest_post_date").val(the_post_date_field);
     }
 
-    function modal_lov_doc_finest_set_value(the_doc_no, the_start_date, the_post_date) {
+    function modal_lov_doc_finest_set_value(the_doc_no, the_sapdoc_no, the_start_date, the_post_date) {
          $("#"+ $("#modal_lov_doc_finest_doc_no").val()).val(the_doc_no);
+         $("#"+ $("#modal_lov_doc_finest_sapdoc_no").val()).val(the_sapdoc_no);
          $("#"+ $("#modal_lov_doc_finest_start_date").val()).val(the_start_date);
          $("#"+ $("#modal_lov_doc_finest_post_date").val()).val(the_post_date);
          $("#modal_lov_doc_finest").modal("toggle");
          
          $("#"+ $("#modal_lov_doc_finest_doc_no").val()).change();
+         $("#"+ $("#modal_lov_doc_finest_sapdoc_no").val()).change();
+         $("#"+ $("#modal_lov_doc_finest_start_date").val()).change();
+         $("#"+ $("#modal_lov_doc_finest_post_date").val()).change();
     }
 
     function modal_lov_doc_finest_prepare_table() {
@@ -86,7 +93,7 @@
         $("#modal_lov_doc_finest_grid_selection").bootgrid({
     	     formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="#'+ $("#modal_lov_doc_finest_start_date").val() +'" title="Set Value" onclick="modal_lov_doc_finest_set_value(\''+ row.SAPNODOC +'\', \''+ row.DATESTART +'\', \''+ row.SAPPOSTDATE +'\')" class="blue"><i class="ace-icon fa 	fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="#'+ $("#modal_lov_doc_finest_start_date").val() +'" title="Set Value" onclick="modal_lov_doc_finest_set_value(\''+ row.DOCID +'\', \''+ row.SAPNODOC +'\', \''+ row.DATESTART +'\', \''+ row.SAPPOSTDATE +'\')" class="blue"><i class="ace-icon fa 	fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
     	     rowCount:[5,10],

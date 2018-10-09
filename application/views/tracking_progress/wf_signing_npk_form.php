@@ -191,6 +191,7 @@
                                             <th data-column-id="START_DATE" data-width="150" data-header-align="center" data-align="center">Start Date</th>
                                             <th data-column-id="FINISH_DATE" data-width="150" data-header-align="center" data-align="center">Finish Date</th>
                                             <th data-column-id="DUE_DATE_NUM" data-width="100" data-header-align="center" data-align="center">Due Date</th>
+                                            <th data-column-id="NOTE" data-header-align="left" data-align="left">Note</th>  
                                             <th data-column-id="STATUS" data-width="100" data-header-align="center" data-align="center">Status</th>  
                                             <th data-column-id="action" data-formatter="action" data-width="160" data-header-align="center" data-align="center">Action</th>               
                                                                               
@@ -411,9 +412,10 @@
                         var SIGN_DOC_TYPE = row.SIGN_DOC_TYPE;
                         var EXTERNAL_ID = row.EXTERNAL_ID;
                         var DUE_DATE_NUM = row.DUE_DATE_NUM;
+                        var NOTE = row.NOTE;
 
                         if(STATUS == 'OPEN'){
-                            return '<button type="button" class="btn btn-xs btn-primary" onclick="updateSign(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\')"> Update </button> <button type="button" class="btn btn-xs btn-danger" onclick="updateCancel(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\')"> Cancel </button>';
+                            return '<button type="button" class="btn btn-xs btn-primary" onclick="updateSign(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\',\''+NOTE+'\')"> Update </button> <button type="button" class="btn btn-xs btn-danger" onclick="updateCancel(\''+SIGNING_STEP_ID+'\',\''+REFERENCE_NAME+'\',\''+STATUS+'\',\''+START_DATE+'\',\''+FINISH_DATE+'\',\''+REF_LIST_ID+'\',\''+SIGN_DOC_TYPE+'\',\''+EXTERNAL_ID+'\',\''+DUE_DATE_NUM+'\',\''+NOTE+'\')"> Cancel </button>';
                         }else if (STATUS == 'CLOSE'){
                             return '';
                         }
@@ -438,12 +440,12 @@
     }
 
 
-    function updateSign(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE){
+    function updateSign(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE, NOTE){
         // alert(DUE_DATE);
-        modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE);
+        modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE, NOTE);
     }
 
-    function updateCancel(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE){
+    function updateCancel(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE, NOTE){
         $.ajax({
             type: 'POST',
             dataType: "json",
@@ -457,7 +459,8 @@
                 REF_LIST_ID : REF_LIST_ID,
                 SIGN_DOC_TYPE : SIGN_DOC_TYPE,
                 EXTERNAL_ID : EXTERNAL_ID,
-                DUE_DATE : DUE_DATE
+                DUE_DATE : DUE_DATE,
+                NOTE: NOTE
             },
             timeout: 10000,
             success: function(data) {                    

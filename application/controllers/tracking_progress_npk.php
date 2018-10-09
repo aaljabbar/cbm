@@ -529,6 +529,7 @@ class Tracking_progress_npk extends CI_Controller
         $START_DATE = $this->input->post('START_DATE');
         $SIGNING_STEP_ID = $this->input->post('SIGNING_STEP_ID');
         $DUE_DATE_NUM = $this->input->post('DUE_DATE_NUM');
+        $NOTE = $this->input->post('NOTE');
         if(empty($FINISH_DATE)){
             $val_finish_date = "null";
         }else{
@@ -546,7 +547,8 @@ class Tracking_progress_npk extends CI_Controller
             $sql = "UPDATE SIGNING_STEP SET
                     START_DATE = ".$val_start_date.",
                     FINISH_DATE = ".$val_finish_date.",
-                    DUE_DATE_NUM = ".$DUE_DATE_NUM."
+                    DUE_DATE_NUM = ".$DUE_DATE_NUM.",
+                    NOTE = '".$NOTE."'
                     WHERE SIGNING_STEP_ID = ".$SIGNING_STEP_ID;
 
             $this->db->query($sql);
@@ -849,6 +851,7 @@ class Tracking_progress_npk extends CI_Controller
         $p_map_npk_id = $this->input->post('p_map_npk_id', 0);
         $no_npk = $this->input->post('no_npk');
         $docno = $this->input->post('DOC_NO');
+        $sapdocno = $this->input->post('SAP_DOC_NO');
         $entry = $this->input->post('ENTRY_LOGISTIC');
         $finish = $this->input->post('FINISH_LOGISTIC');
 
@@ -884,10 +887,13 @@ class Tracking_progress_npk extends CI_Controller
         if($p_map_npk_id > 0){
             $sql = "UPDATE p_map_npk SET
                     DOC_NO = '".$docno."',
+                    SAP_DOC_NO = '".$sapdocno."',
                     ENTRY_LOGISTIC = ".$entry.",
                     FINISH_LOGISTIC = ".$finish.",
                     STARTDAT = ".$startdat.",
                     SAPPOSTDATE = ".$sappostdate.",
+                    ENTRY_FINANCE_DATE = ".$finish.",
+                    FINISH_FINANCE_DATE = ".$sappostdate.",
                     ENTRY_PAYMENT = ".$sappostdate."
                     WHERE P_MAP_NPK_ID = ".$p_map_npk_id;
 
@@ -1176,6 +1182,12 @@ class Tracking_progress_npk extends CI_Controller
 
         echo json_encode($data);
         exit;
+    }
+
+    public function cek_statusbayar(){
+        $result = array();
+        $result['menu_id'] = $this->uri->segment(3);
+        $this->load->view('tracking_progress/cek_statusbayar_npk', $result);
     }
 
 }
