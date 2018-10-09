@@ -206,7 +206,7 @@ $prv = getPrivilege($menu_id); ?>
                     },
                     editrules: {required: false}
                 },
-                {label: 'Period From',name: 'PERIOD_FROM',width: 200, align: "left",editable: true, edittype : 'text', hidden : false, 
+                {label: 'Period From',name: 'PERIOD_FROM',width: 100, align: "left",editable: true, edittype : 'text', hidden : false, 
                     editrules : {edithidden : true, required: true},
                     editoptions: {
                          dataInit: function (element) {
@@ -224,7 +224,7 @@ $prv = getPrivilege($menu_id); ?>
                             }
                     }
                 },
-                {label: 'Period Until',name: 'PERIOD_UNTIL',width: 200, align: "left",editable: true, edittype : 'text', hidden : false, 
+                {label: 'Period Until',name: 'PERIOD_UNTIL',width: 100, align: "left",editable: true, edittype : 'text', hidden : false, 
                     editrules : {edithidden : true, required: true},
                     editoptions: {
                          dataInit: function (element) {
@@ -261,6 +261,13 @@ $prv = getPrivilege($menu_id); ?>
                 {
                     label: 'No. Dokumen Finest',
                     name: 'DOC_NO', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false
+                },
+                {
+                    label: 'SAP Doc',
+                    name: 'SAP_DOC_NO', 
                     width: 200, 
                     sortable: true, 
                     editable: false
