@@ -796,7 +796,7 @@ $prv = getPrivilege($menu_id); ?>
                     dataType: "json",
                     url: urls,
                     data: {},
-                    timeout: 10000,
+                    // timeout: 10000,
                     success: function(data) {  
                         // alert(data.success);
                         var status_desc = data.data.DESC_STAT.toUpperCase();
