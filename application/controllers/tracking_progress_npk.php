@@ -1198,7 +1198,11 @@ class Tracking_progress_npk extends CI_Controller
         $sord = $_REQUEST['sord'];
 
         $t_customer_order_id = $this->input->post('T_CUSTOMER_ORDER_ID', 0);
-        // echo($t_customer_order_id);
+        if(empty($t_customer_order_id)){
+            $t_customer_order_id = 0;
+        }
+        
+
         $table = "SELECT * FROM V_MESSAGE";
 
         $req_param = array(
