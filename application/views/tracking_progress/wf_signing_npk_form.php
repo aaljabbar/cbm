@@ -117,10 +117,19 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-sm-2" for="name">Period:</label>
+                                        <label class="control-label col-sm-2" for="name">Period From:</label>
                                         <div class="col-sm-10">
                                             <div class="clearfix">   
-                                                <input type="text" id="period" name="period" class="col-sm-2" readonly />                                            
+                                                <input type="text" id="period_from" name="period_from" class="col-sm-2" readonly />                                            
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" for="name">Period Until:</label>
+                                        <div class="col-sm-10">
+                                            <div class="clearfix">   
+                                                <input type="text" id="period_until" name="period_until" class="col-sm-2" readonly />                                            
                                             </div>
                                         </div>
                                     </div>
@@ -332,7 +341,8 @@
                 $("#order_date").val( items.ORDER_DATE );
                 $("#p_map_npk_id").val( items.P_MAP_NPK_ID );
                 $("#alamat_mitra").val( items.PGL_ADDR );
-                $("#period").val( items.PERIOD );
+                $("#period_from").val( items.PERIOD_FROM );
+                $("#period_until").val( items.PERIOD_UNTIL );
 
                 loadgrid(items.P_MAP_NPK_ID);
             }

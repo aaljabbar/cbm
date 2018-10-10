@@ -698,14 +698,14 @@ $prv = getPrivilege($menu_id); ?>
             colModel: [
                 {label: 'Pekerjaan', name: 'PROC_NAME', width:400, editable: true},
                 {label: 'Status', name: 'PROFILE_TYPE', editable: false, hidden: false},
-                {label: 'Sender', name: 'USER_NAME', editable: false, hidden: true},
-                {label: 'Message', name: 'MESSAGE', editable: false}
+                {label: 'Sender', name: 'USER_NAME', editable: false, hidden: false},
+                {label: 'Message', name: 'MESSAGE', width:400, editable: false}
             ],
             autowidth: true,
             height: '100%',
             rowNum: 5,
             page: 1,
-            shrinkToFit: true,
+            shrinkToFit: false,
             rownumbers: true,
             rownumWidth: 35, // the width of the row numbers columns
             viewrecords: true,
