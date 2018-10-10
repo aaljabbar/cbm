@@ -849,6 +849,9 @@ class Tracking_progress extends CI_Controller
         $sord = $_REQUEST['sord'];
 
         $t_customer_order_id = $this->input->post('T_CUSTOMER_ORDER_ID', 0);
+        if(empty($t_customer_order_id)){
+            $t_customer_order_id = 0;
+        }
         // echo($t_customer_order_id);
         $table = "SELECT * FROM V_MESSAGE";
 
