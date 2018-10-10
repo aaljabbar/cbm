@@ -58,6 +58,17 @@ $prv = getPrivilege($menu_id); ?>
                     </div>
                 </div>
                 <!-- PAGE CONTENT ENDS -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="detailsPlaceholder" style="display:none">
+                            <table id="jqGridDetails"></table>
+                            <div id="jqGridDetailsPager"></div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -141,6 +152,9 @@ $prv = getPrivilege($menu_id); ?>
         
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
+
+        var grid2 = $("#jqGridDetails");
+        var pager2 = $("#jqGridDetailsPager");
         
         $(window).on('resize.jqGrid', function () {
             responsive_jqgrid(grid_selector, pager_selector);
@@ -161,7 +175,7 @@ $prv = getPrivilege($menu_id); ?>
                 {label: 'ID', name: 'P_MAP_NPK_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
                 {
                     label: '<center>Submit</center>',
-                    name: 'T_CUSTOMER_ORDER_ID',
+                    name: 'T_CUST_ORDER_ID_ACTION',
                     width: 70, 
                     align: "center",
                     editable: false,
@@ -185,6 +199,14 @@ $prv = getPrivilege($menu_id); ?>
                         }
                         
                     }
+                },
+                {   
+                    label: 'T_CUSTOMER_ORDER_ID',
+                    name: 'T_CUSTOMER_ORDER_ID', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: true
                 },
                 {
                     label: 'Period',
@@ -375,7 +397,7 @@ $prv = getPrivilege($menu_id); ?>
                     editrules: {edithidden: true, required:false}
                 },                 
                 {
-                    label: 'Message',
+                    label: 'Message Reject',
                     name: 'MESSAGE_TXT', 
                     edittype: 'textarea',
                     width: 200, 
@@ -454,6 +476,18 @@ $prv = getPrivilege($menu_id); ?>
                 $('#tab_order_no').val(celCode);
                 $('#tab_status').val(status);
                 
+                var t_cust_order_id = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
+                if (rowid != null) {
+                     $("#jqGridDetails").jqGrid('setGridParam', {
+                        url: "<?php echo site_url('tracking_progress_npk/gridMessage');?>" ,
+                        datatype: 'json',
+                        postData: {T_CUSTOMER_ORDER_ID: t_cust_order_id},
+                        userData: {row: rowid}
+                    });
+                     $("#jqGridDetails").jqGrid('setCaption', 'Message :: ' + celCode);
+                    $("#detailsPlaceholder").show();
+                    $("#jqGridDetails").trigger("reloadGrid");
+                }
             },
             onSortCol: clearSelection,
             onPaging: clearSelection,
@@ -655,9 +689,148 @@ $prv = getPrivilege($menu_id); ?>
         
     }); /* end jquery onload */
 
+
+    // var width = $(".page-content").width();
+    //JqGrid Detail
+        $("#jqGridDetails").jqGrid({
+            mtype: "POST",
+            datatype: "json",
+            colModel: [
+                {label: 'Pekerjaan', name: 'PROC_NAME', width:400, editable: true},
+                {label: 'Status', name: 'PROFILE_TYPE', editable: false, hidden: false},
+                {label: 'Sender', name: 'USER_NAME', editable: false, hidden: true},
+                {label: 'Message', name: 'MESSAGE', editable: false}
+            ],
+            autowidth: true,
+            height: '100%',
+            rowNum: 5,
+            page: 1,
+            shrinkToFit: true,
+            rownumbers: true,
+            rownumWidth: 35, // the width of the row numbers columns
+            viewrecords: true,
+            sortname: 'T_PRODUCT_ORDER_CONTROL_ID ', // default sorting ID
+            caption: 'Message',
+            sortorder: 'asc',
+            pager: "#jqGridDetailsPager",
+            jsonReader: {
+                root: 'Data',
+                id: 'id',
+                repeatitems: false
+            },
+            loadComplete: function () {
+                // var table = this;
+                // setTimeout(function () {
+                    //  styleCheckbox(table);
+
+                    //  updateActionIcons(table);
+                    // updatePagerIcons(table);
+                    // enableTooltips(table);
+                // }, 0);
+            },
+            // editurl: '<?php echo site_url('admin/crud_user_role');?>'
+        });
+
+        //navButtons Grid Detail
+        $('#jqGridDetails').jqGrid('navGrid', '#jqGridDetailsPager',
+            {   //navbar options
+                edit: false,
+                excel: true,
+                editicon: 'ace-icon fa fa-pencil blue',
+                add: false,
+                addicon: 'ace-icon fa fa-plus-circle purple',
+                del: false,
+                delicon: 'ace-icon fa fa-trash-o red',
+                search: true,
+                searchicon: 'ace-icon fa fa-search orange',
+                refresh: true,
+                refreshicon: 'ace-icon fa fa-refresh green',
+                view: false,
+                viewicon: 'ace-icon fa fa-search-plus grey'
+            },
+            {
+
+                // options for the Edit Dialog
+                closeAfterEdit: true,
+                width: 500,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />');
+                    style_edit_form(form);
+                }
+            },
+            {
+                //new record form
+                width: 400,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+                closeAfterAdd: true,
+                recreateForm: true,
+                viewPagerButtons: false,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
+                        .wrapInner('<div class="widget-header" />');
+                    style_edit_form(form);
+                }
+
+            },
+            {
+                //delete record form
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    if (form.data('styled')) return false;
+
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />');
+                    style_delete_form(form);
+
+                    form.data('styled', true);
+                },
+                onClick: function (e) {
+                    //alert(1);
+                }
+            },
+            {
+                //search form
+                //closeAfterSearch: true,
+                recreateForm: true,
+                afterShowSearch: function (e) {
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />');
+                    style_search_form(form);
+                },
+                afterRedraw: function () {
+                    style_search_filters($(this));
+                }
+
+                // multipleSearch: true
+                /**
+                 multipleGroup:true,
+                 showQuery: true
+                 */
+            },
+            {
+                //view record form
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+                }
+            }
+        );
+
     function clearSelection() {
 
-        return null;
+        // return null;
+         var jqGridDetail = $("#jqGridDetails");
+            // jqGridDetail.jqGrid('setCaption', 'Menu Child ::');
+            jqGridDetail.jqGrid("clearGridData");
     }
 
     function style_edit_form(form) {

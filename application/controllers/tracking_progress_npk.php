@@ -1190,4 +1190,75 @@ class Tracking_progress_npk extends CI_Controller
         $this->load->view('tracking_progress/cek_statusbayar_npk', $result);
     }
 
+    public function gridMessage() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $t_customer_order_id = $this->input->post('T_CUSTOMER_ORDER_ID', 0);
+        // echo($t_customer_order_id);
+        $table = "SELECT * FROM V_MESSAGE";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        // $req_param['where'] = array();
+
+        // if($t_customer_order_id != 0){
+            // Filter Table *
+        $req_param['where'] = array('DOC_ID = '.$t_customer_order_id);
+        // }
+
+        // $req_param['where'] = array();
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        // print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+
 }
