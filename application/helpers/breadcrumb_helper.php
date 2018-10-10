@@ -79,3 +79,16 @@ function getBreadcrumb($bc)
     return $bc;
 }
 
+function gen_menuid($menu_name)
+{
+	$obj =& get_instance();
+	$base_url = $obj->config->item('base_url');
+    // You may need to load the model if it hasn't been pre-loaded
+    $sql = "SELECT * FROM app_menu WHERE upper(menu_name) = upper('".$menu_name."')";
+    $q = $obj->db->query($sql);
+    $row = $q->row_array();
+    
+    return $row['MENU_ID'];
+
+}
+

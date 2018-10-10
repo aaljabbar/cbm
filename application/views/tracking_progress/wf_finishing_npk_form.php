@@ -5,6 +5,7 @@
 
 <div class="page-content">
     <!-- parameter untuk kembali ke workflow summary -->
+    <input type="hidden" id="MENU_ID" value="<?php echo gen_menuid('Progress NPK'); ?>" />
     <input type="hidden" id="TEMP_ELEMENT_ID" value="<?php echo $this->input->post('ELEMENT_ID'); ?>" />
     <input type="hidden" id="TEMP_PROFILE_TYPE" value="<?php echo $this->input->post('PROFILE_TYPE'); ?>" />
     <input type="hidden" id="TEMP_P_W_DOC_TYPE_ID" value="<?php echo $this->input->post('P_W_DOC_TYPE_ID'); ?>" />
@@ -768,7 +769,34 @@
                 success: function(data) {
                     if (!data.success) {
                         // swal("Informasi",data.message,"info");
-                        swal({html: true, title: "Informasi", text: data.message, type: "info"});
+                        if(data.message == "BELUM PAID"){
+                            swal({
+                                title: "Konfirmasi",
+                                text: "Status Belum Paid <br> Lakukan Proses pengecekan manual",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ya, process!',
+                                cancelButtonText: "Tidak, cancel!",
+                                closeOnConfirm: true,
+                                closeOnCancel: true,
+                                html: true
+                             },
+                             function(isConfirm){
+                                if (isConfirm){
+
+                                    loadContentWithParams("tracking_progress-progress_npk.php", {
+                                        menu_id : $('#MENU_ID').val()
+                                    });
+
+                                } else {
+                                    swal("Cancelled", "Anda melakukan cancel :)", "error");
+                                }
+                             });  
+                            // swal({html: true, title: "Informasi", text: "Maaf Anda tidak bisa melakukan submit <br>", type: "info"}); //asep
+                        }else{
+                            swal({html: true, title: "Informasi", text: data.message, type: "info"});
+                        }
                         //return data.success;
                     }else{
                         // alert('masuk');

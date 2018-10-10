@@ -158,11 +158,13 @@ $prv = getPrivilege($menu_id); ?>
         
         $(window).on('resize.jqGrid', function () {
             responsive_jqgrid(grid_selector, pager_selector);
+            responsive_jqgrid(grid2, pager2);
         });
         
         $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
             if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
                responsive_jqgrid(grid_selector, pager_selector);
+               responsive_jqgrid(grid2, pager2);
             }
         });       
         

@@ -151,14 +151,19 @@ $prv = getPrivilege($menu_id); ?>
         
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
+
+        var grid2 = $("#jqGridDetails");
+        var pager2 = $("#jqGridDetailsPager");
         
         $(window).on('resize.jqGrid', function () {
             responsive_jqgrid(grid_selector, pager_selector);
+            responsive_jqgrid(grid2, pager2);
         });
         
         $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
             if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
                responsive_jqgrid(grid_selector, pager_selector);
+               responsive_jqgrid(grid2, pager2);
             }
         });       
         

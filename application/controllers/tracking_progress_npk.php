@@ -743,7 +743,7 @@ class Tracking_progress_npk extends CI_Controller
 
         $this->cekStatusLogistic();
         $this->cekStatusFinance();
-        $this->cekStatusPayment();
+        
 
         if($p_map_npk_id > 0){
 
@@ -779,6 +779,8 @@ class Tracking_progress_npk extends CI_Controller
             $data['success'] = false;
             $data['message'] = 'Maaf Anda tidak bisa melakukan submit <br> No. NPK Belum ada';
         }
+
+        $this->cekStatusPayment();
 
         echo json_encode($data);
         exit;
@@ -1044,7 +1046,7 @@ class Tracking_progress_npk extends CI_Controller
 
         if($qs->num_rows() == 0){
             $data['success'] = false;
-            $data['message'] = 'Maaf status Payment belum PAID';
+            $data['message'] = 'BELUM PAID';
 
             echo json_encode($data);
             exit;
