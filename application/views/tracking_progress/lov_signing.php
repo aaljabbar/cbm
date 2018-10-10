@@ -74,6 +74,17 @@
                                     <input type="text" id="FINISH_DATE" name="FINISH_DATE" />
                                 </div>
                             </div>
+
+                            &nbsp;
+                            <div class="form-group">
+                                <div class="col-xs-3">
+                                    <label>Note</label>
+                                </div>
+                                <div class="col-xs-9">
+                                    <!-- #section:custom/file-input -->
+                                    <textarea rows="3" class="col-sm-10" id="NOTE" name="NOTE" />                                    
+                                </div>
+                            </div>
                             
                         </div>
                     </div>
@@ -137,13 +148,13 @@
         
     });
 
-    function modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM) {
+    function modal_lov_signing_show(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM, NOTE) {
         // alert(EXTERNAL_ID);
-        modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM);
+        modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM, NOTE);
         $("#modal_lov_signing").modal({backdrop: 'static'});
     }
 
-    function modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM) {
+    function modal_lov_signing_init(SIGNING_STEP_ID, REFERENCE_NAME, STATUS, START_DATE, FINISH_DATE, REF_LIST_ID, SIGN_DOC_TYPE, EXTERNAL_ID, DUE_DATE_NUM, NOTE) {
 
         $('#SIGNING_STEP_ID').val(SIGNING_STEP_ID);
         $('#REFERENCE_NAME').val(REFERENCE_NAME);
@@ -152,6 +163,9 @@
         $('#EXTERNAL_ID').val(EXTERNAL_ID);
 
         $('#STATUS').val(STATUS);
+        if(NOTE == 'null'){
+            NOTE = null;
+        }
         if(START_DATE == 'null'){
             START_DATE = null;
         }
@@ -160,6 +174,7 @@
             FINISH_DATE = null;
         }
 
+        $('#NOTE').val(NOTE);
         $('#START_DATE').val(START_DATE);
         $('#FINISH_DATE').val(FINISH_DATE);
         $('#DUE_DATE_NUM').val(DUE_DATE_NUM);

@@ -520,6 +520,8 @@ class Tracking_progress extends CI_Controller
         $START_DATE = $this->input->post('START_DATE');
         $SIGNING_STEP_ID = $this->input->post('SIGNING_STEP_ID');
         $DUE_DATE_NUM = $this->input->post('DUE_DATE_NUM');
+        $NOTE = $this->input->post('NOTE');
+        
         if(empty($FINISH_DATE)){
             $val_finish_date = "null";
         }else{
@@ -537,7 +539,8 @@ class Tracking_progress extends CI_Controller
             $sql = "UPDATE SIGNING_STEP SET
                     START_DATE = ".$val_start_date.",
                     FINISH_DATE = ".$val_finish_date.",
-                    DUE_DATE_NUM = ".$DUE_DATE_NUM."
+                    DUE_DATE_NUM = ".$DUE_DATE_NUM.",
+                    NOTE = '".$NOTE."'
                     WHERE SIGNING_STEP_ID = ".$SIGNING_STEP_ID;
 
             $this->db->query($sql);

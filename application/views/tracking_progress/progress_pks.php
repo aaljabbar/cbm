@@ -223,7 +223,7 @@ $prv = getPrivilege($menu_id); ?>
                 {
                     label: 'Valid From',
                     name: 'VALID_FROM', 
-                    width: 200, 
+                    width: 100, 
                     sortable: true, 
                     editable: false,
                     formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'd-M-Y'}
@@ -231,7 +231,7 @@ $prv = getPrivilege($menu_id); ?>
                 {
                     label: 'Valid Until',
                     name: 'VALID_UNTIL', 
-                    width: 200, 
+                    width: 100, 
                     sortable: true, 
                     editable: false,
                     formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'd-M-Y'}
