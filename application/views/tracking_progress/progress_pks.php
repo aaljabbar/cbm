@@ -58,6 +58,17 @@ $prv = getPrivilege($menu_id); ?>
                     </div>
                 </div>
                 <!-- PAGE CONTENT ENDS -->
+
+                <!-- GRID CHILD -->
+                 <div class="row">
+                    <div class="col-xs-12">
+                        <div id="detailsPlaceholder" style="display:none">
+                            <table id="jqGridDetails"></table>
+                            <div id="jqGridDetailsPager"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END GRID CHILD -->
             </div>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -160,7 +171,7 @@ $prv = getPrivilege($menu_id); ?>
                 {label: 'ID', name: 'P_MAP_PKS_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
                 {
                     label: '<center>Submit</center>',
-                    name: 'T_CUSTOMER_ORDER_ID',
+                    name: 'T_CUST_ORDER_ID_ACTION',
                     width: 70, 
                     align: "center",
                     editable: false,
@@ -185,10 +196,18 @@ $prv = getPrivilege($menu_id); ?>
                         
                     }
                 },
+                {   
+                    label: 'T_CUSTOMER_ORDER_ID',
+                    name: 'T_CUSTOMER_ORDER_ID', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: false,
+                    hidden: true
+                },
                 {
                     label: 'No. Order',
                     name: 'ORDER_NO', 
-                    width: 200, 
+                    width: 180, 
                     sortable: true, 
                     editable: true,
                     editoptions: {
@@ -317,7 +336,7 @@ $prv = getPrivilege($menu_id); ?>
                     editrules: {edithidden: true, required:false}
                 },  
                 {
-                    label: 'Message',
+                    label: 'Message Reject',
                     name: 'MESSAGE_TXT', 
                     edittype: 'textarea',
                     width: 200, 
@@ -367,6 +386,20 @@ $prv = getPrivilege($menu_id); ?>
                 $('#tab_customer_order_id').val(celValue);
                 $('#tab_order_no').val(celCode);
                 $('#tab_status').val(status);
+
+                var t_cust_order_id = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
+                // alert(t_cust_order_id);
+                if (rowid != null) {
+                     $("#jqGridDetails").jqGrid('setGridParam', {
+                        url: "<?php echo site_url('tracking_progress/gridMessage');?>" ,
+                        datatype: 'json',
+                        postData: {T_CUSTOMER_ORDER_ID: t_cust_order_id},
+                        userData: {row: rowid}
+                    });
+                     $("#jqGridDetails").jqGrid('setCaption', 'Message :: ' + celCode);
+                    $("#detailsPlaceholder").show();
+                    $("#jqGridDetails").trigger("reloadGrid");
+                }
                 
             },
             onSortCol: clearSelection,
@@ -559,9 +592,145 @@ $prv = getPrivilege($menu_id); ?>
         
     }); /* end jquery onload */
 
+    //JqGrid Detail
+    $("#jqGridDetails").jqGrid({
+        mtype: "POST",
+        datatype: "json",
+        colModel: [
+            {label: 'Pekerjaan', name: 'PROC_NAME', width:300, editable: true},
+            {label: 'Status', name: 'PROFILE_TYPE', editable: false, hidden: false},
+            {label: 'Sender', name: 'USER_NAME', editable: false, hidden: true},
+            {label: 'Message', name: 'MESSAGE', width:200, editable: false}
+        ],
+        autowidth: true,
+        height: '100%',
+        rowNum: 5,
+        page: 1,
+        shrinkToFit: false,
+        rownumbers: true,
+        rownumWidth: 35, // the width of the row numbers columns
+        viewrecords: true,
+        sortname: 'T_PRODUCT_ORDER_CONTROL_ID ', // default sorting ID
+        caption: 'Message',
+        sortorder: 'asc',
+        pager: "#jqGridDetailsPager",
+        jsonReader: {
+            root: 'Data',
+            id: 'id',
+            repeatitems: false
+        },
+        loadComplete: function () {
+            // var table = this;
+            // setTimeout(function () {
+                //  styleCheckbox(table);
+
+                //  updateActionIcons(table);
+                // updatePagerIcons(table);
+                // enableTooltips(table);
+            // }, 0);
+        },
+    });
+
+    //navButtons Grid Detail
+    $('#jqGridDetails').jqGrid('navGrid', '#jqGridDetailsPager',
+        {   //navbar options
+            edit: false,
+            excel: true,
+            editicon: 'ace-icon fa fa-pencil blue',
+            add: false,
+            addicon: 'ace-icon fa fa-plus-circle purple',
+            del: false,
+            delicon: 'ace-icon fa fa-trash-o red',
+            search: true,
+            searchicon: 'ace-icon fa fa-search orange',
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green',
+            view: false,
+            viewicon: 'ace-icon fa fa-search-plus grey'
+        },
+        {
+
+            // options for the Edit Dialog
+            closeAfterEdit: true,
+            width: 500,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            recreateForm: true,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />');
+                style_edit_form(form);
+            }
+        },
+        {
+            //new record form
+            width: 400,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            closeAfterAdd: true,
+            recreateForm: true,
+            viewPagerButtons: false,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
+                    .wrapInner('<div class="widget-header" />');
+                style_edit_form(form);
+            }
+
+        },
+        {
+            //delete record form
+            recreateForm: true,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                if (form.data('styled')) return false;
+
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />');
+                style_delete_form(form);
+
+                form.data('styled', true);
+            },
+            onClick: function (e) {
+                //alert(1);
+            }
+        },
+        {
+            //search form
+            //closeAfterSearch: true,
+            recreateForm: true,
+            afterShowSearch: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />');
+                style_search_form(form);
+            },
+            afterRedraw: function () {
+                style_search_filters($(this));
+            }
+
+            // multipleSearch: true
+            /**
+             multipleGroup:true,
+             showQuery: true
+             */
+        },
+        {
+            //view record form
+            recreateForm: true,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+            }
+        }
+    );
+
     function clearSelection() {
 
-        return null;
+        // return null;
+        var jqGridDetail = $("#jqGridDetails");
+        // jqGridDetail.jqGrid('setCaption', 'Menu Child ::');
+        jqGridDetail.jqGrid("clearGridData");
     }
 
     function style_edit_form(form) {
