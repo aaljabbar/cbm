@@ -640,10 +640,10 @@
         // $(this).prev().focus();
     });
 
-    jQuery("#ENTRY_LOGISTIC").on("dp.change", function (e) {
+    /*jQuery("#ENTRY_LOGISTIC").on("dp.change", function (e) {
         jQuery('#FINISH_LOGISTIC').data("DateTimePicker").minDate(e.date);
         jQuery('#FINISH_LOGISTIC').val('');
-    });
+    });*/
 
 
     if(!ace.vars['old_ie']) $('#FINISH_FINANCE_DATE').datetimepicker({
