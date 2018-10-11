@@ -386,14 +386,14 @@
             url: "<?php echo site_url('tracking_progress_npk/getDetailNPK');?>",
             navigation:0,
             formatters: {
-                /*"action": function(column, row)
+                "action": function(column, row)
                 {
                     var location = "./"+row.PATH_FILE+"/"+row.FILE_NAME;
                     var file_name = row.FILE_NAME;
                     // var ids = row.P_MAP_NPK_ID;
                     var ids = row.DOC_ID;
                     return '<button type="button" class="btn btn-xs btn-primary" onclick="downloadDoc(\''+location+'\',\''+file_name+'\')"> Download </button>';
-                }*/
+                }
 
             }
         });
