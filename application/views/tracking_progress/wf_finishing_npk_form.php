@@ -238,7 +238,7 @@
                                     <div class="col-xs-12">
                                         <center>
                                             <button class="btn btn-success" type="button" id="add_upload"> <i class="ace-icon fa fa-check"></i> Add Upload </button>
-                                            <button class="btn btn-primary" type="button" id="btn-submit"> Submit <i class="ace-icon fa fa-arrow-right icon-on-right"></i> </button>
+                                            <!-- <button class="btn btn-primary" type="button" id="btn-submit"> Submit <i class="ace-icon fa fa-arrow-right icon-on-right"></i> </button> -->
                                         </center>
                                     </div>
                                 </div>
