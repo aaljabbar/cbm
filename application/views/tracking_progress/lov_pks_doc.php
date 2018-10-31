@@ -21,7 +21,7 @@
                                 </div>
                                 <div class="col-xs-9">
                                     <!-- #section:custom/file-input -->
-                                    <input type="file" class="filename" name="filename[]" multiple="" />
+                                    <input type="file" id="filename" name="filename[]" multiple="" />
                                 </div>
                             </div>
 
@@ -58,7 +58,7 @@
     //     thumbnail: false
     // });
 
-    $('.filename').ace_file_input({
+    $('#filename').ace_file_input({
         style: 'well',
         btn_choose: 'Drop files here or click to choose',
         btn_change: null,
