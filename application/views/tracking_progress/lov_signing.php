@@ -9,7 +9,7 @@
                 <h4 class="modal-title">UPDATE DATA</h4>
             </div>
             <form role="form" id="form_signing" name="uploadfastel" method="post" enctype="multipart/form-data"
-                  accept-charset="utf-8">
+                  accept-charset="utf-8" autocomplete="off">
                 <div class="modal-body">
                     <div class="row">
                         <div class="widget-main">

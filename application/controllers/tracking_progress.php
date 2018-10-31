@@ -220,28 +220,43 @@ class Tracking_progress extends CI_Controller
             $config['allowed_types'] = '*';
             $config['max_size'] = '10000000';
             $config['overwrite'] = TRUE;
-            $file_id = date("YmdHis");
-            $config['file_name'] = "PKS_" .$p_map_pks_id.'_'. $file_id;
+            // $file_id = date("YmdHis");
+            // $config['file_name'] = "PKS_" .$p_map_pks_id.'_'. $file_id;
 
             $this->load->library('upload');
-            $this->upload->initialize($config);
+            // $this->upload->initialize($config);
 
-            if (!$this->upload->do_upload("filename")) {
+            foreach ($_FILES['filename']['name'] as $key => $image) {
+                $_FILES['filename[]']['name']= $_FILES['filename']['name'][$key];
+                $_FILES['filename[]']['type']= $_FILES['filename']['type'][$key];
+                $_FILES['filename[]']['tmp_name']= $_FILES['filename']['tmp_name'][$key];
+                $_FILES['filename[]']['error']= $_FILES['filename']['error'][$key];
+                $_FILES['filename[]']['size']= $_FILES['filename']['size'][$key];
 
-                $error = $this->upload->display_errors();
-                $result['success'] = false;
-                $result['message'] = $error;
+                $file_id = date("YmdHis");
+                $fileName = "PKS_" .$p_map_pks_id.'_'. $file_id;
 
-                echo json_encode($result);
-                exit;
-            }else{
-                
-                // Do Upload
-                $data = $this->upload->data();          
+                $images[] = $fileName;
 
-                $idd = gen_id('DOC_ID', 'PKS_DOC');
+                $config['file_name'] = $fileName;
 
-                $sql = "INSERT INTO PKS_DOC(DOC_ID, 
+                $this->upload->initialize($config);
+                // print_r($image);
+                // exit;
+                if (!$this->upload->do_upload('filename[]')) {
+
+                    $error = $this->upload->display_errors();
+                    $result['success'] = false;
+                    $result['message'] = $error;
+
+                    echo json_encode($result);
+                    exit;
+                }else{
+                    // Do Upload
+                    $data = $this->upload->data(); 
+                    $idd = gen_id('DOC_ID', 'PKS_DOC');
+
+                    $sql = "INSERT INTO PKS_DOC(DOC_ID, 
                                             P_MAP_PKS_ID, 
                                             FILE_NAME, 
                                             PATH_FILE, 
@@ -267,12 +282,13 @@ class Tracking_progress extends CI_Controller
                                     '".$data['client_name']."'
                                     )";
 
-                $this->db->query($sql);
-                
+                    $this->db->query($sql);
+                    
 
-                $result['success'] = true;
-                $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
+                    $result['success'] = true;
+                    $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
 
+                }
             }
 
         }catch(Exception $e) {

@@ -245,6 +245,7 @@
                     $("#btn-approval").hide();
                 }else{
                     $("#status_approval").text('NOT APPROVED');
+                    $("#btn-approval").show();
                 }
                 
             }
